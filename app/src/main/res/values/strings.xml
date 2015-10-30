@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">玩在校园</string>
+    <string name="login_or_register">登录/注册</string>
+    <string name="phone_hint">输入手机号</string>
+    <string name="vcode_hint">短信验证码已发送至 %1$s，请注意查收。</string>
+    <string name="vcode_countdown">%1$d 秒后  点击重新发送验证码</string>
+    <string name="vcode_resend">重新发送验证码</string>
+    <string name="vcode_agree">点击「完成注册」按钮，代表您已阅读并同意</string>
+    <string name="vcode_eula"><u>《玩在校园用户协议》</u></string>
+    <string name="vcode_register">完成注册</string>
+    <string name="activity">活动</string>
+    <string name="post">战况</string>
+    <string name="message">消息</string>
+    <string name="profile">我</string>
+</resources>
