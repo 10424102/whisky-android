@@ -2,4 +2,41 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Android official typography guidelines (Chinese, Japanese and Korean)-->
+    <dimen name="font_size_headline">24sp</dimen>
+    <dimen name="font_size_title">21sp</dimen>
+    <dimen name="font_size_subtitle">17sp</dimen>
+    <dimen name="font_size_body">15sp</dimen>
+    <dimen name="font_size_caption">13sp</dimen><!-- 说明文字 -->
+    <!-- Other -->
+    <dimen name="divide_line_size">1dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_margin">12dp</dimen>
+    <dimen name="icon_size_small">12dp</dimen>
+    <dimen name="icon_margin_small">6dp</dimen>
+
+    <dimen name="profile_detail_item_horizontal_padding">0dp</dimen>
+    <dimen name="profile_detail_item_vertical_padding">5dp</dimen>
+    <dimen name="profile_detail_icon_size">24dp</dimen>
+    <dimen name="profile_detail_icon_margin">12dp</dimen>
+    <dimen name="profile_detail_title_1_size">15sp</dimen>
+    <dimen name="profile_detail_title_1_margin_bottom">3dp</dimen>
+    <dimen name="profile_detail_content_1_size">16sp</dimen>
+    <dimen name="profile_detail_title_2_size">15sp</dimen>
+    <dimen name="profile_detail_title_2_width">100dp</dimen>
+    <dimen name="profile_detail_title_2_padding_start">12dp</dimen>
+    <dimen name="profile_detail_content_2_size">16sp</dimen>
+    <dimen name="profile_detail_item_2_min_height">48dp</dimen>
+
+    <dimen name="profile_detail_group_gap">16dp</dimen>
+    <dimen name="profile_avatar_size">128dp</dimen>
+    <dimen name="profile_avatar_size_small">36dp</dimen>
+    <dimen name="profile_header_height">250dp</dimen>
+    <dimen name="profile_tabs_horizontal_padding">16dp</dimen>
+    <dimen name="profile_avatar_username_gap">16dp</dimen>
+    <dimen name="profile_toolbar_height">56dp</dimen>
+    <dimen name="profile_tabs_height">48dp</dimen>
+    <dimen name="profile_header_height_min">104dp</dimen>
+    <!-- 56 + 48 -->
 </resources>

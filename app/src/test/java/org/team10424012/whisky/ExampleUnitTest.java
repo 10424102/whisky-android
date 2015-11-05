@@ -1,4 +1,4 @@
-package org.team10424012.whisky;
+package org.team10424102.whisky;
 
 import org.junit.Test;
 

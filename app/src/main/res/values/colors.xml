@@ -2,9 +2,19 @@
 <resources>
     <color name="colorPrimary">#4a90e2</color>
     <color name="colorPrimaryDark">#2067bc</color>
-    <color name="colorAccent">#8930a4</color>
+    <color name="colorAccent">#cd20e1</color>
     <color name="btnLoginPrimary">#33ffffff</color>
     <color name="btnLoginPressed">#4Dffffff</color>
     <color name="btnRegisterPrimary">#66ffffff</color>
     <color name="btnRegisterPressed">#80ffffff</color>
+    <color name="white">#fff</color>
+    <color name="item_press_color">#D9D9D9</color>
+    <color name="transparent">#00000000</color>
+    <color name="background">#f0f0f0</color>
+    <color name="card_background">#fbfbfb</color>
+    <color name="title">#c9c9c9</color>
+    <color name="hint">#e7e7e7</color>
+    <color name="text">#000</color>
+    <color name="divide_line">#e7e7e7</color>
+
 </resources>

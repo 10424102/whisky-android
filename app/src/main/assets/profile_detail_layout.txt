@@ -1,0 +1,14 @@
+signature   ic_pen
+hometown    ic_home
+highschool  ic_building
+
+username
+phone
+email
+age
+birthday
+constellation
+
+college
+academy
+grade
