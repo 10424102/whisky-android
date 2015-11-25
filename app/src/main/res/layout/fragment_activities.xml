@@ -6,123 +6,152 @@
 
     <data>
 
-        <import type="org.team10424102.whisky.utils.EnumUtils"/>
-
         <import type="org.team10424102.whisky.models.Activity"/>
+
+        <import type="org.team10424102.whisky.models.enums.EActivitiesCategory"/>
 
         <import type="android.databinding.ObservableField"/>
 
         <variable
             name="type"
-            type="ObservableField&lt;Activity.Type>"/>
+            type="ObservableField&lt;EActivitiesCategory>"/>
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:minHeight="?attr/actionBarSize"
+            android:paddingTop="@dimen/toolbar_padding_top"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapse_toolbar"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                android:layout_gravity="center_horizontal"/>
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="right"
+                android:layout_margin="12dp"
+                android:src="@drawable/ic_add_white_24dp"/>
 
-                <com.daimajia.slider.library.SliderLayout
-                    android:id="@+id/slider"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:fitsSystemWindows="true"
-                    app:auto_cycle="true"
-                    app:indicator_visibility="visible"
-                    app:pager_animation="Fade"
-                    app:pager_animation_span="800"/>
+        </android.support.v7.widget.Toolbar>
 
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:gravity="top"
-                    android:minHeight="?attr/actionBarSize"
-                    app:contentInsetLeft="0dp"
-                    app:contentInsetStart="0dp"
-                    app:layout_collapseMode="pin"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-                    <ImageButton
-                        android:id="@+id/settings"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="right"
-                        android:layout_margin="16dp"
-                        android:background="@null"
-                        android:src="@drawable/ic_add_white_24dp"/>
-
-                </android.support.v7.widget.Toolbar>
-
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-
-        </android.support.design.widget.AppBarLayout>
-
-        <LinearLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <com.daimajia.slider.library.SliderLayout
+                        android:id="@+id/slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_collapseMode="parallax">
+                    </com.daimajia.slider.library.SliderLayout>
+
+                    <com.daimajia.slider.library.Indicators.PagerIndicator
+                        android:id="@+id/custom_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        app:layout_collapseMode="parallax"
+                        app:selected_color="#20bf00"
+                        app:selected_height="6dp"
+                        app:selected_padding_left="2dp"
+                        app:selected_padding_right="2dp"
+                        app:selected_width="6dp"
+                        app:shape="rect"
+                        app:unselected_color="#dce2e2e2"
+                        app:unselected_height="6dp"
+                        app:unselected_padding_left="2dp"
+                        app:unselected_padding_right="2dp"
+                        app:unselected_width="6dp"/>
+
+                </android.support.design.widget.CollapsingToolbarLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="bottom"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <TextView
-                    android:id="@+id/type"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@{EnumUtils.activityType(type.get())}"
-                    android:textSize="16sp"/>
+                    android:layout_gravity="bottom"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp">
 
-                <com.github.johnkil.print.PrintView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    app:iconColor="#4A90E2"
-                    app:iconSize="24dp"
-                    app:iconText="@string/ic_material_menu"/>
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        app:enum="@{type.get()}"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="筛选"
-                    android:textColor="#4A90E2"
-                    android:textSize="15sp"/>
+                    <com.github.johnkil.print.PrintView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        app:iconColor="#4A90E2"
+                        app:iconSize="20dp"
+                        app:iconText="@string/ic_material_menu"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter"
+                        android:textColor="#4A90E2"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/list_background">
+                </android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </android.support.v7.widget.RecyclerView>
 
-        </LinearLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+
+    </LinearLayout>
 
 </layout>

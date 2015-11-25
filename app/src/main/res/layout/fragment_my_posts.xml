@@ -4,6 +4,11 @@
         tools:ignore="RtlHardcoded">
 
     <data>
+
+        <variable
+            name="handlers"
+            type="org.team10424102.whisky.controllers.MyPostsFragment.Handlers"/>
+
     </data>
 
     <LinearLayout
@@ -33,12 +38,19 @@
                 android:text="筛选"/>
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
+        <org.team10424102.whisky.ui.RightArrowBar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#fdeeee"
+            android:onClick="@{handlers.fuck}">
 
-        </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="哈哈哈"/>
+
+        </org.team10424102.whisky.ui.RightArrowBar>
 
 
     </LinearLayout>

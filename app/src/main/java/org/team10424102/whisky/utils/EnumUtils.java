@@ -1,37 +1,24 @@
 package org.team10424102.whisky.utils;
 
-import org.team10424102.whisky.Global;
-import org.team10424102.whisky.R;
-import org.team10424102.whisky.models.Activity;
-import org.team10424102.whisky.models.Profile;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
-/**
- * Created by yy on 11/14/15.
- */
-public class EnumUtils {
-    public static String gender(Profile.Gender gender) {
-        switch (gender) {
-            case MALE:
-                return Global.context.getString(R.string.gender_male);
-            case FEMALE:
-                return Global.context.getString(R.string.gender_female);
-            case SECRET:
-                return Global.context.getString(R.string.gender_secret);
-        }
-        return null;
-    }
+import org.team10424102.whisky.models.enums.AndroidStringResourceProvided;
 
-    public static String activityType(Activity.Type value) {
-        switch (value) {
-            case SCHOOL:
-                return Global.context.getString(R.string.type_school);
-            case FRIENDS:
-                return Global.context.getString(R.string.type_friends);
-            case FOLLOWINGS:
-                return Global.context.getString(R.string.type_followings);
-            case RECOMMENDATIONS:
-                return Global.context.getString(R.string.type_recommendations);
+import java.util.ArrayList;
+import java.util.List;
+
+public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
+
+    @NonNull
+    public static <E extends Enum<E>> List<String> getStringList(Context context, Class<E> cls) {
+        if (!AndroidStringResourceProvided.class.isAssignableFrom(cls)) return new ArrayList<>(0);
+        List<E> enums = getEnumList(cls);
+        List<String> result = new ArrayList<>(enums.size());
+        for (Enum e : enums) {
+            AndroidStringResourceProvided sp = (AndroidStringResourceProvided) e;
+            result.add(context.getString(sp.getStringResId()));
         }
-        return null;
+        return result;
     }
 }

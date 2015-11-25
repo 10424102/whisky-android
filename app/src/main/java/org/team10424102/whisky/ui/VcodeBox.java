@@ -27,8 +27,7 @@ public class VcodeBox extends View {
                 R.styleable.VcodeBox,
                 0, 0);
         try {
-            mGap = a.getDimensionPixelSize(R.styleable.VcodeBox_gap,
-                    (int) DimensionUtils.dp2px(10, context.getResources()));
+            mGap = a.getDimensionPixelSize(R.styleable.VcodeBox_gap, DimensionUtils.dp2px(10));
             mLength = a.getInt(R.styleable.VcodeBox_lenght, 4);
         } finally {
             a.recycle();

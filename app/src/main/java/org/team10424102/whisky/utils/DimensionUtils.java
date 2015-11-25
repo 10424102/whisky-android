@@ -1,5 +1,6 @@
 package org.team10424102.whisky.utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
@@ -7,22 +8,27 @@ import android.util.DisplayMetrics;
  * Created by yy on 11/6/15.
  */
 public class DimensionUtils {
+    private static Resources res;
+    private static float factor;
     private final float AVATAR_USERNAME_GAP = 16;
     private final float APPBAR_HEIGHT = 102;
     private final float DEFAULT_TOOLBAR_HEIGHT = 56;
 
-    public static float dp2px(float dp, Resources res) {
-        //return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
+    public static void init(Context context) {
+        res = context.getResources();
         DisplayMetrics metrics = res.getDisplayMetrics();
-        return dp * (metrics.densityDpi / 160f);
+        factor = metrics.xdpi / DisplayMetrics.DENSITY_DEFAULT;
     }
 
-    public static float px2dp(float px, Resources res) {
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        return px / (metrics.densityDpi / 160f);
+    public static int dp2px(float dp) {
+        return Math.round(dp * factor);
     }
 
-    public static int getStatusBarHeight(Resources res) {
+    public static float px2dp(int px) {
+        return Math.round(px / factor);
+    }
+
+    public static int getStatusBarHeight() {
         int result = 0;
         int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {

@@ -15,6 +15,7 @@
     <dimen name="icon_margin">12dp</dimen>
     <dimen name="icon_size_small">12dp</dimen>
     <dimen name="icon_margin_small">6dp</dimen>
+    <dimen name="item_margin">16dp</dimen>
 
     <dimen name="profile_detail_item_horizontal_padding">0dp</dimen>
     <dimen name="profile_detail_item_vertical_padding">5dp</dimen>
@@ -28,6 +29,7 @@
     <dimen name="profile_detail_title_2_padding_start">12dp</dimen>
     <dimen name="profile_detail_content_2_size">16sp</dimen>
     <dimen name="profile_detail_item_2_min_height">48dp</dimen>
+    <dimen name="my_info_group_gap">10dp</dimen>
 
     <dimen name="profile_detail_group_gap">16dp</dimen>
     <dimen name="profile_avatar_size">128dp</dimen>
@@ -39,4 +41,7 @@
     <dimen name="profile_tabs_height">48dp</dimen>
     <dimen name="profile_header_height_min">104dp</dimen>
     <!-- 56 + 48 -->
+
+
+    <dimen name="toolbar_padding_top">0dp</dimen>
 </resources>

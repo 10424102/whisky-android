@@ -2,27 +2,21 @@ package org.team10424102.whisky.controllers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
-import org.team10424102.whisky.Global;
+import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.components.ErrorManager;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import org.team10424102.whisky.components.AvailabilityResult;
 
 /**
  * Created by yy on 10/30/15.
@@ -30,8 +24,7 @@ import java.util.TimerTask;
 public class WelcomeActivity extends Activity {
     private static final String TAG = "WelcomeActivity";
 
-    private EditText phone;
-    private Button loginOrRegister;
+    private EditText mPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,88 +36,68 @@ public class WelcomeActivity extends Activity {
         }
 
         setContentView(R.layout.activity_welcome);
-        phone = (EditText) findViewById(R.id.phone);
-        loginOrRegister = (Button) findViewById(R.id.login_or_register);
-        phone.setOnClickListener(new View.OnClickListener() {
+        mPhone = (EditText) findViewById(R.id.phone);
+
+        mPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.getId() == phone.getId()) {
-                    phone.setCursorVisible(true);
-                }
+                mPhone.setCursorVisible(true);
             }
         });
-        phone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                phone.setCursorVisible(false);
+                mPhone.setCursorVisible(false);
                 if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     InputMethodManager in =
                             (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    in.hideSoftInputFromWindow(phone.getApplicationWindowToken(),
+                    in.hideSoftInputFromWindow(mPhone.getApplicationWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 return false;
             }
         });
-        loginOrRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneStr = phone.getText().toString();
-                if (TextUtils.isEmpty(phoneStr)) {
-                    phone.setError(getString(R.string.phone_empty));
-                    return;
-                }
-                new AuthenticationTask().execute(phoneStr);
-            }
-        });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Global.apiService.getServerStatus().enqueue(new ApiCallback<Integer>(this, 200) {
-            @Override
-            public void handleSuccess(Integer result) {
-                if (result == Global.SERVER_STATUS_MAINTENANCE) {
-                    Global.errorManager.handleError(WelcomeActivity.this, ErrorManager.ERR_SERVER_MAINTENANCE);
-                }
-            }
-        });
-    }
+    public void commit(View view) {
+        final String phone = mPhone.getText().toString();
+        if (TextUtils.isEmpty(phone)) {
+            mPhone.setError(getString(R.string.phone_empty));
+            return;
+        }
 
-    private void setButtonText(@StringRes int resId, int counter) {
-        String text = getResources().getString(resId) + StringUtils.repeat('.', counter);
-        loginOrRegister.setText(text);
-    }
+        App.getProfile().setPhone(phone);
 
-    private class AuthenticationTask extends AsyncTask<String, Void, Void> {
+        final String token = App.getDataService().getToken(phone);
 
-        private Timer mTimer;
-        private int counter = 0;
+        if (token != null) {
 
-        @Override
-        protected Void doInBackground(String... params) {
-            mTimer = new Timer();
-            mTimer.scheduleAtFixedRate(new TimerTask() {
+            App.getProfile().setToken(token);
+
+            App.api().isTokenAvailable(token).enqueue(new ApiCallback<AvailabilityResult>() {
                 @Override
-                public void run() {
-                    counter = (counter + 1) % 4;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setButtonText(R.string.login_or_register, counter);
-                        }
-                    });
+                protected void handleSuccess(AvailabilityResult result) {
+                    if (result.isAvailable()) {
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        return;
+                    }
+
+                    Intent intent = new Intent(WelcomeActivity.this, VcodeActivity.class);
+                    intent.putExtra("phone", phone);
+                    intent.putExtra("type", VcodeActivity.TYPE_REFRESH_TOKEN);
+                    startActivity(intent);
                 }
-            }, 0, 1000);
-            Global.authenticationManager.authenticateCurrentUser(WelcomeActivity.this, params[0]);
-            return null;
+            });
+
+            return;
         }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            mTimer.cancel();
-            setButtonText(R.string.login_or_register, 0);
-        }
+
+        Intent intent = new Intent(WelcomeActivity.this, VcodeActivity.class);
+        intent.putExtra("phone", phone);
+        intent.putExtra("type", VcodeActivity.TYPE_REGISTER);
+        startActivity(intent);
+
     }
 }

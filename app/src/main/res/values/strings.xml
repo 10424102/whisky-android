@@ -13,55 +13,59 @@
     <string name="vcode_eula"><u>《玩在校园用户协议》</u></string>
     <string name="vcode_register">完成注册</string>
     <string name="vcode_login">验证登录</string>
+    <string name="vcode_failed">未能完成验证</string>
 
     <string name="tab_activities">活动</string>
     <string name="tab_matches">战况</string>
     <string name="tab_messages">消息</string>
     <string name="tab_profile">我</string>
 
+
     <string name="profile_activities">活动</string>
     <string name="profile_matches">战况</string>
     <string name="profile_info">资料</string>
     <string name="profile_posts">秀</string>
     <string name="profile_photos">照片</string>
-    <string name="profile_signature">心情</string>
-    <string name="profile_signature_hint">此时此刻你是怎样的心情？</string>
-    <string name="profile_hometown">家乡</string>
-    <string name="profile_hometown_hint">今天的老乡是什么颜色？</string>
-    <string name="profile_highschool">高中</string>
-    <string name="profile_highschool_hint">还记得大明湖畔的夏雨荷吗？</string>
-    <string name="profile_username">用户名</string>
-    <string name="profile_username_hint">来起一个独一无二的用户名吧！</string>
-    <string name="profile_phone">手机</string>
-    <string name="profile_phone_hint">居然没有手机号，不科学 &gt;_&lt; </string>
-    <string name="profile_email">电子邮箱</string>
-    <string name="profile_email_hint">据说填了邮箱的人找回账号更方便</string>
-    <string name="profile_age">年龄</string>
-    <string name="profile_age_hint">这个数值其实是计算出来的，哈哈~</string>
-    <string name="profile_birthday">生日</string>
-    <string name="profile_birthday_hint">填写生日来寻找一些同龄人吧!</string>
-    <string name="profile_constellation">星座</string>
-    <string name="profile_constellation_hint">这个其实也是计算出来的 zz</string>
-    <string name="profile_gender">性别</string>
-    <string name="profile_gender_hint">选个性别呗 ~</string>
-    <string name="profile_college">大学</string>
-    <string name="profile_college_hint">今天的大学是什么颜色?</string>
-    <string name="profile_academy">学院</string>
-    <string name="profile_academy_hint">今天的学院是什么颜色?</string>
-    <string name="profile_grade">年级</string>
-    <string name="profile_grade_hint">难道你已经是毕业狗了吗？</string>
-    <string name="constellation_aries">白羊座</string>
-    <string name="constellation_taurus">金牛座</string>
-    <string name="constellation_gemini">双子座</string>
-    <string name="constellation_cancer">巨蟹座</string>
-    <string name="constellation_leo">狮子座</string>
-    <string name="constellation_virgo">处女座</string>
-    <string name="constellation_libra">天平座</string>
-    <string name="constellation_scorpio">天蝎座</string>
-    <string name="constellation_sagittarius">射手座</string>
-    <string name="constellation_capricorn">魔蝎座</string>
-    <string name="constellation_aquarius">水平座</string>
-    <string name="constellation_pisces">双鱼座</string>
+
+    <string name="my_info_header">资料</string>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <string name="my_info_signature">心情</string>
+    <string name="my_info_signature_hint">此时此刻你是怎样的心情？</string>
+    <string name="my_info_hometown">家乡</string>
+    <string name="my_info_hometown_hint">今天的老乡是什么颜色？</string>
+    <string name="my_info_highschool">高中</string>
+    <string name="my_info_highschool_hint">还记得大明湖畔的夏雨荷吗？</string>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <string name="my_info_nickname">名字</string>
+    <string name="my_info_nickname_hint">填写你的中文昵称</string>
+    <string name="my_info_username">叉叉号</string>
+    <string name="my_info_username_hint">来起一个独一无二的用户名吧！</string>
+    <string name="my_info_gender">性别</string>
+    <string name="my_info_gender_hint">选个性别呗 ~</string>
+    <string name="my_info_age">年龄</string>
+    <string name="my_info_age_hint">这个数值其实是计算出来的，哈哈~</string>
+    <string name="my_info_constellation">星座</string>
+    <string name="my_info_constellation_hint">这个其实也是计算出来的 zz</string>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <string name="my_info_college">大学</string>
+    <string name="my_info_college_hint">今天的大学是什么颜色?</string>
+    <string name="my_info_academy">学院</string>
+    <string name="my_info_academy_hint">今天的学院是什么颜色?</string>
+    <string name="my_info_grade">年级</string>
+    <string name="my_info_grade_hint">难道你已经是毕业狗了吗？</string>
+
+    <string name="my_info_set_birthday">设置生日</string>
+
+    <string name="activity_details_signup">我要报名</string>
+    <string name="activity_details_start_time">开始时间: %1$s</string>
+    <string name="activity_details_end_time">结束时间: %1$s</string>
+    <string name="activity_details_reg_end_time">报名截止: %1$s</string>
+    <string name="activity_details_members">有 %1$s 位您关注的人参加</string>
+    <string name="activity_details_promoter">发起人</string>
+    <string name="activity_details_comments_left">评论 (%1$s)</string>
+    <string name="activity_details_comments_right">评论</string>
+    <string name="activity_details_show">大声秀出来</string>
+
 
     <string name="messages_comments">评论</string>
     <string name="messages_likes">赞</string>
@@ -70,17 +74,80 @@
     <string name="pref_server_address">debug_server_address</string>
     <string name="pref_user_token">auth_user_token</string>
 
+    <string name="ext_poll_vote">投票</string>
+
+    <string name="ext_dota2_match_result_evaluation">本场评分</string>
+
+    <string name="filter">筛选</string>
+
+    <string name="enum_dota2_match_type_ladder">天梯匹配</string>
+    <string name="enum_match_result_win">胜利</string>
+    <string name="enum_match_result_lose">失败</string>
+    <string name="enum_match_result_draw">平局</string>
+    <string name="enum_activities_category_school">校内活动</string>
+    <string name="enum_activities_category_friends">朋友的活动</string>
+    <string name="enum_activities_category_focuses">关注的人的活动</string>
+    <string name="enum_activities_category_recommendations">推荐活动</string>
+    <string name="enum_activity_type_civil_war">内战</string>
+    <string name="enum_activity_type_match">比赛</string>
+    <string name="enum_dota2_hero_anti_mage">敌法师</string>
+    <string name="enum_dota2_hero_axe">斧王</string>
+    <string name="enum_dota2_hero_bane">霍乱之源</string>
+    <string name="enum_dota2_hero_bloodseeker">嗜血狂魔</string>
+    <string name="enum_dota2_hero_crystal_maiden">水晶室女</string>
+    <string name="enum_dota2_hero_drow_ranger">卓尔游侠</string>
+    <string name="enum_dota2_hero_earthshaker">撼地者</string>
+    <string name="enum_dota2_hero_juggernaut">主宰</string>
+    <string name="enum_dota2_mirana">米拉娜</string>
+    <string name="enum_dota2_morphling">变体精灵</string>
+    <string name="enum_dota2_hero_shadow_fiend">影魔</string>
+    <string name="enum_dota2_hero_phantom_lancer">幻影长矛手</string>
+    <string name="enum_game_type_dota2">DOTA2</string>
+    <string name="enum_game_type_lol">英雄联盟</string>
+    <string name="enum_game_type_minecraft">我的世界</string>
+    <string name="enum_game_type_cs">反恐精英</string>
+    <string name="enum_game_type_cf">穿越火线</string>
+    <string name="enum_game_type_starcraft">星际争霸</string>
+    <string name="enum_game_type_warcraft">魔兽争霸</string>
+    <string name="enum_game_type_heartstone">炉石传说</string>
+    <string name="enum_game_type_wow">魔兽世界</string>
+    <string name="enum_gender_male">男</string>
+    <string name="enum_gender_female">女</string>
+    <string name="enum_gender_secret">保密</string>
+    <string name="enum_constellation_aries">白羊座</string>
+    <string name="enum_constellation_taurus">金牛座</string>
+    <string name="enum_constellation_gemini">双子座</string>
+    <string name="enum_constellation_cancer">巨蟹座</string>
+    <string name="enum_constellation_leo">狮子座</string>
+    <string name="enum_constellation_virgo">处女座</string>
+    <string name="enum_constellation_libra">天平座</string>
+    <string name="enum_constellation_scorpio">天蝎座</string>
+    <string name="enum_constellation_sagittarius">射手座</string>
+    <string name="enum_constellation_capricorn">魔蝎座</string>
+    <string name="enum_constellation_aquarius">水平座</string>
+    <string name="enum_constellation_pisces">双鱼座</string>
+    <string name="enum_match_posts_category_school">校内战况</string>
+    <string name="enum_match_posts_category_friends">朋友战况</string>
+    <string name="enum_match_posts_category_focuses">关注的人战况</string>
+
+
     <string name="alert_dialog_title">温馨提示</string>
     <string name="err_server_maintenance">系统服务器维护中，非常抱歉给您造成了不便，还请耐心等待。</string>
     <string name="err_network">非常抱歉，出现了一些网络问题，应用即将退出</string>
     <string name="err_init_retrofit">retrofit 程序模块初始化失败，应用即将退出</string>
     <string name="err_invoking_api">服务器 API 调用失败</string>
 
-    <string name="gender_male">男</string>
-    <string name="gender_female">女</string>
-    <string name="gender_secret">保密</string>
-    <string name="type_school">校内活动</string>
-    <string name="type_friends">好友参加的活动</string>
-    <string name="type_followings">关注的人参加的活动</string>
-    <string name="type_recommendations">推荐活动</string>
+
+    <string name="debug_image_hash">hash: %1$s</string>
+    <string name="debug_image_size">%1$d x %2$d</string>
+    <string name="debug_image_hits">hits: %1$d</string>
+
+    <string name="ic_material_menu">&#xf20e;</string>
+
+
+    <string name="activity_status_ready">活动未开始</string>
+    <string name="activity_status_signup">活动报名中</string>
+    <string name="activity_status_running">活动进行中</string>
+    <string name="activity_status_ended">活动已结束</string>
+
 </resources>

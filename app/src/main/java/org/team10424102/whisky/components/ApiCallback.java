@@ -1,8 +1,6 @@
 package org.team10424102.whisky.components;
 
-import android.content.Context;
-
-import org.team10424102.whisky.Global;
+import android.util.Log;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -12,12 +10,15 @@ import retrofit.Retrofit;
  * Created by yy on 11/13/15.
  */
 public class ApiCallback<T> implements Callback<T> {
-    private final int code;
-    private final Context mContext;
+    public static final String TAG = "ApiCallback";
+    private int code = 200;
 
-    public ApiCallback(Context context, int expectedHttpStatusCode) {
-        mContext = context;
+    public ApiCallback(int expectedHttpStatusCode) {
         code = expectedHttpStatusCode;
+    }
+
+    public ApiCallback() {
+
     }
 
     @Override
@@ -25,17 +26,23 @@ public class ApiCallback<T> implements Callback<T> {
         if (code == response.code() && response.body() != null) {
             handleSuccess(response.body());
         } else {
-            Global.errorManager.handleError(mContext, ErrorManager.ERR_INVOKING_API);
+            handleFailure(response, null);
         }
     }
 
-    public void handleSuccess(T result) {
-        // no-op;
+    protected void handleSuccess(T result) {
+    }
+
+    protected void handleFailure(Response response, Throwable t) {
+        Log.e(TAG, "API request failed.", t);
+        if (response != null) {
+            Log.e(TAG, String.format("Response[code = %d, body = %s]",
+                    response.code(), response.body().toString()));
+        }
     }
 
     @Override
     public void onFailure(Throwable t) {
-        Global.errorManager.handleError(mContext, ErrorManager.ERR_INVOKING_API);
-        // TODO retry
+        handleFailure(null, t);
     }
 }

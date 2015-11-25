@@ -24,8 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.team10424102.whisky.controllers.DebugActivity"
-            android:screenOrientation="portrait">
+            android:name=".dev.DebugActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -33,8 +34,7 @@
         </activity>
         <activity
             android:name="org.team10424102.whisky.controllers.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="org.team10424102.whisky.controllers.WelcomeActivity"
@@ -45,6 +45,9 @@
             android:name="org.team10424102.whisky.controllers.VcodeActivity"
             android:label="@string/vcode_title"
             android:screenOrientation="portrait"/>
+        <activity android:name=".controllers.ChooseCollegeActivity"/>
+        <activity android:name=".controllers.ActivitiesCreatingActivity"/>
+        <activity android:name=".controllers.ActivitiesDetailsActivity"/>
     </application>
 
 </manifest>

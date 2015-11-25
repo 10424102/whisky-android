@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="RtlHardcoded,TextFields">
+
+    <data>
+
+        <variable
+            name="profile"
+            type="org.team10424102.whisky.models.Profile"/>
+
+        <variable
+            name="handlers"
+            type="org.team10424102.whisky.controllers.MyInfoFragment.Handlers"/>
+    </data>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:text="@string/my_info_header"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editSignature}"
+                app:caption="@string/my_info_signature"
+                app:myIcon="@drawable/ic_pen"
+                app:onCommitListener="@{handlers.commitSignature}">
+
+                <EditText
+                    android:id="@+id/edit"
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.signature}"/>
+
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editHometown}"
+                app:caption="@string/my_info_hometown"
+                app:myIcon="@drawable/ic_home"
+                app:onCommitListener="@{handlers.commitHometown}">
+
+                <EditText
+                    android:id="@id/edit"
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.hometown}"/>
+
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editHighschool}"
+                app:caption="@string/my_info_highschool"
+                app:myIcon="@drawable/ic_building"
+                app:onCommitListener="@{handlers.commitHighschool}">
+
+                <EditText
+                    android:id="@id/edit"
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.highschool}"/>
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+
+            <!-- group 2 -->
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:onClick="@{handlers.editNickname}"
+                app:caption="@string/my_info_nickname"
+                app:onCommitListener="@{handlers.commitNickname}">
+
+                <EditText
+                    android:id="@id/edit"
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.nickname}"/>
+
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editUsername}"
+                app:caption="@string/my_info_username"
+                app:onCommitListener="@{handlers.commitUsername}">
+
+                <EditText
+                    android:id="@id/edit"
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.username}"/>
+
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editGender}"
+                app:caption="@string/my_info_gender"
+                app:onCommitListener="@{handlers.commitGender}">
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    app:enum="@{profile.gender}"/>
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editBirthday}"
+                app:caption="@string/my_info_age">
+
+                <TextView
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.age}"/>
+
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editBirthday}"
+                app:caption="@string/my_info_constellation">
+
+                <TextView
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.constellation}"/>
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+
+            <!-- group 3-->
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:onClick="@{handlers.editCollege}"
+                app:caption="@string/my_info_college">
+
+                <TextView
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.college}"/>
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editCollege}"
+                app:caption="@string/my_info_academy">
+
+                <TextView
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.academy}"/>
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+            <include layout="@layout/horizontal_divider"/>
+
+            <org.team10424102.whisky.ui.MyInfoItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handlers.editCollege}"
+                app:caption="@string/my_info_grade">
+
+                <TextView
+                    style="@style/MyInfoItemEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{profile.grade}"/>
+            </org.team10424102.whisky.ui.MyInfoItem>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</layout>

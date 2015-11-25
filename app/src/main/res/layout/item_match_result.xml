@@ -21,8 +21,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:orientation="horizontal"
             android:paddingTop="4dp">
 
@@ -30,7 +30,7 @@
                 android:id="@+id/likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_like"
+                android:drawableLeft="@drawable/ic_like_hollow"
                 android:drawablePadding="3dp"/>
 
             <TextView
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:drawableLeft="@drawable/ic_comment"
+                android:drawableLeft="@drawable/ic_comment_hollow"
                 android:drawablePadding="3dp"/>
 
         </LinearLayout>

@@ -1,7 +1,6 @@
 package org.team10424102.whisky.utils;
 
-import org.team10424102.whisky.Global;
-import org.team10424102.whisky.R;
+import org.team10424102.whisky.models.enums.EConstellation;
 import org.threeten.bp.MonthDay;
 
 import java.util.Calendar;
@@ -25,22 +24,22 @@ public class ConstellationUtils {
             MonthDay.of(11, 21),
             MonthDay.of(12, 21)
     };
-    public static int[] constellationResId = new int[]{
-            R.string.constellation_aquarius,
-            R.string.constellation_pisces,
-            R.string.constellation_aries,
-            R.string.constellation_taurus,
-            R.string.constellation_gemini,
-            R.string.constellation_cancer,
-            R.string.constellation_leo,
-            R.string.constellation_virgo,
-            R.string.constellation_libra,
-            R.string.constellation_scorpio,
-            R.string.constellation_sagittarius,
-            R.string.constellation_capricorn
+    public static EConstellation[] constellation = new EConstellation[]{
+            EConstellation.AQUARIUS,
+            EConstellation.PISCES,
+            EConstellation.ARIES,
+            EConstellation.TAURUS,
+            EConstellation.GEMINI,
+            EConstellation.CANCER,
+            EConstellation.LEO,
+            EConstellation.VIRGO,
+            EConstellation.LIBRA,
+            EConstellation.SCORPIO,
+            EConstellation.SAGITTARIUS,
+            EConstellation.CAPRICORN
     };
 
-    public static String getConstellation(Date date) {
+    public static EConstellation getConstellation(Date date) {
         if (date == null) return null;
         int begin = 0, end = 11, mid = 5;
         Calendar cal = Calendar.getInstance();
@@ -58,6 +57,6 @@ public class ConstellationUtils {
             }
             y = begin;
         }
-        return Global.context.getResources().getString(constellationResId[y]);
+        return constellation[y];
     }
 }

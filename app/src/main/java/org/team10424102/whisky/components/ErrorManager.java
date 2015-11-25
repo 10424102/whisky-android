@@ -8,15 +8,16 @@ import android.support.annotation.StringRes;
 
 import org.team10424102.whisky.R;
 
+import static org.team10424102.whisky.App.ERR_INIT_RETROFIT;
+import static org.team10424102.whisky.App.ERR_INVOKING_API;
+import static org.team10424102.whisky.App.ERR_NETWORK;
+import static org.team10424102.whisky.App.ERR_RENEW_TOKEN;
+import static org.team10424102.whisky.App.ERR_SERVER_MAINTENANCE;
+
 /**
  * Created by yy on 11/8/15.
  */
 public class ErrorManager {
-    public static final int ERR_RENEW_TOKEN = 1;
-    public static final int ERR_SERVER_MAINTENANCE = 2;
-    public static final int ERR_NETWORK = 3;
-    public static final int ERR_INIT_RETROFIT = 4;
-    public static final int ERR_INVOKING_API = 5;
 
     public void handleError(Context context, int err) {
         switch (err) {

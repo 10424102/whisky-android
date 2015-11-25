@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4a90e2</color>
-    <color name="colorPrimaryDark">#2067bc</color>
-    <color name="colorAccent">#cd20e1</color>
+
+    <!-- 基本色 -->
+    <color name="primary">#35343A</color>
+    <color name="primary_dark">#232226</color>
+    <color name="accent">#139645</color>
+
+    <!-- 通用色 -->
+    <color name="white">#fff</color>
+
+    <!-- Welcome 界面颜色 -->
     <color name="btnLoginPrimary">#33ffffff</color>
     <color name="btnLoginPressed">#4Dffffff</color>
     <color name="btnRegisterPrimary">#66ffffff</color>
     <color name="btnRegisterPressed">#80ffffff</color>
-    <color name="white">#fff</color>
+
+    <!-- 列表颜色 -->
+    <color name="list_background">#dedede</color>
     <color name="item_press_color">#D9D9D9</color>
-    <color name="transparent">#00000000</color>
-    <color name="background">#f0f0f0</color>
-    <color name="card_background">#fbfbfb</color>
+    <color name="item_background">#f5f5f5</color>
+    <color name="item_background_pressed">#c7d9ff</color>
+
+    <!-- 文字颜色 -->
     <color name="title">#c9c9c9</color>
     <color name="hint">#e7e7e7</color>
-    <color name="text">#000</color>
-    <color name="divide_line">#e7e7e7</color>
+    <color name="text">#111</color>
+    <color name="caption">#787878</color>
+
+    <color name="win">#26b626</color>
+    <color name="lose">#da2020</color>
+    <color name="post_content">#ababab</color>
 
 </resources>

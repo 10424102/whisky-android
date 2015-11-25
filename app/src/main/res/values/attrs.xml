@@ -4,4 +4,11 @@
         <attr name="gap" format="dimension"/>
         <attr name="lenght" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="MyInfoItem">
+        <attr name="myIcon" format="reference"/>
+        <attr name="caption" format="string"/>
+        <attr name="leftSpan" format="dimension"/>
+        <attr name="onCommit" format="string"/>
+    </declare-styleable>
 </resources>

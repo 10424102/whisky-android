@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="org.team10424102.whisky.models.extensions.dota2.EMatchResult"/>
+
+        <variable
+            name="result"
+            type="org.team10424102.whisky.models.extensions.dota2.Dota2MatchResult"/>
+    </data>
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:orientation="horizontal">
+
+        <!-- 左边竖线 -->
+        <View
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="#d1d1d1"/>
+
+        <!-- 右边内容 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1">
+
+                <!-- 英雄头像 -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/dummy_avatar"/>
+
+            </RelativeLayout>
+
+
+            <!-- 英雄名称 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                app:enum="@{result.hero}"/>
+
+            <!-- 评价 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <!-- A+ -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{result.evaluation}"
+                    android:textColor="#da2020"/>
+                <!-- 本场评分 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ext_dota2_match_result_evaluation"
+                    android:textColor="@color/post_content"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
+            <!-- 比赛类型 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                app:enum="@{result.type}"/>
+
+            <!-- 比赛结果 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <!-- 结果图标 -->
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@{result.result == EMatchResult.WIN ? @drawable/ic_win : @drawable/ic_lose}"/>
+
+                <!-- 胜利/失败 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@{result.result == EMatchResult.WIN ? @color/win : @color/lose}"
+                    android:textSize="11sp"
+                    app:enum="@{result.result}"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

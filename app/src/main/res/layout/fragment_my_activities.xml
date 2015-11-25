@@ -16,33 +16,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="10dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="参加的活动"/>
+                android:text="参加的活动"
+                android:textSize="14sp"/>
 
             <com.github.johnkil.print.PrintView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 app:iconColor="#4A90E2"
-                app:iconSize="24dp"
+                app:iconSize="20dp"
                 app:iconText="@string/ic_material_menu"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="筛选"
+                android:text="@string/filter"
                 android:textColor="#4A90E2"
-                android:textSize="15sp"/>
+                android:textSize="12sp"/>
+
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

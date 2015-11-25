@@ -1,23 +1,23 @@
 package org.team10424102.whisky.controllers;
 
 import android.content.Intent;
-import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
+import android.databinding.ObservableInt;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.team10424102.whisky.Global;
+import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.models.RefreshTokenResult;
-import org.team10424102.whisky.models.RegisterResult;
+import org.team10424102.whisky.components.TokenResult;
+import org.team10424102.whisky.databinding.ActivityVcodeBinding;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,99 +25,75 @@ import java.util.TimerTask;
 /**
  * Created by yy on 10/30/15.
  */
-public class VcodeActivity extends AppCompatActivity {
-    public static final int TYPE_LOGIN = 1;
+public class VcodeActivity extends BaseActivity {
+    public static final int TYPE_REFRESH_TOKEN = 1;
     public static final int TYPE_REGISTER = 2;
     public static final int COUNTDOWN_LENGTH = 60;
-    private static final String TAG = "WelcomeActivity";
+
     private String mPhone;
-    private TextView mHint;
     private TextView mCountdown;
-    private Button mConfirm;
     private EditText mVcode;
     private Timer mTimer;
-    private LinearLayout mRegisterLisenceBox;
+    private ObservableInt mCounter = new ObservableInt(COUNTDOWN_LENGTH);
 
-    private int mCounter = COUNTDOWN_LENGTH;
+    private void initToolbar(Toolbar toolbar) {
+        // 初始化 Toolbar
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayShowTitleEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(false);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vcode);
+        ActivityVcodeBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_vcode);
+
         Intent intent = getIntent();
         int type = intent.getIntExtra("type", TYPE_REGISTER);
         mPhone = getIntent().getStringExtra("phone");
-        mHint = (TextView) findViewById(R.id.vcode_hint);
-        mCountdown = (TextView) findViewById(R.id.countdown);
-        mConfirm = (Button) findViewById(R.id.confirm);
-        mVcode = (EditText) findViewById(R.id.vcode);
-        mRegisterLisenceBox = (LinearLayout) findViewById(R.id.register_lisence_box);
 
-        mHint.setText(String.format(getResources().getString(R.string.vcode_hint), mPhone));
+        mCountdown = binding.countdown;
+        mVcode = binding.vcode;
 
-        if (type == TYPE_LOGIN) {
-            mConfirm.setText(R.string.vcode_login);
-            mRegisterLisenceBox.setVisibility(View.GONE);
-            mConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mTimer.cancel();
-                    login();
-                }
-            });
-        } else {
-            mConfirm.setText(R.string.vcode_register);
-            mConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mTimer.cancel();
-                    register();
-                }
-            });
-        }
+        binding.setPhone(mPhone);
+        binding.setRegister(type == TYPE_REGISTER);
+        binding.setCounter(mCounter);
+
+        initToolbar(binding.toolbar);
+
 
     }
 
-    private void register() {
-        Global.apiService.register("86", mPhone, mVcode.getText().toString())
-                .enqueue(new ApiCallback<RegisterResult>(this, 200) {
+    public void comfirm(View view) {
+        mTimer.cancel();
+        App.api().getToken(mPhone, mVcode.getText().toString())
+                .enqueue(new ApiCallback<TokenResult>() {
                     @Override
-                    public void handleSuccess(RegisterResult result) {
-                        Global.currentUserPhone = mPhone;
-                        Global.currentUserToken = result.getToken();
-                        Global.dataManager.saveToken(Global.currentUserPhone, Global.currentUserToken);
-                        goToMainActivity();
+                    protected void handleSuccess(TokenResult result) {
+                        String phone = mPhone;
+                        String token = result.getToken();
+
+                        App.getProfile().setPhone(phone);
+                        App.getProfile().setToken(token);
+                        App.getDataService().saveToken(phone, token);
+
+                        Intent intent = new Intent(VcodeActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 });
-    }
-
-    private void login() {
-        Global.apiService.refreshToken("86", mPhone, mVcode.getText().toString())
-                .enqueue(new ApiCallback<RefreshTokenResult>(this, 200) {
-                    @Override
-                    public void handleSuccess(RefreshTokenResult result) {
-                        Global.currentUserPhone = mPhone;
-                        Global.currentUserToken = result.getToken();
-                        Global.dataManager.saveToken(Global.currentUserPhone, Global.currentUserToken);
-                        goToMainActivity();
-                    }
-                });
-    }
-
-    private void goToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Resources res = getResources();
-        final String countdownFormat = res.getString(R.string.vcode_countdown);
+
         final SpannableString resendText =
-                new SpannableString(res.getString(R.string.vcode_resend));
+                new SpannableString(getResources().getString(R.string.vcode_resend));
         resendText.setSpan(new UnderlineSpan(), 0, resendText.length(), 0);
-        mCountdown.setText(String.format(countdownFormat, mCounter));
+
+
         if (mTimer != null) {
             mTimer.cancel();
         }
@@ -125,13 +101,8 @@ public class VcodeActivity extends AppCompatActivity {
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (mCounter > 0) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mCountdown.setText(String.format(countdownFormat, mCounter));
-                        }
-                    });
+                if (mCounter.get() > 0) {
+                    mCounter.set(mCounter.get() - 1);
                 } else {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -141,7 +112,7 @@ public class VcodeActivity extends AppCompatActivity {
                         }
                     });
                 }
-                mCounter = mCounter - 1;
+
             }
         }, 1000, 1000);
     }
