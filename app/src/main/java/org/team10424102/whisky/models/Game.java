@@ -2,32 +2,30 @@ package org.team10424102.whisky.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.StringRes;
 
-import org.team10424102.whisky.models.enums.EGameType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Game implements Parcelable {
-    @StringRes
-    private int name;
-    private EGameType type;
+    private String name;
+    private String identifier;
     private LazyImage logo;
 
 
-
-    public int getName() {
+    @JsonProperty("localizedName")
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public EGameType getType() {
-        return type;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setType(EGameType type) {
-        this.type = type;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public LazyImage getLogo() {
@@ -39,10 +37,6 @@ public class Game implements Parcelable {
     }
 
 
-
-
-
-
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
@@ -52,17 +46,6 @@ public class Game implements Parcelable {
     /////////////////////////////////////////////////////////////////
 
 
-
-    public Game() {
-    }
-
-    protected Game(Parcel in) {
-        this.name = in.readInt();
-        int tmpType = in.readInt();
-        this.type = tmpType == -1 ? null : EGameType.values()[tmpType];
-        this.logo = in.readParcelable(LazyImage.class.getClassLoader());
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -70,12 +53,21 @@ public class Game implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.name);
-        dest.writeInt(this.type == null ? -1 : this.type.ordinal());
+        dest.writeString(this.name);
+        dest.writeString(this.identifier);
         dest.writeParcelable(this.logo, 0);
     }
 
-    public static final Parcelable.Creator<Game> CREATOR = new Parcelable.Creator<Game>() {
+    public Game() {
+    }
+
+    protected Game(Parcel in) {
+        this.name = in.readString();
+        this.identifier = in.readString();
+        this.logo = in.readParcelable(LazyImage.class.getClassLoader());
+    }
+
+    public static final Creator<Game> CREATOR = new Creator<Game>() {
         public Game createFromParcel(Parcel source) {
             return new Game(source);
         }

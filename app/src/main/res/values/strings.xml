@@ -102,15 +102,6 @@
     <string name="enum_dota2_morphling">变体精灵</string>
     <string name="enum_dota2_hero_shadow_fiend">影魔</string>
     <string name="enum_dota2_hero_phantom_lancer">幻影长矛手</string>
-    <string name="enum_game_type_dota2">DOTA2</string>
-    <string name="enum_game_type_lol">英雄联盟</string>
-    <string name="enum_game_type_minecraft">我的世界</string>
-    <string name="enum_game_type_cs">反恐精英</string>
-    <string name="enum_game_type_cf">穿越火线</string>
-    <string name="enum_game_type_starcraft">星际争霸</string>
-    <string name="enum_game_type_warcraft">魔兽争霸</string>
-    <string name="enum_game_type_heartstone">炉石传说</string>
-    <string name="enum_game_type_wow">魔兽世界</string>
     <string name="enum_gender_male">男</string>
     <string name="enum_gender_female">女</string>
     <string name="enum_gender_secret">保密</string>

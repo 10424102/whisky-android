@@ -3,6 +3,7 @@ package org.team10424102.whisky.components;
 import com.squareup.okhttp.Response;
 
 import org.team10424102.whisky.models.Activity;
+import org.team10424102.whisky.models.Game;
 import org.team10424102.whisky.models.Post;
 import org.team10424102.whisky.models.Profile;
 import org.team10424102.whisky.models.ServerHealth;
@@ -22,6 +23,7 @@ import retrofit.http.Query;
 
 import static org.team10424102.whisky.App.API_ACTIVITY;
 import static org.team10424102.whisky.App.API_AVAILABILITY;
+import static org.team10424102.whisky.App.API_GAME;
 import static org.team10424102.whisky.App.API_HEALTH;
 import static org.team10424102.whisky.App.API_TOKEN;
 import static org.team10424102.whisky.App.API_USER;
@@ -83,4 +85,7 @@ public interface ApiService {
 
     @DELETE(API_USER + "/friends/{id}")
     Call<Response> unfriendSomeone(@Path("category") long id);
+
+    @GET(API_GAME)
+    Call<Game> getGameInfo(@Path("identifier") String identifier);
 }

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.models.enums.EGameType;
 
 public class ActivitySliderView extends BaseSliderView {
 

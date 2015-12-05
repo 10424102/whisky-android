@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.models.enums.EActivityType;
-import org.team10424102.whisky.models.enums.EGameType;
 
 import java.util.Date;
 import java.util.List;

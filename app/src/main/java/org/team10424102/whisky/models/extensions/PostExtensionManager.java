@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.team10424102.whisky.models.Post;
-import org.team10424102.whisky.models.enums.EGameType;
 
 import java.io.IOException;
 import java.util.HashMap;
