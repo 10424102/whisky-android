@@ -7,30 +7,12 @@ import android.support.annotation.StringRes;
 import org.team10424102.whisky.models.enums.EGameType;
 
 public class Game implements Parcelable {
-
-    public static final Parcelable.Creator<Game> CREATOR = new Parcelable.Creator<Game>() {
-        public Game createFromParcel(Parcel source) {
-            return new Game(source);
-        }
-
-        public Game[] newArray(int size) {
-            return new Game[size];
-        }
-    };
     @StringRes
     private int name;
     private EGameType type;
     private LazyImage logo;
 
-    public Game() {
-    }
 
-    protected Game(Parcel in) {
-        this.name = in.readInt();
-        int tmpType = in.readInt();
-        this.type = tmpType == -1 ? null : EGameType.values()[tmpType];
-        this.logo = in.readParcelable(LazyImage.class.getClassLoader());
-    }
 
     public int getName() {
         return name;
@@ -56,6 +38,31 @@ public class Game implements Parcelable {
         this.logo = logo;
     }
 
+
+
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+
+
+    public Game() {
+    }
+
+    protected Game(Parcel in) {
+        this.name = in.readInt();
+        int tmpType = in.readInt();
+        this.type = tmpType == -1 ? null : EGameType.values()[tmpType];
+        this.logo = in.readParcelable(LazyImage.class.getClassLoader());
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -67,4 +74,14 @@ public class Game implements Parcelable {
         dest.writeInt(this.type == null ? -1 : this.type.ordinal());
         dest.writeParcelable(this.logo, 0);
     }
+
+    public static final Parcelable.Creator<Game> CREATOR = new Parcelable.Creator<Game>() {
+        public Game createFromParcel(Parcel source) {
+            return new Game(source);
+        }
+
+        public Game[] newArray(int size) {
+            return new Game[size];
+        }
+    };
 }

@@ -21,15 +21,7 @@ import java.util.List;
  * Created by yy on 11/4/15.
  */
 public class Profile extends BaseObservable implements Parcelable {
-    public static final Creator<Profile> CREATOR = new Creator<Profile>() {
-        public Profile createFromParcel(Parcel source) {
-            return new Profile(source);
-        }
 
-        public Profile[] newArray(int size) {
-            return new Profile[size];
-        }
-    };
     private String phone;
     private String username;
     private String email;
@@ -47,6 +39,10 @@ public class Profile extends BaseObservable implements Parcelable {
     private List<User> friends = new ArrayList<>();
     private List<User> fans = new ArrayList<>();
     private List<User> focuses = new ArrayList<>();
+    private String token;
+
+
+
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -55,32 +51,7 @@ public class Profile extends BaseObservable implements Parcelable {
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
-    private String token;
 
-    public Profile() {
-    }
-
-    protected Profile(Parcel in) {
-        this.phone = in.readString();
-        this.username = in.readString();
-        this.email = in.readString();
-        long tmpBirthday = in.readLong();
-        this.birthday = tmpBirthday == -1 ? null : new Date(tmpBirthday);
-        this.college = in.readString();
-        this.academy = in.readString();
-        this.grade = in.readString();
-        this.signature = in.readString();
-        this.hometown = in.readString();
-        this.highschool = in.readString();
-        this.avatar = in.readParcelable(LazyImage.class.getClassLoader());
-        this.background = in.readParcelable(LazyImage.class.getClassLoader());
-        int tmpGender = in.readInt();
-        this.gender = tmpGender == -1 ? null : EGender.values()[tmpGender];
-        this.nickname = in.readString();
-        this.friends = in.createTypedArrayList(User.CREATOR);
-        this.fans = in.createTypedArrayList(User.CREATOR);
-        this.focuses = in.createTypedArrayList(User.CREATOR);
-    }
 
     @Bindable
     public String getUsername() {
@@ -241,22 +212,18 @@ public class Profile extends BaseObservable implements Parcelable {
         return token;
     }
 
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                     Object Override                         //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
+
 
     public void setToken(String token) {
         this.token = token;
     }
 
+
+
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        Parcelable                           //
+    //                          Others                             //
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
@@ -283,11 +250,62 @@ public class Profile extends BaseObservable implements Parcelable {
         return null;
     }
 
+
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                     Object Override                         //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
     @Override
     public String toString() {
         return String.format("个人资料 (用户名 = %s, 昵称 = %s, 手机号 = %s)",
                 getUsername(), getNickname(), getPhone());
     }
+
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+
+    public Profile() {
+    }
+
+    protected Profile(Parcel in) {
+        this.phone = in.readString();
+        this.username = in.readString();
+        this.email = in.readString();
+        long tmpBirthday = in.readLong();
+        this.birthday = tmpBirthday == -1 ? null : new Date(tmpBirthday);
+        this.college = in.readString();
+        this.academy = in.readString();
+        this.grade = in.readString();
+        this.signature = in.readString();
+        this.hometown = in.readString();
+        this.highschool = in.readString();
+        this.avatar = in.readParcelable(LazyImage.class.getClassLoader());
+        this.background = in.readParcelable(LazyImage.class.getClassLoader());
+        int tmpGender = in.readInt();
+        this.gender = tmpGender == -1 ? null : EGender.values()[tmpGender];
+        this.nickname = in.readString();
+        this.friends = in.createTypedArrayList(User.CREATOR);
+        this.fans = in.createTypedArrayList(User.CREATOR);
+        this.focuses = in.createTypedArrayList(User.CREATOR);
+    }
+
+
 
     @Override
     public int describeContents() {
@@ -314,4 +332,15 @@ public class Profile extends BaseObservable implements Parcelable {
         dest.writeTypedList(fans);
         dest.writeTypedList(focuses);
     }
+
+
+    public static final Creator<Profile> CREATOR = new Creator<Profile>() {
+        public Profile createFromParcel(Parcel source) {
+            return new Profile(source);
+        }
+
+        public Profile[] newArray(int size) {
+            return new Profile[size];
+        }
+    };
 }

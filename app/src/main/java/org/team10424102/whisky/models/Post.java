@@ -11,15 +11,7 @@ import org.team10424102.whisky.models.extensions.PostExtensionData;
 import java.util.Date;
 
 public class Post extends BaseObservable implements Parcelable {
-    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
-        public Post createFromParcel(Parcel source) {
-            return new Post(source);
-        }
 
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
     private Long id;
     private String content;
     private String device;
@@ -28,6 +20,11 @@ public class Post extends BaseObservable implements Parcelable {
     private PostExtensionData extension;
     private int gameLogo;
     private int likes;
+    private int comments;
+
+
+
+
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -36,23 +33,6 @@ public class Post extends BaseObservable implements Parcelable {
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
-    private int comments;
-
-    public Post() {
-    }
-
-    protected Post(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.content = in.readString();
-        this.device = in.readString();
-        long tmpCreationTime = in.readLong();
-        this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
-        this.sender = in.readParcelable(User.class.getClassLoader());
-        this.extension = in.readParcelable(PostExtensionData.class.getClassLoader());
-        this.gameLogo = in.readInt();
-        this.likes = in.readInt();
-        this.comments = in.readInt();
-    }
 
     public Long getId() {
         return id;
@@ -116,14 +96,6 @@ public class Post extends BaseObservable implements Parcelable {
     }
 
 
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                     Object Override                         //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
     public void setComments(int comments) {
         this.comments = comments;
     }
@@ -137,13 +109,17 @@ public class Post extends BaseObservable implements Parcelable {
     }
 
 
+
+
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        Parcelable                           //
+    //                     Object Override                         //
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
+
+
 
     @Override
     public String toString() {
@@ -166,6 +142,33 @@ public class Post extends BaseObservable implements Parcelable {
         return id != null ? id.hashCode() : 0;
     }
 
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+
+    public Post() {
+    }
+
+    protected Post(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.content = in.readString();
+        this.device = in.readString();
+        long tmpCreationTime = in.readLong();
+        this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
+        this.sender = in.readParcelable(User.class.getClassLoader());
+        this.extension = in.readParcelable(PostExtensionData.class.getClassLoader());
+        this.gameLogo = in.readInt();
+        this.likes = in.readInt();
+        this.comments = in.readInt();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -183,4 +186,14 @@ public class Post extends BaseObservable implements Parcelable {
         dest.writeInt(this.likes);
         dest.writeInt(this.comments);
     }
+
+    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
+        public Post createFromParcel(Parcel source) {
+            return new Post(source);
+        }
+
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 }

@@ -8,31 +8,20 @@ import android.os.Parcelable;
  * Created by yy on 11/14/15.
  */
 public class User extends BaseObservable implements Parcelable {
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        public User createFromParcel(Parcel source) {
-            return new User(source);
-        }
 
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
     private Long id;
     private LazyImage avatar;
     private String username;
     private String nickname;
     private String signature;
 
-    public User() {
-    }
-
-    protected User(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.avatar = in.readParcelable(LazyImage.class.getClassLoader());
-        this.username = in.readString();
-        this.nickname = in.readString();
-        this.signature = in.readString();
-    }
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        GET & SET                            //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
 
     public Long getId() {
         return id;
@@ -79,6 +68,18 @@ public class User extends BaseObservable implements Parcelable {
         this.nickname = nickname;
     }
 
+
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                     Object Override                         //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
     @Override
     public String toString() {
         return String.format("用户 (编号 = %d, 名字: %s)", getId(), getDisplayName());
@@ -100,9 +101,31 @@ public class User extends BaseObservable implements Parcelable {
         return id != null ? id.hashCode() : 0;
     }
 
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public User() {
+    }
+
+    protected User(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.avatar = in.readParcelable(LazyImage.class.getClassLoader());
+        this.username = in.readString();
+        this.nickname = in.readString();
+        this.signature = in.readString();
     }
 
     @Override
@@ -113,4 +136,15 @@ public class User extends BaseObservable implements Parcelable {
         dest.writeString(this.nickname);
         dest.writeString(this.signature);
     }
+
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

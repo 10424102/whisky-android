@@ -10,17 +10,15 @@ import org.team10424102.whisky.App;
  * Created by yy on 11/14/15.
  */
 public class LazyImage extends BaseObservable implements Parcelable {
-    public static final Creator<LazyImage> CREATOR = new Creator<LazyImage>() {
-        public LazyImage createFromParcel(Parcel source) {
-            return new LazyImage(source);
-        }
 
-        public LazyImage[] newArray(int size) {
-            return new LazyImage[size];
-        }
-    };
     private String accessToken;
     private String hash;
+
+
+
+    public LazyImage(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
 
     /////////////////////////////////////////////////////////////////
@@ -32,17 +30,6 @@ public class LazyImage extends BaseObservable implements Parcelable {
     /////////////////////////////////////////////////////////////////
 
 
-    public LazyImage(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public LazyImage() {
-    }
-
-    protected LazyImage(Parcel in) {
-        this.accessToken = in.readString();
-        this.hash = in.readString();
-    }
 
     public String getAccessToken() {
         return accessToken;
@@ -52,14 +39,6 @@ public class LazyImage extends BaseObservable implements Parcelable {
         this.accessToken = accessToken;
     }
 
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                     Object Override                         //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
 
     public String getHash() {
         return hash;
@@ -74,13 +53,17 @@ public class LazyImage extends BaseObservable implements Parcelable {
     }
 
 
+
+
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        Parcelable                           //
+    //                     Object Override                         //
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
+
+
 
     @Override
     public String toString() {
@@ -103,6 +86,28 @@ public class LazyImage extends BaseObservable implements Parcelable {
         return hash != null ? hash.hashCode() : 0;
     }
 
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+
+
+
+    protected LazyImage(Parcel in) {
+        this.accessToken = in.readString();
+        this.hash = in.readString();
+    }
+
+    public LazyImage() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -113,4 +118,15 @@ public class LazyImage extends BaseObservable implements Parcelable {
         dest.writeString(this.accessToken);
         dest.writeString(this.hash);
     }
+
+
+    public static final Creator<LazyImage> CREATOR = new Creator<LazyImage>() {
+        public LazyImage createFromParcel(Parcel source) {
+            return new LazyImage(source);
+        }
+
+        public LazyImage[] newArray(int size) {
+            return new LazyImage[size];
+        }
+    };
 }

@@ -10,27 +10,19 @@ import java.util.List;
  * Created by yy on 11/14/15.
  */
 public class UserGroup extends BaseObservable implements Parcelable {
-    public static final Creator<UserGroup> CREATOR = new Creator<UserGroup>() {
-        public UserGroup createFromParcel(Parcel source) {
-            return new UserGroup(source);
-        }
 
-        public UserGroup[] newArray(int size) {
-            return new UserGroup[size];
-        }
-    };
     private Long id;
     private String name;
     private List<User> members;
 
-    public UserGroup() {
-    }
 
-    protected UserGroup(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.name = in.readString();
-        this.members = in.createTypedArrayList(User.CREATOR);
-    }
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        GET & SET                            //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
 
     public Long getId() {
         return id;
@@ -56,6 +48,17 @@ public class UserGroup extends BaseObservable implements Parcelable {
         this.members = members;
     }
 
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                     Object Override                         //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
     @Override
     public String toString() {
         return String.format("用户组 (编号 = %d, 组名 = %s)", getId(), getName());
@@ -77,6 +80,29 @@ public class UserGroup extends BaseObservable implements Parcelable {
         return id != null ? id.hashCode() : 0;
     }
 
+
+
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+
+    public UserGroup() {
+    }
+
+    protected UserGroup(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.members = in.createTypedArrayList(User.CREATOR);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -88,4 +114,14 @@ public class UserGroup extends BaseObservable implements Parcelable {
         dest.writeString(this.name);
         dest.writeTypedList(members);
     }
+
+    public static final Creator<UserGroup> CREATOR = new Creator<UserGroup>() {
+        public UserGroup createFromParcel(Parcel source) {
+            return new UserGroup(source);
+        }
+
+        public UserGroup[] newArray(int size) {
+            return new UserGroup[size];
+        }
+    };
 }
