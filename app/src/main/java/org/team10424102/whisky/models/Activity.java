@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.models.enums.EActivityType;
-import org.team10424102.whisky.models.enums.EGameType;
 
 import java.util.Date;
 import java.util.List;
@@ -44,6 +43,7 @@ public class Activity extends BaseObservable implements Parcelable {
     private User promoter;
     private Game game;
     private List<User> members;
+    private List<Post> comments;
 
 
     /////////////////////////////////////////////////////////////////
@@ -53,34 +53,7 @@ public class Activity extends BaseObservable implements Parcelable {
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
-    private List<Post> comments;
 
-    public Activity() {
-    }
-
-    protected Activity(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.title = in.readString();
-        this.content = in.readString();
-        this.location = in.readString();
-        long tmpStartTime = in.readLong();
-        this.startTime = tmpStartTime == -1 ? null : new Date(tmpStartTime);
-        long tmpEndTime = in.readLong();
-        this.endTime = tmpEndTime == -1 ? null : new Date(tmpEndTime);
-        long tmpRegistrationDeadline = in.readLong();
-        this.registrationDeadline = tmpRegistrationDeadline == -1 ? null : new Date(tmpRegistrationDeadline);
-        long tmpCreationTime = in.readLong();
-        this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
-        this.cover = in.readParcelable(LazyImage.class.getClassLoader());
-        this.photos = in.createTypedArrayList(LazyImage.CREATOR);
-        int tmpType = in.readInt();
-        this.type = tmpType == -1 ? null : EActivityType.values()[tmpType];
-        this.group = in.readParcelable(UserGroup.class.getClassLoader());
-        this.promoter = in.readParcelable(User.class.getClassLoader());
-        this.game = in.readParcelable(Game.class.getClassLoader());
-        this.members = in.createTypedArrayList(User.CREATOR);
-        this.comments = in.createTypedArrayList(Post.CREATOR);
-    }
 
     public Long getId() {
         return id;
@@ -206,14 +179,6 @@ public class Activity extends BaseObservable implements Parcelable {
         this.members = members;
     }
 
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                       View Getters                          //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
     public List<Post> getComments() {
         return comments;
     }
@@ -226,7 +191,7 @@ public class Activity extends BaseObservable implements Parcelable {
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
-    //                     Object Override                         //
+    //                         Others                              //
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
@@ -251,14 +216,14 @@ public class Activity extends BaseObservable implements Parcelable {
         return 0;
     }
 
-
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        Parcelable                           //
+    //                     Object Override                         //
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
+
 
     @Override
     public boolean equals(Object o) {
@@ -280,6 +245,45 @@ public class Activity extends BaseObservable implements Parcelable {
     public String toString() {
         return String.format("活动 (编号 = %d, 标题 = %s)", getId(), getTitle());
     }
+
+
+
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                        Parcelable                           //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+    public Activity() {
+    }
+
+    protected Activity(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.title = in.readString();
+        this.content = in.readString();
+        this.location = in.readString();
+        long tmpStartTime = in.readLong();
+        this.startTime = tmpStartTime == -1 ? null : new Date(tmpStartTime);
+        long tmpEndTime = in.readLong();
+        this.endTime = tmpEndTime == -1 ? null : new Date(tmpEndTime);
+        long tmpRegistrationDeadline = in.readLong();
+        this.registrationDeadline = tmpRegistrationDeadline == -1 ? null : new Date(tmpRegistrationDeadline);
+        long tmpCreationTime = in.readLong();
+        this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
+        this.cover = in.readParcelable(LazyImage.class.getClassLoader());
+        this.photos = in.createTypedArrayList(LazyImage.CREATOR);
+        int tmpType = in.readInt();
+        this.type = tmpType == -1 ? null : EActivityType.values()[tmpType];
+        this.group = in.readParcelable(UserGroup.class.getClassLoader());
+        this.promoter = in.readParcelable(User.class.getClassLoader());
+        this.game = in.readParcelable(Game.class.getClassLoader());
+        this.members = in.createTypedArrayList(User.CREATOR);
+        this.comments = in.createTypedArrayList(Post.CREATOR);
+    }
+
 
     @Override
     public int describeContents() {

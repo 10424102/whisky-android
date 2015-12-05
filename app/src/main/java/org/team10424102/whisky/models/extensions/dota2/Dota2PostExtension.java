@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.databinding.ExtDota2MatchResultBinding;
-import org.team10424102.whisky.models.enums.EGameType;
 import org.team10424102.whisky.models.extensions.GamePostExtension;
 import org.team10424102.whisky.models.extensions.PostExtension;
 import org.team10424102.whisky.models.extensions.PostExtensionIdentifier;

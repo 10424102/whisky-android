@@ -25,6 +25,10 @@ import org.team10424102.whisky.components.ApiService;
 import org.team10424102.whisky.components.AuthService;
 import org.team10424102.whisky.components.DataService;
 import org.team10424102.whisky.components.ErrorManager;
+import org.team10424102.whisky.components.GameManager;
+import org.team10424102.whisky.components.LocalizationInterceptor;
+import org.team10424102.whisky.components.LoggingInterceptor;
+import org.team10424102.whisky.models.Game;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.Profile;
 import org.team10424102.whisky.models.enums.AndroidStringResourceProvided;
@@ -34,6 +38,7 @@ import org.team10424102.whisky.models.extensions.PostExtensionManager;
 import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtension;
 import org.team10424102.whisky.models.extensions.image.ImagePostExtension;
 import org.team10424102.whisky.models.extensions.poll.PollPostExtension;
+import org.team10424102.whisky.models.mapping.GameDeserializer;
 import org.team10424102.whisky.models.mapping.LazyImageDeserializer;
 import org.team10424102.whisky.models.mapping.LazyImageSerializer;
 import org.team10424102.whisky.utils.DimensionUtils;
@@ -64,6 +69,7 @@ public class App extends Application {
     public static final String API_IMAGE = "/api/image";
     public static final String API_HEALTH = "/health";
     public static final String API_ACTIVITY = "/api/activity";
+    public static final String API_GAME = "/api/game";
 
     public static final String PREF_SERVER_ADDRESS = "server_address";
     public static final String PREF_LOG_FILE_NAME_PREFIX = "log_file_name_prefix";
@@ -95,6 +101,79 @@ public class App extends Application {
     private static OkHttpClient httpClient;
     private static String host;
     private static HashMap<String, String> countryRules;
+
+
+
+    private GameManager mGameManager;
+
+
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
+
+        // Icon font
+        PrintConfig.initDefault(getAssets(), "ionicons.woff");
+
+        // JSR-310
+        AndroidThreeTen.init(this);
+
+        context = getApplicationContext();
+
+        errorManager = new ErrorManager();
+        dataService = new DataService(context);
+        authManager = new AuthService(dataService);
+        postExtensionManager = new PostExtensionManager();
+        postExtensionManager.registerPostExtension(new Dota2PostExtension());
+        postExtensionManager.registerPostExtension(new ImagePostExtension());
+        postExtensionManager.registerPostExtension(new PollPostExtension());
+        DimensionUtils.init(context);
+
+
+        // OkHttpClient
+        httpClient = new OkHttpClient();
+        httpClient.interceptors().add(new ApiAuthInterceptor());
+        httpClient.interceptors().add(new LocalizationInterceptor(context));
+        httpClient.interceptors().add(new LoggingInterceptor());
+
+        // Picasso
+        picasso = new Picasso.Builder(context).downloader(new OkHttpDownloader(httpClient)).build();
+
+
+
+
+        mGameManager = new GameManager(apiService);
+
+
+
+
+        // ObjectMapper
+        objectMapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        //module.addDeserializer(Profile.class, new ProfileDeserializer());
+        module.addSerializer(LazyImage.class, new LazyImageSerializer());
+        module.addDeserializer(LazyImage.class, new LazyImageDeserializer());
+        module.addDeserializer(PostExtensionData.class, new PostExtensionDeserializer());
+        module.addDeserializer(Game.class, new GameDeserializer(mGameManager));
+        objectMapper.registerModule(module);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+
+//        SharedPreferences pref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+//        String serverAddress = pref.getString(PREF_SERVER_ADDRESS, DEFAULT_SERVER_ADDRESS);
+//        initRetrofit(serverAddress);
+
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        dataService.closeDatabase();
+        //SMSSDK.unregisterAllEventHandler();
+    }
+
 
     public static void initRetrofit(String serverAddress) {
         host = "http://" + serverAddress;
@@ -256,63 +335,5 @@ public class App extends Application {
     public static PostExtensionManager getPostExtensionManager() {
         return postExtensionManager;
     }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-
-        // Icon font
-        PrintConfig.initDefault(getAssets(), "ionicons.woff");
-
-        // JSR-310
-        AndroidThreeTen.init(this);
-
-        context = getApplicationContext();
-
-        errorManager = new ErrorManager();
-        dataService = new DataService(context);
-        authManager = new AuthService(dataService);
-        postExtensionManager = new PostExtensionManager();
-        postExtensionManager.registerPostExtension(new Dota2PostExtension());
-        postExtensionManager.registerPostExtension(new ImagePostExtension());
-        postExtensionManager.registerPostExtension(new PollPostExtension());
-        DimensionUtils.init(context);
-
-
-        // OkHttpClient
-        ApiAuthInterceptor interceptor = new ApiAuthInterceptor();
-
-        httpClient = new OkHttpClient();
-        httpClient.interceptors().add(interceptor);
-
-        // Picasso
-        picasso = new Picasso.Builder(context).downloader(new OkHttpDownloader(httpClient)).build();
-
-
-        // ObjectMapper
-        objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        //module.addDeserializer(Profile.class, new ProfileDeserializer());
-        module.addSerializer(LazyImage.class, new LazyImageSerializer());
-        module.addDeserializer(LazyImage.class, new LazyImageDeserializer());
-        module.addDeserializer(PostExtensionData.class, new PostExtensionDeserializer());
-        objectMapper.registerModule(module);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-
-//        SharedPreferences pref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-//        String serverAddress = pref.getString(PREF_SERVER_ADDRESS, DEFAULT_SERVER_ADDRESS);
-//        initRetrofit(serverAddress);
-
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        dataService.closeDatabase();
-        //SMSSDK.unregisterAllEventHandler();
-    }
-
 
 }

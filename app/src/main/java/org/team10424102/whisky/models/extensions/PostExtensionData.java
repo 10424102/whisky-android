@@ -4,26 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PostExtensionData implements Parcelable {
-    public static final Parcelable.Creator<PostExtensionData> CREATOR = new Parcelable.Creator<PostExtensionData>() {
-        public PostExtensionData createFromParcel(Parcel source) {
-            return new PostExtensionData(source);
-        }
 
-        public PostExtensionData[] newArray(int size) {
-            return new PostExtensionData[size];
-        }
-    };
     public String id;
     public Parcelable data;
 
     public PostExtensionData(String id, Parcelable data) {
         this.id = id;
         this.data = data;
-    }
-
-    protected PostExtensionData(Parcel in) {
-        this.id = in.readString();
-        this.data = in.readParcelable(Parcelable.class.getClassLoader());
     }
 
     public String getId() {
@@ -34,6 +21,14 @@ public class PostExtensionData implements Parcelable {
         this.id = id;
     }
 
+    public Parcelable getData() {
+        return data;
+    }
+
+    public void setData(Parcelable data) {
+        this.data = data;
+    }
+
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
@@ -42,13 +37,11 @@ public class PostExtensionData implements Parcelable {
     //                                                             //
     /////////////////////////////////////////////////////////////////
 
-    public Parcelable getData() {
-        return data;
+    protected PostExtensionData(Parcel in) {
+        this.id = in.readString();
+        this.data = in.readParcelable(Parcelable.class.getClassLoader());
     }
 
-    public void setData(Parcelable data) {
-        this.data = data;
-    }
 
     @Override
     public int describeContents() {
@@ -60,4 +53,14 @@ public class PostExtensionData implements Parcelable {
         dest.writeString(this.id);
         dest.writeParcelable(this.data, 0);
     }
+
+    public static final Parcelable.Creator<PostExtensionData> CREATOR = new Parcelable.Creator<PostExtensionData>() {
+        public PostExtensionData createFromParcel(Parcel source) {
+            return new PostExtensionData(source);
+        }
+
+        public PostExtensionData[] newArray(int size) {
+            return new PostExtensionData[size];
+        }
+    };
 }
