@@ -95,7 +95,8 @@ public class DebugActivity extends BaseActivity {
         editor.putString(PREF_SERVER_ADDRESS, serverAddr);
         editor.apply();
 
-        App.changeServerAddress(serverAddr);
+
+        ((App)getApplication()).changeServerAddress(serverAddr);
 
         App.api().getServerHealth().enqueue(new ApiCallback<ServerHealth>() {
             @Override

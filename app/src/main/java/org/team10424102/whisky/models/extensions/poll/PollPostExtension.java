@@ -16,6 +16,7 @@ import org.team10424102.whisky.R;
 import org.team10424102.whisky.databinding.ExtPollBinding;
 import org.team10424102.whisky.models.extensions.PostExtension;
 import org.team10424102.whisky.models.extensions.PostExtensionIdentifier;
+import org.team10424102.whisky.models.extensions.RelatedGame;
 
 import java.util.Arrays;
 

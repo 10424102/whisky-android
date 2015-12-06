@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.databinding.FragmentMyInfo2Binding;
+import org.team10424102.whisky.databinding.FragmentMyInfoBinding;
 import org.team10424102.whisky.models.Profile;
 import org.team10424102.whisky.ui.MyInfoItem;
 
@@ -31,7 +31,7 @@ public class MyInfoFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final FragmentMyInfo2Binding binding = FragmentMyInfo2Binding.inflate(inflater, container, false);
+        final FragmentMyInfoBinding binding = FragmentMyInfoBinding.inflate(inflater, container, false);
         final Profile profile = getArguments().getParcelable(ARG_PROFILE);
         binding.setProfile(profile);
         binding.setHandlers(handlers);

@@ -8,6 +8,7 @@ import android.support.annotation.StringRes;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.models.enums.EActivityType;
 
@@ -196,13 +197,6 @@ public class Activity extends BaseObservable implements Parcelable {
     //                                                             //
     /////////////////////////////////////////////////////////////////
 
-    @JsonSetter("game")
-    public void setGameByType(EGameType type) {
-        game = new Game();
-        game.setName(type.getStringResId());
-        game.setType(type);
-    }
-
     @StringRes
     public int getStatus() {
         Date now = new Date();
@@ -214,6 +208,11 @@ public class Activity extends BaseObservable implements Parcelable {
 
     public int getFocusedMemberCount() {
         return 0;
+    }
+
+    @JsonSetter("game")
+    public void setGameByIdentifier(String identifier) {
+        this.game =  App.getInstance().getGameManager().getGame(identifier);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -245,8 +244,6 @@ public class Activity extends BaseObservable implements Parcelable {
     public String toString() {
         return String.format("活动 (编号 = %d, 标题 = %s)", getId(), getTitle());
     }
-
-
 
 
     /////////////////////////////////////////////////////////////////

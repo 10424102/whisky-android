@@ -87,5 +87,5 @@ public interface ApiService {
     Call<Response> unfriendSomeone(@Path("category") long id);
 
     @GET(API_GAME)
-    Call<Game> getGameInfo(@Path("identifier") String identifier);
+    Call<Game> getGameInfo(@Query("identifier") String identifier);
 }

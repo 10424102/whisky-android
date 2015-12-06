@@ -14,8 +14,6 @@ public class LazyImage extends BaseObservable implements Parcelable {
     private String accessToken;
     private String hash;
 
-
-
     public LazyImage(String accessToken) {
         this.accessToken = accessToken;
     }
@@ -47,13 +45,6 @@ public class LazyImage extends BaseObservable implements Parcelable {
     public void setHash(String hash) {
         this.hash = hash;
     }
-
-    public String url() {
-        return App.getImageUrl(this);
-    }
-
-
-
 
     /////////////////////////////////////////////////////////////////
     //                                                             //

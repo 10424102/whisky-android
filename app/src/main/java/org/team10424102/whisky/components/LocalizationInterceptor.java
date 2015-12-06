@@ -16,7 +16,7 @@ public class LocalizationInterceptor implements Interceptor {
 
     public LocalizationInterceptor(Context context) {
         Locale locale = context.getResources().getConfiguration().locale;
-        mLocale = locale.getDisplayName();
+        mLocale = locale.toString();
     }
 
     @Override

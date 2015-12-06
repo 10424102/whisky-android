@@ -18,7 +18,7 @@ public class Post extends BaseObservable implements Parcelable {
     private Date creationTime;
     private User sender;
     private PostExtensionData extension;
-    private int gameLogo;
+    private Game game;
     private int likes;
     private int comments;
 
@@ -75,12 +75,12 @@ public class Post extends BaseObservable implements Parcelable {
         this.sender = sender;
     }
 
-    public int getGameLogo() {
-        return gameLogo;
+    public Game getGame() {
+        return game;
     }
 
-    public void setGameLogo(int gameLogo) {
-        this.gameLogo = gameLogo;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     public int getLikes() {
@@ -152,23 +152,6 @@ public class Post extends BaseObservable implements Parcelable {
     //                                                             //
     /////////////////////////////////////////////////////////////////
 
-
-    public Post() {
-    }
-
-    protected Post(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.content = in.readString();
-        this.device = in.readString();
-        long tmpCreationTime = in.readLong();
-        this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
-        this.sender = in.readParcelable(User.class.getClassLoader());
-        this.extension = in.readParcelable(PostExtensionData.class.getClassLoader());
-        this.gameLogo = in.readInt();
-        this.likes = in.readInt();
-        this.comments = in.readInt();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -181,13 +164,29 @@ public class Post extends BaseObservable implements Parcelable {
         dest.writeString(this.device);
         dest.writeLong(creationTime != null ? creationTime.getTime() : -1);
         dest.writeParcelable(this.sender, 0);
-        dest.writeParcelable(this.extension, flags);
-        dest.writeInt(this.gameLogo);
+        dest.writeParcelable(this.extension, 0);
+        dest.writeParcelable(this.game, 0);
         dest.writeInt(this.likes);
         dest.writeInt(this.comments);
     }
 
-    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
+    public Post() {
+    }
+
+    protected Post(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.content = in.readString();
+        this.device = in.readString();
+        long tmpCreationTime = in.readLong();
+        this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
+        this.sender = in.readParcelable(User.class.getClassLoader());
+        this.extension = in.readParcelable(PostExtensionData.class.getClassLoader());
+        this.game = in.readParcelable(Game.class.getClassLoader());
+        this.likes = in.readInt();
+        this.comments = in.readInt();
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
         public Post createFromParcel(Parcel source) {
             return new Post(source);
         }

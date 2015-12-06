@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="imageUrl"
-            type="String"/>
+            name="image"
+            type="org.team10424102.whisky.models.LazyImage"/>
 
     </data>
 
@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:imageUrl="@{imageUrl}"/>
+            app:lazyImage="@{image}"/>
 
 
     </LinearLayout>
