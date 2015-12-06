@@ -35,7 +35,7 @@ public class MatchResultsAdapter2 extends RecyclerView.Adapter<MatchResultsAdapt
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Post post = mDataset.get(position);
         App.getPicasso().load(R.drawable.dummy_avatar).into(holder.avatar);
-        App.getPicasso().load(R.drawable.game_dota2).into(holder.gameLogo);
+        //App.getPicasso().load(R.drawable.game_dota2).into(holder.gameLogo);
         holder.name.setText(post.getSender().getDisplayName());
         holder.signature.setText(post.getSender().getSignature());
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");

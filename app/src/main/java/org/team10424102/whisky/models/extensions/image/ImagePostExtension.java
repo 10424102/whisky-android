@@ -61,7 +61,7 @@ public class ImagePostExtension implements PostExtension<Gallery> {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-            holder.binding.setImageUrl(mDataset.get(position).url());
+            holder.binding.setImage(mDataset.get(position));
         }
 
         @Override

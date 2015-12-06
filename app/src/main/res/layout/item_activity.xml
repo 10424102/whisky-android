@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{activity.cover.url()}"
+                app:lazyImage="@{activity.cover}"
                 />
 
             <TextView

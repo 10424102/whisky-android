@@ -95,23 +95,7 @@ public class ActivitiesFragment extends Fragment {
                         mSlider.stopAutoCycle();
                         mSlider.removeAllSliders();
                         for (Activity activity : result) {
-                            ActivitySliderView view = new ActivitySliderView(getContext());
-                            final Activity ac = activity;
-                            view
-                                    .description(ac.getTitle())
-                                    .image(ac.getCover().url())
-                                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
-                                    .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                                        @Override
-                                        public void onSliderClick(BaseSliderView slider) {
-                                            Toast.makeText(getContext(), "Activity: " + ac.getId(), Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                            view.setPicasso(App.getPicasso());
-                            view.setGame(ac.getGame().getType());
-                            view.bundle(new Bundle());
-                            view.getBundle()
-                                    .putLong("id", ac.getId());
+                            ActivitySliderView view = new ActivitySliderView(getContext(), activity);
                             mSlider.addSlider(view);
                         }
                         mSlider.startAutoCycle();

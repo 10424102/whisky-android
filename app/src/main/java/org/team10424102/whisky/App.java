@@ -28,7 +28,6 @@ import org.team10424102.whisky.components.ErrorManager;
 import org.team10424102.whisky.components.GameManager;
 import org.team10424102.whisky.components.LocalizationInterceptor;
 import org.team10424102.whisky.components.LoggingInterceptor;
-import org.team10424102.whisky.models.Game;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.Profile;
 import org.team10424102.whisky.models.enums.AndroidStringResourceProvided;
@@ -38,7 +37,6 @@ import org.team10424102.whisky.models.extensions.PostExtensionManager;
 import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtension;
 import org.team10424102.whisky.models.extensions.image.ImagePostExtension;
 import org.team10424102.whisky.models.extensions.poll.PollPostExtension;
-import org.team10424102.whisky.models.mapping.GameDeserializer;
 import org.team10424102.whisky.models.mapping.LazyImageDeserializer;
 import org.team10424102.whisky.models.mapping.LazyImageSerializer;
 import org.team10424102.whisky.utils.DimensionUtils;
@@ -103,10 +101,13 @@ public class App extends Application {
     private static HashMap<String, String> countryRules;
 
 
+    private static App INSTANCE;
 
     private GameManager mGameManager;
 
-
+    public App() {
+        INSTANCE = this;
+    }
 
 
     @Override
@@ -125,12 +126,6 @@ public class App extends Application {
         errorManager = new ErrorManager();
         dataService = new DataService(context);
         authManager = new AuthService(dataService);
-        postExtensionManager = new PostExtensionManager();
-        postExtensionManager.registerPostExtension(new Dota2PostExtension());
-        postExtensionManager.registerPostExtension(new ImagePostExtension());
-        postExtensionManager.registerPostExtension(new PollPostExtension());
-        DimensionUtils.init(context);
-
 
         // OkHttpClient
         httpClient = new OkHttpClient();
@@ -142,28 +137,11 @@ public class App extends Application {
         picasso = new Picasso.Builder(context).downloader(new OkHttpDownloader(httpClient)).build();
 
 
-
-
-        mGameManager = new GameManager(apiService);
-
-
-
-
-        // ObjectMapper
-        objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        //module.addDeserializer(Profile.class, new ProfileDeserializer());
-        module.addSerializer(LazyImage.class, new LazyImageSerializer());
-        module.addDeserializer(LazyImage.class, new LazyImageDeserializer());
-        module.addDeserializer(PostExtensionData.class, new PostExtensionDeserializer());
-        module.addDeserializer(Game.class, new GameDeserializer(mGameManager));
-        objectMapper.registerModule(module);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-
 //        SharedPreferences pref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 //        String serverAddress = pref.getString(PREF_SERVER_ADDRESS, DEFAULT_SERVER_ADDRESS);
 //        initRetrofit(serverAddress);
+
+        DimensionUtils.init(context);
 
     }
 
@@ -175,8 +153,12 @@ public class App extends Application {
     }
 
 
-    public static void initRetrofit(String serverAddress) {
+    public void initRetrofit(String serverAddress) {
         host = "http://" + serverAddress;
+
+        // ObjectMapper
+        objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(host)
@@ -185,12 +167,30 @@ public class App extends Application {
                 .build();
 
         apiService = retrofit.create(ApiService.class);
+
+        mGameManager = new GameManager(apiService);
+
+        SimpleModule module = new SimpleModule();
+        //module.addDeserializer(Profile.class, new ProfileDeserializer());
+        module.addSerializer(LazyImage.class, new LazyImageSerializer());
+        module.addDeserializer(LazyImage.class, new LazyImageDeserializer());
+        module.addDeserializer(PostExtensionData.class, new PostExtensionDeserializer());
+        objectMapper.registerModule(module);
+
+        postExtensionManager = new PostExtensionManager(mGameManager);
+        postExtensionManager.registerPostExtension(new Dota2PostExtension());
+        postExtensionManager.registerPostExtension(new ImagePostExtension());
+        postExtensionManager.registerPostExtension(new PollPostExtension());
     }
 
-    @BindingAdapter({"bind:lazyImage"})
-    public static void loadLazyImage(ImageView view, LazyImage image) {
-
+    public void changeServerAddress(String serverAddress) {
+        initRetrofit(serverAddress);
     }
+
+    public GameManager getGameManager() {
+        return mGameManager;
+    }
+
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -199,6 +199,16 @@ public class App extends Application {
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
+
+    @BindingAdapter({"bind:lazyImage"})
+    public static void loadLazyImage(ImageView view, LazyImage image) {
+        if (image == null) return;
+        picasso.load(getLazyImageUrl(image)).into(view);
+    }
+
+    public static String getLazyImageUrl(LazyImage image) {
+        return host + "/api/image?q=" + image.getAccessToken();
+    }
 
     @BindingAdapter({"bind:imageUrl"})
     public static void loadImage(ImageView view, String imageUrl) {
@@ -231,6 +241,16 @@ public class App extends Application {
         view.setText(dt.format(date));
     }
 
+
+    /////////////////////////////////////////////////////////////////
+    //                                                             //
+    //                    ~~~~~~~~~~~~~~~~~                        //
+    //                           MOB                               //
+    //                    =================                        //
+    //                                                             //
+    /////////////////////////////////////////////////////////////////
+
+
     @SuppressWarnings("unchecked")
     public static void initMobSmsSdk(Context context) {
         SMSSDK.initSDK(context, "bb474882aff3", "8b1ac2e6fa5cd29185bba8f8201d60f2");
@@ -257,15 +277,6 @@ public class App extends Application {
         //SMSSDK.getSupportedCountries();
     }
 
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                           MOB                               //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
     private static void onCountryListGot(ArrayList<HashMap<String, Object>> countries) {
         // 解析国家列表
         for (HashMap<String, Object> country : countries) {
@@ -286,15 +297,6 @@ public class App extends Application {
         }
     }
 
-    public static Context getContext() {
-        return context;
-    }
-
-    public static void setContext(Context ctx) {
-        context = ctx;
-    }
-
-
     /////////////////////////////////////////////////////////////////
     //                                                             //
     //                    ~~~~~~~~~~~~~~~~~                        //
@@ -306,10 +308,6 @@ public class App extends Application {
     @NonNull
     public static ApiService api() {
         return apiService;
-    }
-
-    public static void changeServerAddress(String serverAddress) {
-        initRetrofit(serverAddress);
     }
 
     public static void handleError(int errorCode) {
@@ -324,16 +322,24 @@ public class App extends Application {
         return dataService;
     }
 
-    public static String getImageUrl(LazyImage lazyImage) {
-        return host + "/api/image?q=" + lazyImage.getAccessToken();
-    }
-
     public static Picasso getPicasso() {
         return picasso;
     }
 
     public static PostExtensionManager getPostExtensionManager() {
         return postExtensionManager;
+    }
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static void setContext(Context ctx) {
+        context = ctx;
+    }
+
+    public static App getInstance() {
+        return INSTANCE;
     }
 
 }

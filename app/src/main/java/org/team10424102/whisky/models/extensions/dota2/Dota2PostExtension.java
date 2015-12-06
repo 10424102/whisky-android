@@ -13,9 +13,11 @@ import org.team10424102.whisky.databinding.ExtDota2MatchResultBinding;
 import org.team10424102.whisky.models.extensions.GamePostExtension;
 import org.team10424102.whisky.models.extensions.PostExtension;
 import org.team10424102.whisky.models.extensions.PostExtensionIdentifier;
+import org.team10424102.whisky.models.extensions.RelatedGame;
 
 @PostExtensionIdentifier("dota2_match_result")
-public class Dota2PostExtension implements PostExtension<Dota2MatchResult>, GamePostExtension {
+@RelatedGame("DOTA2")
+public class Dota2PostExtension implements PostExtension<Dota2MatchResult> {
 
     @Override
     public void render(Dota2MatchResult result, View view) {
@@ -31,10 +33,5 @@ public class Dota2PostExtension implements PostExtension<Dota2MatchResult>, Game
     @Override
     public Parcelable parseJson(JsonNode dataNode, JsonParser jp) throws JsonProcessingException {
         return jp.getCodec().treeToValue(dataNode, Dota2MatchResult.class);
-    }
-
-    @Override
-    public EGameType getGameType() {
-        return EGameType.DOTA2;
     }
 }

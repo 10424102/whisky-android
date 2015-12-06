@@ -43,7 +43,7 @@
                 app:civ_border_color="#eaeaea"
                 app:civ_border_width="1dp"
                 app:civ_fill_color="#eaeaea"
-                app:imageUrl="@{post.sender.avatar.url()}"/>
+                app:lazyImage="@{post.sender.avatar}"/>
 
             <!-- 右边推文内容 -->
             <LinearLayout
@@ -80,8 +80,8 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
-                        android:visibility="@{post.gameLogo == 0 ? View.GONE: View.VISIBLE}"
-                        app:drawableResId="@{post.gameLogo}"/>
+                        android:visibility="@{post.game == null ? View.GONE: View.VISIBLE}"
+                        app:lazyImage="@{post.game.logo}"/>
 
                 </LinearLayout>
 
