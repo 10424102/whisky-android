@@ -5,6 +5,7 @@ import android.util.Log;
 import org.team10424102.whisky.models.Game;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +16,7 @@ public class GameManager {
 
     private ApiService mApiService;
 
-    private Map<String, Game> games = new ConcurrentHashMap<>();
+    private Map<String, Game> games = new HashMap<>(); //TODO 到底多线程有没有问题?
 
 
     public GameManager(ApiService apiService) {
