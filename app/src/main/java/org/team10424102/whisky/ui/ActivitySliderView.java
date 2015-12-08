@@ -1,6 +1,7 @@
 package org.team10424102.whisky.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.ApiCallback;
 import org.team10424102.whisky.models.Activity;
 
 public class ActivitySliderView extends BaseSliderView {
@@ -27,18 +29,7 @@ public class ActivitySliderView extends BaseSliderView {
 
         setScaleType(BaseSliderView.ScaleType.CenterCrop);
 
-        setOnSliderClickListener(new OnSliderClickListener() {
-            @Override
-            public void onSliderClick(BaseSliderView slider) {
-                Toast.makeText(getContext(), "Activity: " + activity.getId(), Toast.LENGTH_LONG).show();
-            }
-        });
-
         setPicasso(App.getPicasso());
-
-        bundle(new Bundle());
-        getBundle().putLong("id", activity.getId());
-
 
         if (activity.getGame() != null) {
             gameLogoUrl = App.getLazyImageUrl(activity.getGame().getLogo());

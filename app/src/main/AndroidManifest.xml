@@ -21,6 +21,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -45,9 +46,15 @@
             android:name="org.team10424102.whisky.controllers.VcodeActivity"
             android:label="@string/vcode_title"
             android:screenOrientation="portrait"/>
-        <activity android:name=".controllers.ChooseCollegeActivity"/>
-        <activity android:name=".controllers.ActivitiesCreatingActivity"/>
-        <activity android:name=".controllers.ActivitiesDetailsActivity"/>
+        <activity
+            android:name=".controllers.ChooseCollegeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controllers.ActivitiesCreatingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controllers.ActivitiesDetailsActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers;
+package org.team10424102.whisky.controllers.posts;
 
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
+import org.team10424102.whisky.controllers.posts.PostsAdapter;
 import org.team10424102.whisky.databinding.FragmentMatchesBinding;
 import org.team10424102.whisky.models.Post;
 import org.team10424102.whisky.models.enums.EMatchPostsCategory;
@@ -37,7 +39,7 @@ public class MatchesFragment extends Fragment {
     private RecyclerView mList;
 
     private void loadMatchPostsFromServer(int page) {
-        App.api().getPosts(mCategory, page, PAGE_SIZE, null).enqueue(new ApiCallback<List<Post>>() {
+        App.api().getPosts(mCategory.toString(), page, PAGE_SIZE, null).enqueue(new ApiCallback<List<Post>>() {
             @Override
             protected void handleSuccess(List<Post> result) {
                 //mMatchPosts.clear();

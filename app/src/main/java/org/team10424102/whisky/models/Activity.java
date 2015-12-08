@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.StringRes;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import org.team10424102.whisky.App;
@@ -19,16 +20,6 @@ import java.util.List;
  * Created by yy on 10/30/15.
  */
 public class Activity extends BaseObservable implements Parcelable {
-
-    public static final Creator<Activity> CREATOR = new Creator<Activity>() {
-        public Activity createFromParcel(Parcel source) {
-            return new Activity(source);
-        }
-
-        public Activity[] newArray(int size) {
-            return new Activity[size];
-        }
-    };
     private Long id;
     private String title;
     private String content;
@@ -40,11 +31,11 @@ public class Activity extends BaseObservable implements Parcelable {
     private LazyImage cover;
     private List<LazyImage> photos;
     private EActivityType type;
-    private UserGroup group;
     private User promoter;
     private Game game;
-    private List<User> members;
-    private List<Post> comments;
+    private long groupId;
+    private int commentsCount;
+    private int likesCount;
 
 
     /////////////////////////////////////////////////////////////////
@@ -148,14 +139,6 @@ public class Activity extends BaseObservable implements Parcelable {
         this.type = type;
     }
 
-    public UserGroup getGroup() {
-        return group;
-    }
-
-    public void setGroup(UserGroup group) {
-        this.group = group;
-    }
-
     public User getPromoter() {
         return promoter;
     }
@@ -172,22 +155,32 @@ public class Activity extends BaseObservable implements Parcelable {
         this.game = game;
     }
 
-    public List<User> getMembers() {
-        return members;
+    @JsonProperty("group")
+    public long getGroupId() {
+        return groupId;
     }
 
-    public void setMembers(List<User> members) {
-        this.members = members;
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
     }
 
-    public List<Post> getComments() {
-        return comments;
+    @JsonProperty("comments")
+    public int getCommentsCount() {
+        return commentsCount;
     }
 
-    public void setComments(List<Post> comments) {
-        this.comments = comments;
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
+    @JsonProperty("likes")
+    public int getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
+    }
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -212,8 +205,9 @@ public class Activity extends BaseObservable implements Parcelable {
 
     @JsonSetter("game")
     public void setGameByIdentifier(String identifier) {
-        this.game =  App.getInstance().getGameManager().getGame(identifier);
+        this.game = App.getInstance().getGameManager().getGame(identifier);
     }
+
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -254,6 +248,31 @@ public class Activity extends BaseObservable implements Parcelable {
     //                                                             //
     /////////////////////////////////////////////////////////////////
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.content);
+        dest.writeString(this.location);
+        dest.writeLong(startTime != null ? startTime.getTime() : -1);
+        dest.writeLong(endTime != null ? endTime.getTime() : -1);
+        dest.writeLong(registrationDeadline != null ? registrationDeadline.getTime() : -1);
+        dest.writeLong(creationTime != null ? creationTime.getTime() : -1);
+        dest.writeParcelable(this.cover, 0);
+        dest.writeTypedList(photos);
+        dest.writeInt(this.type == null ? -1 : this.type.ordinal());
+        dest.writeParcelable(this.promoter, 0);
+        dest.writeParcelable(this.game, 0);
+        dest.writeLong(this.groupId);
+        dest.writeInt(this.commentsCount);
+        dest.writeInt(this.likesCount);
+    }
+
     public Activity() {
     }
 
@@ -274,36 +293,20 @@ public class Activity extends BaseObservable implements Parcelable {
         this.photos = in.createTypedArrayList(LazyImage.CREATOR);
         int tmpType = in.readInt();
         this.type = tmpType == -1 ? null : EActivityType.values()[tmpType];
-        this.group = in.readParcelable(UserGroup.class.getClassLoader());
         this.promoter = in.readParcelable(User.class.getClassLoader());
         this.game = in.readParcelable(Game.class.getClassLoader());
-        this.members = in.createTypedArrayList(User.CREATOR);
-        this.comments = in.createTypedArrayList(Post.CREATOR);
+        this.groupId = in.readLong();
+        this.commentsCount = in.readInt();
+        this.likesCount = in.readInt();
     }
 
+    public static final Creator<Activity> CREATOR = new Creator<Activity>() {
+        public Activity createFromParcel(Parcel source) {
+            return new Activity(source);
+        }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
-        dest.writeString(this.title);
-        dest.writeString(this.content);
-        dest.writeString(this.location);
-        dest.writeLong(startTime != null ? startTime.getTime() : -1);
-        dest.writeLong(endTime != null ? endTime.getTime() : -1);
-        dest.writeLong(registrationDeadline != null ? registrationDeadline.getTime() : -1);
-        dest.writeLong(creationTime != null ? creationTime.getTime() : -1);
-        dest.writeParcelable(this.cover, 0);
-        dest.writeTypedList(photos);
-        dest.writeInt(this.type == null ? -1 : this.type.ordinal());
-        dest.writeParcelable(this.group, 0);
-        dest.writeParcelable(this.promoter, 0);
-        dest.writeParcelable(this.game, 0);
-        dest.writeTypedList(members);
-        dest.writeTypedList(comments);
-    }
+        public Activity[] newArray(int size) {
+            return new Activity[size];
+        }
+    };
 }

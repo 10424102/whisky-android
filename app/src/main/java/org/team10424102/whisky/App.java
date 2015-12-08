@@ -116,7 +116,7 @@ public class App extends Application {
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
 
         // Icon font
-        PrintConfig.initDefault(getAssets(), "ionicons.woff");
+        PrintConfig.initDefault(getAssets(), "ionicons.ttf");
 
         // JSR-310
         AndroidThreeTen.init(this);
@@ -223,6 +223,7 @@ public class App extends Application {
 
     @BindingAdapter({"bind:enum"})
     public static void loadEnum(TextView view, AndroidStringResourceProvided e) {
+        if (e == null) return;
         view.setText(e.getStringResId());
     }
 

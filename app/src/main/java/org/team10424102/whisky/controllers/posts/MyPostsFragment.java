@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers;
+package org.team10424102.whisky.controllers.posts;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;

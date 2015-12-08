@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="avatar"
+            type="org.team10424102.whisky.models.LazyImage"/>
+
+        <variable
+            name="gameLogo"
+            type="String"/>
+
+    </data>
+
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:layout_marginBottom="5dp"
+                 android:layout_marginLeft="6dp"
+                 android:layout_marginRight="6dp"
+                 android:layout_marginTop="5dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="7dp"
+            android:src="@drawable/dummy_avatar"
+            app:civ_border_color="#5e5e5e"
+            app:civ_border_width="1dp"/>
+
+        <ImageView
+            android:id="@+id/game_logo"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="#800505"/>
+
+    </FrameLayout>
+
+
+</layout>

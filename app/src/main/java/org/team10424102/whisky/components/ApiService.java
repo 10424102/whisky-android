@@ -60,7 +60,7 @@ public interface ApiService {
     Call<Response> createActivity(@Body Activity activity);
 
     @GET("/api/post/{category}")
-    Call<List<Post>> getPosts(@Path("category") EMatchPostsCategory category, @Query("page") int page, @Query("size") int size, @Query("filter") String filter);
+    Call<List<Post>> getPosts(@Path("category") String category, @Query("page") int page, @Query("size") int size, @Query("filter") String filter);
 
     @GET(API_USER + "/focuses")
     Call<List<User>> getFocuses();
