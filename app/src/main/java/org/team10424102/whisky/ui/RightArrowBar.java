@@ -26,8 +26,6 @@ public class RightArrowBar extends FrameLayout {
 
         mContentRoot = new LinearLayout(getContext());
 
-        setBackgroundColor(Color.WHITE);
-
         setMinimumHeight(DimensionUtils.dp2px(DEFAULT_HEIGHT));
     }
 

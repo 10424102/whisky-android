@@ -1,9 +1,13 @@
 package org.team10424102.whisky.controllers;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import org.team10424102.whisky.App;
+import org.team10424102.whisky.components.ApiCallback;
 import org.team10424102.whisky.databinding.ItemActivityBinding;
 import org.team10424102.whisky.models.Activity;
 
@@ -17,9 +21,30 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
     }
 
     @Override
-    public ActivitiesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemActivityBinding binding = ItemActivityBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+    public ActivitiesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+        ItemActivityBinding binding =
+                ItemActivityBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        binding.getRoot().setTag(mDataset.get(position).getId());
+        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                long id = (long) v.getTag();
+                App.api().getActivity(id).enqueue(new ApiCallback<Activity>() {
+                    @Override
+                    protected void handleSuccess(Activity result) {
+                        Intent intent = new Intent(v.getContext(), ActivitiesDetailsActivity.class);
+                        intent.putExtra("activity", result);
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            }
+        });
         return new ViewHolder(binding);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
@@ -27,6 +52,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         final Activity activity = mDataset.get(position);
         holder.binding.setActivity(activity);
     }
+
 
     @Override
     public int getItemCount() {

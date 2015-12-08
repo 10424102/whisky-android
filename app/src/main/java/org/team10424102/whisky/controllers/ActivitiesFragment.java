@@ -1,5 +1,6 @@
 package org.team10424102.whisky.controllers;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
@@ -96,6 +96,24 @@ public class ActivitiesFragment extends Fragment {
                         mSlider.removeAllSliders();
                         for (Activity activity : result) {
                             ActivitySliderView view = new ActivitySliderView(getContext(), activity);
+                            view.bundle(new Bundle());
+                            view.getBundle().putLong("id", activity.getId());
+                            view.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                                @Override
+                                public void onSliderClick(BaseSliderView slider) {
+
+                                    Bundle bundle = slider.getBundle();
+                                    long id = bundle.getLong("id");
+                                    App.api().getActivity(id).enqueue(new ApiCallback<Activity>() {
+                                        @Override
+                                        protected void handleSuccess(Activity result) {
+                                            Intent intent = new Intent(getContext(), ActivitiesDetailsActivity.class);
+                                            intent.putExtra("activity", result);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+                            });
                             mSlider.addSlider(view);
                         }
                         mSlider.startAutoCycle();
@@ -103,8 +121,20 @@ public class ActivitiesFragment extends Fragment {
                 }
         );
 
-        mSlider.setDuration(4000);
+        mSlider.setDuration(3500);
         mSlider.setPresetTransformer(SliderLayout.Transformer.Fade);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSlider.startAutoCycle();
+    }
+
+    @Override
+    public void onPause() {
+        mSlider.stopAutoCycle();
+        super.onPause();
     }
 
     private void initRecyclerView(RecyclerView list) {

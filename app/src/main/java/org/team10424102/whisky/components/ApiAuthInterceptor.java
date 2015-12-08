@@ -39,9 +39,11 @@ public class ApiAuthInterceptor implements Interceptor {
 
         if (needAuthHeader(request)) {
             // 添加 Token
-            request = request.newBuilder()
-                    .addHeader("X-Token", App.getProfile().getToken())
-                    .build();
+            if (App.getProfile().getToken() != null) {
+                request = request.newBuilder()
+                        .addHeader("X-Token", App.getProfile().getToken())
+                        .build();
+            }
         }
 
         Response response = chain.proceed(request);

@@ -19,13 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="#fff">
+            android:background="#f9f9f9">
 
-            <TextView
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bindings"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:text="游戏账号绑定"/>
+                android:layout_height="80dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
+            </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 
@@ -33,9 +38,11 @@
             android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#969696"
             android:text="全部战况（1542）"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"/>
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"

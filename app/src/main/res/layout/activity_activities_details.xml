@@ -9,6 +9,8 @@
         <variable
             name="activity"
             type="org.team10424102.whisky.models.Activity"/>
+
+        <import type="org.team10424102.whisky.utils.DateUtils"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -25,7 +27,7 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapse_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
+                android:layout_height="250dp"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -35,8 +37,6 @@
                     android:id="@+id/background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/profile_tabs_height"
-                    android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     app:lazyImage="@{activity.cover}"/>
@@ -45,271 +45,365 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_gravity="bottom|right"
                     android:layout_margin="12dp"
                     app:lazyImage="@{activity.game.logo}"/>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/profile_header_height_min"
+                    android:layout_height="?attr/actionBarSize"
                     android:gravity="top"
                     android:minHeight="?attr/actionBarSize"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     app:contentInsetLeft="0dp"
                     app:contentInsetStart="0dp"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                    <ImageButton
-                        android:id="@+id/notifications"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                    <com.github.johnkil.print.PrintView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:layout_margin="16dp"
-                        android:background="@null"
-                        android:src="@drawable/ic_back"/>
+                        android:background="@drawable/circle_bg"
+                        android:padding="2dp"
+                        app:iconColor="#fff"
+                        app:iconSize="24dp"
+                        app:iconText="&#xf3cf;"/>
 
-                    <ImageButton
-                        android:id="@+id/settings"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+
+                    <com.github.johnkil.print.PrintView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_margin="16dp"
-                        android:background="@null"
-                        android:src="@drawable/ic_more"/>
+                        android:background="@drawable/circle_bg"
+                        android:padding="2dp"
+                        app:iconColor="#fff"
+                        app:iconSize="24dp"
+                        app:iconText="&#xf396;"
+                        />
+
 
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <!-- 活动标题 -->
-            <LinearLayout
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/item_background"
-                android:orientation="vertical"
-                android:padding="5dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableLeft="@drawable/ic_flag"
-                        android:drawablePadding="5dp"
-                        android:text="@{activity.status}"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:enum="@{activity.type}"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_people"
-                        android:text="@{Integer.toString(activity.members.size())}"/>
-
-                </LinearLayout>
-
-                <!-- 真正的标题 -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{activity.title}"
-                    android:textSize="16sp"/>
-
-                <!-- 大声秀出来 -->
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/activity_details_show"/>
-
-            </LinearLayout>
-
-
-            <!-- 活动内容 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/item_background"
-                android:padding="5dp"
-                android:text="@{activity.content}"/>
-
-
-            <!-- 参与者 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/item_background">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/activity_details_members(activity.focusedMemberCount)}"
-                    />
-
-                <!-- 用户头像 -->
-                <android.support.v7.widget.RecyclerView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                </android.support.v7.widget.RecyclerView>
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_keyboard_arrow_right_white_24dp"/>
-            </LinearLayout>
-
-
-            <!-- 活动时间 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/item_background"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{activity.location}"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/activity_details_start_time(activity.startTime)}"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/activity_details_end_time(activity.endTime)}"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/activity_details_reg_end_time(activity.registrationDeadline)}"/>
-            </LinearLayout>
-
-
-            <!-- 发起人 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/item_background"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:overScrollMode="never">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/caption"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/activity_details_promoter"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:date="@{activity.creationTime}"
-                        app:dateFormat='@{"yyyy-MM-dd HH:mm:ss"}'/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_margin="6dp"
-                        app:lazyImage="@{activity.promoter.avatar}"/>
-
+                    <!-- 活动标题 -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
+                        android:background="@color/item_background"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingTop="4dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_flag"
+                                android:drawablePadding="5dp"
+                                android:text="@{activity.status}"
+                                android:textColor="#9B9B9B"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:enum="@{activity.type}"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_people"
+                                android:text="123"
+                                android:textColor="#9B9B9B"/>
+
+                        </LinearLayout>
+
+                        <!-- 真正的标题 -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@{activity.title}"
+                            android:textSize="16sp"/>
+
+                        <!-- 大声秀出来 -->
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/show_button_bg"
+                            android:minHeight="0dp"
+                            android:minWidth="0dp"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="40dp"
+                            android:paddingRight="40dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/activity_details_show"
+                            android:textColor="#249620"/>
+
+                    </LinearLayout>
+
+
+                    <!-- 活动内容 -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/item_background"
+                        android:padding="10dp"
+                        android:text="@{activity.content}"/>
+
+
+                    <!-- 参与者 -->
+                    <org.team10424102.whisky.ui.RightArrowBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/item_background"
+                        android:padding="10dp">
+
+                        <!-- 关注的并且参加该活动的人 -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{activity.promoter.nickname ?? activity.promoter.username}"/>
+                            android:text="@{@string/activity_details_members(activity.focusedMemberCount)}"
+                            />
+
+                        <!-- 用户头像 -->
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                        </android.support.v7.widget.RecyclerView>
+
+                    </org.team10424102.whisky.ui.RightArrowBar>
+
+
+                    <!-- 活动时间 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/item_background"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{activity.promoter.signature}"/>
+                            android:layout_marginBottom="4dp"
+                            android:text="@{activity.location}"
+                            android:textSize="15sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/activity_details_start_time(DateUtils.toHumanReadableString(activity.startTime))}"
+                            android:textColor="#9B9B9B"
+                            android:textSize="13sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/activity_details_end_time(DateUtils.toHumanReadableString(activity.endTime))}"
+                            android:textColor="#9B9B9B"
+                            android:textSize="13sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/activity_details_reg_end_time(DateUtils.toHumanReadableString(activity.registrationDeadline))}"
+                            android:textColor="#9B9B9B"
+                            android:textSize="13sp"/>
+                    </LinearLayout>
+
+
+                    <!-- 发起人 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/item_background"
+                        android:orientation="vertical"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:id="@+id/caption"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/activity_details_promoter"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <include layout="@layout/horizontal_divider"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_margin="6dp"
+                                app:civ_fill_color="#dfdfdf"
+                                app:lazyImage="@{activity.promoter.avatar}"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@{activity.promoter.nickname ?? activity.promoter.username}"
+                                        android:textColor="#4A90E2"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#c2c2c2"
+                                        android:textSize="12sp"
+                                        app:date="@{activity.creationTime}"
+                                        app:dateFormat='@{"yyyy-MM-dd HH:mm"}'/>
+
+                                </LinearLayout>
+
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{activity.promoter.signature}"
+                                    android:textColor="#9B9B9B"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <!-- 评论 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/item_background"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@{@string/activity_details_comments_left(activity.commentsCount)}"/>
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_comment"
+                                android:drawablePadding="5dp"
+                                android:text="@string/activity_details_comments_right"/>
+                        </LinearLayout>
+
+                        <include layout="@layout/horizontal_divider"/>
+
+                        <EditText
+                            android:id="@+id/comment_edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:gravity="top|left"
+                            android:inputType="textMultiLine"
+                            android:lines="8"
+                            android:maxLines="10"
+                            android:minLines="6"
+                            android:padding="10dp"
+                            />
+
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
 
-
-            <!-- 评论 -->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/item_background"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:background="@color/item_background">
 
-                <LinearLayout
+
+                <Button
+                    android:id="@+id/signup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_margin="10dp"
+                    android:background="@drawable/activity_signup_bg"
+                    android:text="@string/activity_details_signup"
+                    android:textColor="#fff"/>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@{@string/activity_details_comments_left(activity.comments.size)}"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_comment"
-                        android:text="@string/activity_details_comments_right"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#d6d6d6"></LinearLayout>
-
-                <EditText
-                    android:id="@+id/comment_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@null"/>
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
+            </RelativeLayout>
 
 
-        <Button
-            android:id="@+id/signup"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#F17A5D"
-            android:text="@string/activity_details_signup"
-            android:textColor="#fff"/>
+        </LinearLayout>
+
 
     </android.support.design.widget.CoordinatorLayout>
 
