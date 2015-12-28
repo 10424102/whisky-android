@@ -19,7 +19,9 @@ public class LazyImageDeserializer extends JsonDeserializer<LazyImage> {
     public LazyImage deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         JsonNode root = jp.getCodec().readTree(jp);
         LazyImage image = new LazyImage();
-        image.setAccessToken(root.asText());
+        String[] parts = root.asText().split("~");
+        image.setAccessToken(parts[0]);
+        image.setHash(parts[1]);
         return image;
     }
 }

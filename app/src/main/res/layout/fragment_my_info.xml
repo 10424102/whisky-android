@@ -14,6 +14,8 @@
         <variable
             name="handlers"
             type="org.team10424102.whisky.controllers.MyInfoFragment.Handlers"/>
+
+        <import type="org.team10424102.whisky.App"/>
     </data>
 
 
@@ -23,11 +25,9 @@
         android:overScrollMode="never">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -43,17 +43,10 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editSignature}"
                 app:caption="@string/my_info_signature"
+                app:content="@{profile.signature}"
                 app:myIcon="@drawable/ic_pen"
-                app:onCommitListener="@{handlers.commitSignature}">
-
-                <EditText
-                    android:id="@+id/edit"
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.signature}"/>
-
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:onCommitListener="@{handlers.commitSignature}"
+                app:editable="true"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -62,17 +55,10 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editHometown}"
                 app:caption="@string/my_info_hometown"
+                app:content="@{profile.hometown}"
                 app:myIcon="@drawable/ic_home"
-                app:onCommitListener="@{handlers.commitHometown}">
-
-                <EditText
-                    android:id="@id/edit"
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.hometown}"/>
-
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:onCommitListener="@{handlers.commitHometown}"
+                app:editable="true"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -81,16 +67,10 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editHighschool}"
                 app:caption="@string/my_info_highschool"
+                app:content="@{profile.highschool}"
                 app:myIcon="@drawable/ic_building"
-                app:onCommitListener="@{handlers.commitHighschool}">
-
-                <EditText
-                    android:id="@id/edit"
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.highschool}"/>
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:onCommitListener="@{handlers.commitHighschool}"
+                app:editable="true"/>
 
 
             <!-- group 2 -->
@@ -100,16 +80,9 @@
                 android:layout_marginTop="10dp"
                 android:onClick="@{handlers.editNickname}"
                 app:caption="@string/my_info_nickname"
-                app:onCommitListener="@{handlers.commitNickname}">
-
-                <EditText
-                    android:id="@id/edit"
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.nickname}"/>
-
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:content="@{profile.nickname}"
+                app:onCommitListener="@{handlers.commitNickname}"
+                app:editable="true"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -118,16 +91,9 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editUsername}"
                 app:caption="@string/my_info_username"
-                app:onCommitListener="@{handlers.commitUsername}">
-
-                <EditText
-                    android:id="@id/edit"
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.username}"/>
-
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:content="@{profile.username}"
+                app:onCommitListener="@{handlers.commitUsername}"
+                app:editable="true"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -136,14 +102,9 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editGender}"
                 app:caption="@string/my_info_gender"
-                app:onCommitListener="@{handlers.commitGender}">
-
-                <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    app:enum="@{profile.gender}"/>
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:content="@{App.getContext().getString(profile.gender.getStringResId())}"
+                app:options="@array/gender"
+                app:onCommitListener="@{handlers.commitGender}"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -151,15 +112,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editBirthday}"
-                app:caption="@string/my_info_age">
-
-                <TextView
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.age}"/>
-
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:caption="@string/my_info_age"
+                app:content="@{profile.age}"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -167,14 +121,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editBirthday}"
-                app:caption="@string/my_info_constellation">
-
-                <TextView
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.constellation}"/>
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:caption="@string/my_info_constellation"
+                app:content="@{profile.constellation}"/>
 
 
             <!-- group 3-->
@@ -183,14 +131,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:onClick="@{handlers.editCollege}"
-                app:caption="@string/my_info_college">
-
-                <TextView
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.college}"/>
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:caption="@string/my_info_college"
+                app:content="@{profile.college}"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -198,14 +140,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editCollege}"
-                app:caption="@string/my_info_academy">
-
-                <TextView
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.academy}"/>
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:caption="@string/my_info_academy"
+                app:content="@{profile.academy}"/>
 
             <include layout="@layout/horizontal_divider"/>
 
@@ -213,14 +149,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.editCollege}"
-                app:caption="@string/my_info_grade">
-
-                <TextView
-                    style="@style/MyInfoItemEditTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{profile.grade}"/>
-            </org.team10424102.whisky.ui.MyInfoItem>
+                app:caption="@string/my_info_grade"
+                app:content="@{profile.grade}"/>
 
         </LinearLayout>
 

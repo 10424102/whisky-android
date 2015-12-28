@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import com.github.johnkil.print.PrintDrawable;
 
+import org.team10424102.whisky.R;
 import org.team10424102.whisky.utils.DimensionUtils;
 
 public class RightArrowBar extends FrameLayout {
@@ -23,8 +24,10 @@ public class RightArrowBar extends FrameLayout {
     public RightArrowBar(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-
         mContentRoot = new LinearLayout(getContext());
+
+        int bgColor = getContext().getResources().getColor(R.color.item_background);
+        setBackgroundColor(bgColor);
 
         setMinimumHeight(DimensionUtils.dp2px(DEFAULT_HEIGHT));
     }

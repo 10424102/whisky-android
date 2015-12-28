@@ -23,7 +23,7 @@ import com.squareup.picasso.Picasso;
 import org.team10424102.whisky.components.ApiAuthInterceptor;
 import org.team10424102.whisky.components.ApiService;
 import org.team10424102.whisky.components.AuthService;
-import org.team10424102.whisky.components.DataService;
+import org.team10424102.whisky.components.PersistenceService;
 import org.team10424102.whisky.components.ErrorManager;
 import org.team10424102.whisky.components.GameManager;
 import org.team10424102.whisky.components.LocalizationInterceptor;
@@ -47,7 +47,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -58,16 +61,12 @@ import retrofit.Retrofit;
  * Created by yy on 11/4/15.
  */
 public class App extends Application {
-    public static final String API_USER = "/api/user";
-    public static final String API_TOKEN = "/api/token";
-    public static final String API_AVAILABILITY = "/api/availability";
-    public static final String API_FOCUSES = "/api/focuses";
-    public static final String API_FANS = "/api/fans";
-    public static final String API_FRIENDS = "/api/friends";
-    public static final String API_IMAGE = "/api/image";
-    public static final String API_HEALTH = "/health";
-    public static final String API_ACTIVITY = "/api/activity";
-    public static final String API_GAME = "/api/game";
+    public static final String API_STATUS = "/status";
+    public static final String API_USER = "/api/users";
+    public static final String API_IMAGE = "/api/images";
+    public static final String API_POST = "/api/posts";
+    public static final String API_ACTIVITY = "/api/activities";
+    public static final String API_GAME = "/api/games";
 
     public static final String PREF_SERVER_ADDRESS = "server_address";
     public static final String PREF_LOG_FILE_NAME_PREFIX = "log_file_name_prefix";
@@ -93,7 +92,7 @@ public class App extends Application {
     private static Picasso picasso;
     private static ErrorManager errorManager;
     private static AuthService authManager;
-    private static DataService dataService;
+    private static PersistenceService persistenceService;
     private static PostExtensionManager postExtensionManager;
     private static ObjectMapper objectMapper;
     private static OkHttpClient httpClient;
@@ -104,6 +103,7 @@ public class App extends Application {
     private static App INSTANCE;
 
     private GameManager mGameManager;
+    private Map<Class, Object> mComponents = new ConcurrentHashMap<>();
 
     public App() {
         INSTANCE = this;
@@ -124,14 +124,16 @@ public class App extends Application {
         context = getApplicationContext();
 
         errorManager = new ErrorManager();
-        dataService = new DataService(context);
-        authManager = new AuthService(dataService);
+        persistenceService = new PersistenceService(context);
+        authManager = new AuthService(persistenceService);
 
         // OkHttpClient
         httpClient = new OkHttpClient();
         httpClient.interceptors().add(new ApiAuthInterceptor());
         httpClient.interceptors().add(new LocalizationInterceptor(context));
         httpClient.interceptors().add(new LoggingInterceptor());
+        httpClient.setConnectTimeout(1, TimeUnit.SECONDS);
+        httpClient.setReadTimeout(1, TimeUnit.SECONDS);
 
         // Picasso
         picasso = new Picasso.Builder(context).downloader(new OkHttpDownloader(httpClient)).build();
@@ -148,7 +150,7 @@ public class App extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        dataService.closeDatabase();
+        persistenceService.closeDatabase();
         //SMSSDK.unregisterAllEventHandler();
     }
 
@@ -203,11 +205,11 @@ public class App extends Application {
     @BindingAdapter({"bind:lazyImage"})
     public static void loadLazyImage(ImageView view, LazyImage image) {
         if (image == null) return;
-        picasso.load(getLazyImageUrl(image)).into(view);
+        picasso.load(getLazyImageUrl(image)).error(R.drawable.dummy_profile_bg).into(view);
     }
 
     public static String getLazyImageUrl(LazyImage image) {
-        return host + "/api/image?q=" + image.getAccessToken();
+        return host + API_IMAGE + "?q=" + image.getAccessToken();
     }
 
     @BindingAdapter({"bind:imageUrl"})
@@ -319,8 +321,8 @@ public class App extends Application {
         return profile;
     }
 
-    public static DataService getDataService() {
-        return dataService;
+    public static PersistenceService getPersistenceService() {
+        return persistenceService;
     }
 
     public static Picasso getPicasso() {
@@ -341,6 +343,10 @@ public class App extends Application {
 
     public static App getInstance() {
         return INSTANCE;
+    }
+
+    public Object getComponent(Class clazz) {
+        return mComponents.get(clazz);
     }
 
 }

@@ -18,6 +18,7 @@ import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
 import org.team10424102.whisky.controllers.posts.MatchesFragment;
+import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.Profile;
 
 public class MainActivity extends BaseActivity {
@@ -78,6 +79,10 @@ public class MainActivity extends BaseActivity {
                 p.setBackground(profile.getBackground());
                 p.setGender(profile.getGender());
                 p.setNickname(profile.getNickname());
+
+                p.setFriendsCount(profile.getFriendsCount());
+                p.setFansCount(profile.getFansCount());
+                p.setFocusesCount(profile.getFocusesCount());
             }
         });
     }

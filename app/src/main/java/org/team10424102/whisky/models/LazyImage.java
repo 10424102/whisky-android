@@ -4,6 +4,8 @@ import android.databinding.BaseObservable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import org.team10424102.whisky.App;
 
 /**

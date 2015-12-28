@@ -25,6 +25,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import retrofit.Response;
+
 import static org.team10424102.whisky.App.DEFAULT_LOG_FILE_LOCATION;
 import static org.team10424102.whisky.App.DEFAULT_LOG_FILE_NAME_PREFIX;
 import static org.team10424102.whisky.App.DEFAULT_SERVER_ADDRESS;
@@ -75,7 +77,14 @@ public class DebugActivity extends BaseActivity {
         RecyclerView userList = binding.userList;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userList.setLayoutManager(linearLayoutManager);
-        userList.setAdapter(new UserListAdapter(App.getDataService().getAllUsers()));
+        userList.setAdapter(new UserListAdapter(App.getPersistenceService().getAllUsers()));
+
+        mServerAddr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mServerAddr.setError(null);
+            }
+        });
     }
 
     public void startApp(View view) {
@@ -101,12 +110,18 @@ public class DebugActivity extends BaseActivity {
         App.api().getServerHealth().enqueue(new ApiCallback<ServerHealth>() {
             @Override
             protected void handleSuccess(ServerHealth result) {
-                if (result.getStatus().equals("UP")) {
+                if (result.getStatus().equals("OK")) {
                     Intent intent = new Intent(DebugActivity.this, WelcomeActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(DebugActivity.this, "服务器地址有误或者服务器未开启", Toast.LENGTH_LONG).show();
+                    mServerAddr.setError("服务器维护中");
                 }
+            }
+
+            @Override
+            protected void handleFailure(Response response, Throwable t) {
+                super.handleFailure(response, t);
+                mServerAddr.setError("无法连接上服务器");
             }
         });
     }

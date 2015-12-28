@@ -22,7 +22,8 @@ public class LocalizationInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
-        req = req.newBuilder().addHeader("Accept-Language", mLocale).build();
+        //req = req.newBuilder().addHeader("Accept-Language", mLocale).build();
+        req = req.newBuilder().addHeader("Accept-Language", "zh_CN").build();
 
         return chain.proceed(req);
     }
