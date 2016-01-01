@@ -10,5 +10,10 @@
         <attr name="caption" format="string"/>
         <attr name="leftSpan" format="dimension"/>
         <attr name="onCommit" format="string"/>
+        <attr name="content" format="string"/>
+        <attr name="editable" format="boolean"/>
+        <attr name="options" format="reference"/>
+        <attr name="length" format="integer"/>
+        <attr name="regex" format="string"/>
     </declare-styleable>
 </resources>

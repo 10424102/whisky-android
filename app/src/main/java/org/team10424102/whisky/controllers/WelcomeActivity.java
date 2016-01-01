@@ -15,8 +15,12 @@ import android.widget.TextView;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.components.AvailabilityResult;
+
+import java.net.HttpURLConnection;
+
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by yy on 10/30/15.
@@ -68,16 +72,18 @@ public class WelcomeActivity extends Activity {
 
         App.getProfile().setPhone(phone);
 
-        final String token = App.getDataService().getToken(phone);
+        final String token = App.getPersistenceService().getToken(phone);
 
         if (token != null) {
 
             App.getProfile().setToken(token);
 
-            App.api().isTokenAvailable(token).enqueue(new ApiCallback<AvailabilityResult>() {
+            App.api().isTokenAvailable(token).enqueue(new Callback<Void>() {
+
                 @Override
-                protected void handleSuccess(AvailabilityResult result) {
-                    if (result.isAvailable()) {
+                public void onResponse(Response<Void> response, Retrofit retrofit) {
+
+                    if (response.code() == HttpURLConnection.HTTP_OK) {
                         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                         startActivity(intent);
                         return;
@@ -87,6 +93,11 @@ public class WelcomeActivity extends Activity {
                     intent.putExtra("phone", phone);
                     intent.putExtra("type", VcodeActivity.TYPE_REFRESH_TOKEN);
                     startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
                 }
             });
 

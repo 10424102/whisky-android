@@ -92,7 +92,16 @@
     <string name="enum_activity_type_match">比赛</string>
     <string name="enum_gender_male">男</string>
     <string name="enum_gender_female">女</string>
-    <string name="enum_gender_secret">保密</string>
+    <string name="enum_gender_other">其他</string>
+    <string name="enum_gender_unknown">未知</string>
+    <string-array name="gender">
+        <item>男</item>
+        <item>女</item>
+        <item>其他</item>
+        <item>未知</item>
+    </string-array>
+
+
     <string name="enum_constellation_aries">白羊座</string>
     <string name="enum_constellation_taurus">金牛座</string>
     <string name="enum_constellation_gemini">双子座</string>

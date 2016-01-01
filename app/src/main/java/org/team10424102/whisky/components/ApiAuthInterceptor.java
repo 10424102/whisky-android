@@ -17,7 +17,7 @@ import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
  */
 public class ApiAuthInterceptor implements Interceptor {
     public static final String[] NO_AUTH_URIS = new String[]{
-            App.API_TOKEN, App.API_HEALTH
+            App.API_USER + "/token", App.API_STATUS
     };
     private static final String TAG = "ApiAuthInterceptor";
 

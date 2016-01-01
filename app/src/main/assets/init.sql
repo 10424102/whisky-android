@@ -1,6 +1,24 @@
-DROP TABLE IF EXISTS T_TOKEN;
+drop table if exists t_user;
 
-CREATE TABLE T_TOKEN (
-    phone VARCHAR(20) PRIMARY KEY,
-    token VARCHAR(100)
+create table t_user (
+    phone varchar(20) primary key,
+    token character(32),
+    used_count  int,
+    username varchar(30),
+    nickname varchar(30),
+    signature varchar(140),
+    email varchar(50),
+    highschool varchar(30),
+    hometown varchar(30),
+    gender varchar(10),
+    birthday date,
+    college varchar(30),
+    academy varchar(30),
+    grade varchar(30),
+    visiable boolean
+);
+
+create table t_image (
+    hash character(32) primary key,
+    data blob
 );

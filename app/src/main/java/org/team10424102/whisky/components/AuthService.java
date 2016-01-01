@@ -10,23 +10,25 @@ import org.team10424102.whisky.controllers.VcodeActivity;
 
 import java.io.IOException;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Created by yy on 11/7/15.
  */
 public class AuthService {
     private static final String TAG = "AuthService";
 
-    private DataService mDataService;
+    private PersistenceService mPersistenceService;
 
-    public AuthService(DataService dataService) {
-        mDataService = dataService;
+    public AuthService(PersistenceService persistenceService) {
+        mPersistenceService = persistenceService;
     }
 
 
     public void authenticateCurrentUser(Context context, String phone, String token) {
         try {
             if (isPhoneRegistered(phone)) {
-                token = mDataService.getToken(phone);
+                token = mPersistenceService.getToken(phone);
                 if (token == null) {
                     refreshToken(context, phone);
                 } else {
@@ -45,11 +47,11 @@ public class AuthService {
     }
 
     private boolean isPhoneRegistered(String phone) throws IOException {
-        return !App.api().isPhoneAvailable(phone).execute().body().isAvailable();
+        return App.api().isPhoneAvailable(phone).execute().code() == HttpsURLConnection.HTTP_OK;
     }
 
     private boolean isTokenStillValid(String token) throws IOException {
-        return App.api().isTokenAvailable(token).execute().body().isAvailable();
+        return App.api().isTokenAvailable(token).execute().code() == HttpsURLConnection.HTTP_OK;
     }
 
     private void goToMainActivity(Context context, String phone, String token) {

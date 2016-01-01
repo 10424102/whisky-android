@@ -15,14 +15,18 @@ import java.util.List;
 /**
  * Created by yy on 11/7/15.
  */
-public class DataService implements IDebugData {
-    private static final String TAG = "DataService";
+public class PersistenceService implements IDebugData {
+    private static final String TAG = "PersistenceService";
     private SimpleDatabaseHelper mDatabaseHelper;
     private SQLiteDatabase db;
 
-    public DataService(Context context) {
+    public PersistenceService(Context context) {
         mDatabaseHelper = new SimpleDatabaseHelper(context);
         db = mDatabaseHelper.getWritableDatabase();
+    }
+
+    public SQLiteDatabase getSQLiteDatabase() {
+        return db;
     }
 
     public String getToken(String phone) {

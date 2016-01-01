@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.BR;
@@ -34,11 +35,14 @@ public class Profile extends BaseObservable implements Parcelable {
     private String highschool;
     private LazyImage avatar;
     private LazyImage background;
-    private EGender gender = EGender.SECRET;
+    private EGender gender = EGender.UNKNOWN;
     private String nickname;
-    private List<User> friends = new ArrayList<>();
-    private List<User> fans = new ArrayList<>();
-    private List<User> focuses = new ArrayList<>();
+    private List<User> friends;
+    private int friendsCount;
+    private List<User> fans;
+    private int fansCount;
+    private List<User> focuses;
+    private int focusesCount;
     private String token;
 
 
@@ -212,13 +216,27 @@ public class Profile extends BaseObservable implements Parcelable {
         return token;
     }
 
-
-
     public void setToken(String token) {
         this.token = token;
     }
 
+    @JsonSetter("friends")
+    public void setFriendsCount(int count) {
+        friends = null;
+        friendsCount = count;
+    }
 
+    @JsonSetter("fans")
+    public void setFansCount(int count) {
+        fans = null;
+        fansCount = count;
+    }
+
+    @JsonSetter("focuses")
+    public void setFocusesCount(int count) {
+        focuses = null;
+        focusesCount = count;
+    }
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -250,9 +268,23 @@ public class Profile extends BaseObservable implements Parcelable {
         return null;
     }
 
+    @Bindable
+    public int getFriendsCount() {
+        if (friends == null) return friendsCount;
+        return friends.size();
+    }
 
+    @Bindable
+    public int getFansCount() {
+        if (fans == null) return fansCount;
+        return fans.size();
+    }
 
-
+    @Bindable
+    public int getFocusesCount() {
+        if (focuses == null) return focusesCount;
+        return focuses.size();
+    }
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -267,9 +299,6 @@ public class Profile extends BaseObservable implements Parcelable {
         return String.format("个人资料 (用户名 = %s, 昵称 = %s, 手机号 = %s)",
                 getUsername(), getNickname(), getPhone());
     }
-
-
-
 
     /////////////////////////////////////////////////////////////////
     //                                                             //

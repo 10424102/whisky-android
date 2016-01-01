@@ -77,7 +77,7 @@ public class VcodeActivity extends BaseActivity {
 
                         App.getProfile().setPhone(phone);
                         App.getProfile().setToken(token);
-                        App.getDataService().saveToken(phone, token);
+                        App.getPersistenceService().saveToken(phone, token);
 
                         Intent intent = new Intent(VcodeActivity.this, MainActivity.class);
                         startActivity(intent);

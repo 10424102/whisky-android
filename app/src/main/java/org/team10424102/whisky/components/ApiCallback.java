@@ -37,7 +37,7 @@ public class ApiCallback<T> implements Callback<T> {
         Log.e(TAG, "API request failed.", t);
         if (response != null) {
             Log.e(TAG, String.format("Response[code = %d, body = %s]",
-                    response.code(), response.body().toString()));
+                    response.code(), response.body()));
         }
     }
 
