@@ -9,6 +9,7 @@ import android.view.ViewStub;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.databinding.ItemPostMyselfBinding;
 import org.team10424102.whisky.models.Post;
+import org.team10424102.whisky.models.extensions.PostExtensionManager;
 
 import java.util.List;
 
@@ -26,14 +27,15 @@ public class PostsMyselfAdapter extends RecyclerView.Adapter<PostsMyselfAdapter.
 
         final Post post = mDataset.get(position);
 
+        final PostExtensionManager postExtensionManager =
+                (PostExtensionManager) App.getInstance().getComponent(PostExtensionManager.class);
 
-        binding.stub.getViewStub().setLayoutResource(
-                App.getPostExtensionManager().getLayout(post.getExtension()));
+        binding.stub.getViewStub().setLayoutResource(postExtensionManager.getLayout(post.getExtension()));
 
         binding.stub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, View inflated) {
-                App.getPostExtensionManager().render(post.getExtension(), inflated);
+                postExtensionManager.render(post.getExtension(), inflated);
             }
         });
 

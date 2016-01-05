@@ -1,14 +1,14 @@
-package org.team10424102.whisky.components;
+package org.team10424102.whisky.components.api;
 
 import com.squareup.okhttp.Response;
 
+import org.team10424102.whisky.components.TokenResult;
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.Game;
 import org.team10424102.whisky.models.Post;
 import org.team10424102.whisky.models.Profile;
 import org.team10424102.whisky.models.ServerHealth;
 import org.team10424102.whisky.models.User;
-import org.team10424102.whisky.models.enums.EMatchPostsCategory;
 
 import java.util.List;
 

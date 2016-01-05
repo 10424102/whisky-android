@@ -8,13 +8,13 @@
 
         <import type="org.team10424102.whisky.models.Activity"/>
 
-        <import type="org.team10424102.whisky.models.enums.EActivitiesCategory"/>
+        <import type="org.team10424102.whisky.models.enums.ActivitiesCategory"/>
 
         <import type="android.databinding.ObservableField"/>
 
         <variable
             name="type"
-            type="ObservableField&lt;EActivitiesCategory>"/>
+            type="ObservableField&lt;ActivitiesCategory>"/>
     </data>
 
     <LinearLayout

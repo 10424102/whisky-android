@@ -1,4 +1,4 @@
-package org.team10424102.whisky.components;
+package org.team10424102.whisky.components.auth;
 
 import android.app.Service;
 import android.content.Intent;
@@ -6,15 +6,20 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import org.team10424102.whisky.models.Profile;
+import org.team10424102.whisky.App;
 
 import java.util.List;
 
 public class AccountService extends Service {
 
-    private final IBinder mBinder = new AccountBinder();
+    private final IBinder mBinder = new InnerBinder();
     private Account mCurrentAccount;
     private AccountRepo mAccountRepo;
+
+    @Override
+    public void onCreate() {
+        
+    }
 
     @Nullable
     @Override
@@ -22,8 +27,8 @@ public class AccountService extends Service {
         return mBinder;
     }
 
-    public class AccountBinder extends Binder {
-        AccountService getService() {
+    public class InnerBinder extends Binder {
+        public AccountService getService() {
             return AccountService.this;
         }
     }
@@ -41,12 +46,10 @@ public class AccountService extends Service {
      * @return
      */
     public List<Account> getAllAccounts() {
-        List<Account> results = mAccountRepo.all();
-        for (Account account: results) {
-            account.validate();
-            if (account.isValid() && account.isVisiable()) continue;
-            results.remove(account);
+        if (mAccountRepo == null) {
+            mAccountRepo = (AccountRepo)((App) getApplication()).getComponent(AccountRepo.class);
+            assert mAccountRepo != null: "缺少 AccountRepo 组件";
         }
-        return results;
+        return mAccountRepo.all();
     }
 }

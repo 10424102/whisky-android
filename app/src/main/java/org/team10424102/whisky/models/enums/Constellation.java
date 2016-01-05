@@ -2,7 +2,7 @@ package org.team10424102.whisky.models.enums;
 
 import org.team10424102.whisky.R;
 
-public enum EConstellation implements AndroidStringResourceProvided {
+public enum Constellation implements AndroidStringResourceProvided {
 
     ARIES(R.string.enum_constellation_aries),
     TAURUS(R.string.enum_constellation_taurus),
@@ -19,7 +19,7 @@ public enum EConstellation implements AndroidStringResourceProvided {
 
     private int id;
 
-    EConstellation(int resId) {
+    Constellation(int resId) {
         id = resId;
     }
 

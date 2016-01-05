@@ -1,11 +1,16 @@
 package org.team10424102.whisky.controllers;
 
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,22 +18,28 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.auth.Account;
+import org.team10424102.whisky.components.auth.AccountService;
+import org.team10424102.whisky.components.api.ApiService;
+import org.team10424102.whisky.components.auth.BlackServerAccount;
+import org.team10424102.whisky.components.Initializer;
+import org.team10424102.whisky.databinding.ActivityWelcomeBinding;
 
-import java.net.HttpURLConnection;
+import java.util.List;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import javax.inject.Inject;
 
 /**
  * Created by yy on 10/30/15.
  */
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends BaseActivity {
     private static final String TAG = "WelcomeActivity";
 
+    @Inject ApiService mApiService;
+
     private EditText mPhone;
+    private AccountService mAccountService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +50,18 @@ public class WelcomeActivity extends Activity {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
-        setContentView(R.layout.activity_welcome);
-        mPhone = (EditText) findViewById(R.id.phone);
+        ActivityWelcomeBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        mPhone = binding.phone;
+
+        // hide cursor
         mPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPhone.setCursorVisible(true);
             }
         });
+
         mPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -61,7 +75,10 @@ public class WelcomeActivity extends Activity {
                 return false;
             }
         });
+
+        new ApplicationInitializationTask().execute();
     }
+
 
     public void commit(View view) {
         final String phone = mPhone.getText().toString();
@@ -69,46 +86,82 @@ public class WelcomeActivity extends Activity {
             mPhone.setError(getString(R.string.phone_empty));
             return;
         }
+        new PhoneValidationTask(mAccountService).execute(phone);
+    }
 
-        App.getProfile().setPhone(phone);
+    private class ApplicationInitializationTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.d(TAG, "开始初始化应用");
+            Initializer initializer = new Initializer(WelcomeActivity.this);
+            initializer.init();
+            Log.d(TAG, "初始化完毕");
+            return null;
+        }
+    }
 
-        final String token = App.getPersistenceService().getToken(phone);
+    private class PhoneValidationTask extends AsyncTask<String, Void, Void> {
 
-        if (token != null) {
+        private final AccountService mAccountService;
 
-            App.getProfile().setToken(token);
-
-            App.api().isTokenAvailable(token).enqueue(new Callback<Void>() {
-
-                @Override
-                public void onResponse(Response<Void> response, Retrofit retrofit) {
-
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        return;
-                    }
-
-                    Intent intent = new Intent(WelcomeActivity.this, VcodeActivity.class);
-                    intent.putExtra("phone", phone);
-                    intent.putExtra("type", VcodeActivity.TYPE_REFRESH_TOKEN);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-
-                }
-            });
-
-            return;
+        public PhoneValidationTask(AccountService accountService) {
+            mAccountService = accountService;
         }
 
-
-        Intent intent = new Intent(WelcomeActivity.this, VcodeActivity.class);
-        intent.putExtra("phone", phone);
-        intent.putExtra("type", VcodeActivity.TYPE_REGISTER);
-        startActivity(intent);
+        @Override
+        protected Void doInBackground(String... params) {
+            String phone = params[0];
+            List<Account> accounts = mAccountService.getAllAccounts();
+            Account account = null;
+            for (Account a : accounts) {
+                if (a.getProfile().getPhone().equals(phone)) {
+                    account = a;
+                    break;
+                }
+            }
+            Context context = WelcomeActivity.this;
+            if (account == null) {
+                account = new BlackServerAccount(phone);
+            }
+            while (!account.isValid(context)) {
+                account.activate(context);
+            }
+            account.save(context);
+            jumpMainActivity(account);
+            return null;
+        }
 
     }
+
+    private void jumpMainActivity(Account validAccount) {
+        mAccountService.setCurrentAccount(validAccount);
+        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // bind to AccountService
+        Intent intent = new Intent(this, AccountService.class);
+        bindService(intent, mConnention, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnention);
+    }
+
+    private ServiceConnection mConnention = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
+            mAccountService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
 }

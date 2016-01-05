@@ -29,18 +29,7 @@ public class MyPhotosFragment extends Fragment {
         list.addItemDecoration(new MarginDecoration(getContext()));
         list.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        User u = new User();
-        u.setNickname(App.getProfile().getUsername());
-
         List<LazyImage> data = new ArrayList<>();
-        data.add(new LazyImage());
-        data.add(new LazyImage());
-        data.add(new LazyImage());
-        data.add(new LazyImage());
-        data.add(new LazyImage());
-        data.add(new LazyImage());
-        data.add(new LazyImage());
-        data.add(new LazyImage());
 
         list.setAdapter(new PhotosAdapter(data));
 

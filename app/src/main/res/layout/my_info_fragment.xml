@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable name="account" type="org.team10424102.whisky.components.auth.Account"/>
+        <import type="org.team10424102.whisky.utils.EnumUtils"/>
+    </data>
+
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="RtlHardcoded,TextFields"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:text="@string/my_info_header"/>
+
+            <!-- group 1 -->
+            <include layout="@layout/my_info_item" app:content="@{account.profile.signature}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.hometown}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.highschool}"/>
+
+
+            <!-- group 2 -->
+            <include layout="@layout/my_info_item" app:content="@{account.profile.nickname}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.username}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{EnumUtils.toString(account.profile.gender)}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.age}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.constellation}"/>
+
+            <!-- group 3-->
+            <include layout="@layout/my_info_item" app:content="@{account.profile.college}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.academy}"/>
+            <include layout="@layout/horizontal_divider"/>
+            <include layout="@layout/my_info_item" app:content="@{account.profile.grade}"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</layout>

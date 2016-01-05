@@ -18,11 +18,12 @@ import android.widget.Spinner;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
-import org.team10424102.whisky.controllers.posts.PostsAdapter;
 import org.team10424102.whisky.databinding.FragmentMatchesBinding;
 import org.team10424102.whisky.models.Post;
-import org.team10424102.whisky.models.enums.EMatchPostsCategory;
+import org.team10424102.whisky.models.enums.MatchPostsCategory;
+import org.team10424102.whisky.models.extensions.PostExtensionManager;
 import org.team10424102.whisky.ui.MarginDownDecoration;
 import org.team10424102.whisky.utils.DimensionUtils;
 
@@ -35,16 +36,18 @@ import java.util.List;
 public class MatchesFragment extends Fragment {
     public static final int PAGE_SIZE = 5;
     private List<Post> mMatchPosts = new ArrayList<>();
-    private EMatchPostsCategory mCategory = EMatchPostsCategory.SCHOOL;
+    private MatchPostsCategory mCategory = MatchPostsCategory.SCHOOL;
     private RecyclerView mList;
+    private ApiService mApiService;
+    private PostExtensionManager mPostExtensionManager;
 
     private void loadMatchPostsFromServer(int page) {
-        App.api().getPosts(mCategory.toString(), page, PAGE_SIZE, null).enqueue(new ApiCallback<List<Post>>() {
+        mApiService.getPosts(mCategory.toString(), page, PAGE_SIZE, null).enqueue(new ApiCallback<List<Post>>() {
             @Override
             protected void handleSuccess(List<Post> result) {
                 //mMatchPosts.clear();
                 for (Post p : result) {
-                    App.getPostExtensionManager().setGameFor(p);
+                    mPostExtensionManager.setGameFor(p);
                 }
                 mMatchPosts.addAll(result);
                 mList.getAdapter().notifyDataSetChanged();
@@ -86,6 +89,10 @@ public class MatchesFragment extends Fragment {
         Spinner spinner = binding.spinner;
         ArrayAdapter<String> aa = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, new String[]{"校园战况", "好友战况", "关注的人战况"});
         spinner.setAdapter(aa);
+
+
+        mApiService = (ApiService)App.getInstance().getComponent(ApiService.class);
+        mPostExtensionManager = (PostExtensionManager)App.getInstance().getComponent(PostExtensionManager.class);
 
         loadMatchPostsFromServer(0);
 

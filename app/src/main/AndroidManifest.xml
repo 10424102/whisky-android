@@ -55,7 +55,7 @@
         <activity
             android:name=".controllers.ActivitiesDetailsActivity"
             android:screenOrientation="portrait"/>
-        <service android:name=".components.AccountService"
+        <service android:name=".components.auth.AccountService"
             android:exported="false"/>
     </application>
 

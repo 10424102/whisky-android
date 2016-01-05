@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.BR;
-import org.team10424102.whisky.models.enums.EGender;
+import org.team10424102.whisky.models.enums.Gender;
 import org.team10424102.whisky.utils.ConstellationUtils;
+import org.team10424102.whisky.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Profile extends BaseObservable implements Parcelable {
     private String highschool;
     private LazyImage avatar;
     private LazyImage background;
-    private EGender gender = EGender.UNKNOWN;
+    private Gender gender = Gender.UNKNOWN;
     private String nickname;
     private List<User> friends;
     private int friendsCount;
@@ -180,11 +180,11 @@ public class Profile extends BaseObservable implements Parcelable {
     }
 
     @Bindable
-    public EGender getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(EGender gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -263,7 +263,7 @@ public class Profile extends BaseObservable implements Parcelable {
     public String getConstellation() {
         if (birthday != null) {
             int id = ConstellationUtils.getConstellation(birthday).getStringResId();
-            return App.getContext().getString(id);
+            return StringUtils.getString(id);
         }
         return null;
     }
@@ -327,7 +327,7 @@ public class Profile extends BaseObservable implements Parcelable {
         this.avatar = in.readParcelable(LazyImage.class.getClassLoader());
         this.background = in.readParcelable(LazyImage.class.getClassLoader());
         int tmpGender = in.readInt();
-        this.gender = tmpGender == -1 ? null : EGender.values()[tmpGender];
+        this.gender = tmpGender == -1 ? null : Gender.values()[tmpGender];
         this.nickname = in.readString();
         this.friends = in.createTypedArrayList(User.CREATOR);
         this.fans = in.createTypedArrayList(User.CREATOR);

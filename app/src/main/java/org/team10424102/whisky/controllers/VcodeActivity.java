@@ -6,6 +6,7 @@ import android.databinding.ObservableInt;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -15,7 +16,10 @@ import android.widget.TextView;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.components.api.ApiService;
+import org.team10424102.whisky.components.auth.PhoneTokenAuthentication;
 import org.team10424102.whisky.components.TokenResult;
 import org.team10424102.whisky.databinding.ActivityVcodeBinding;
 
@@ -25,16 +29,23 @@ import java.util.TimerTask;
 /**
  * Created by yy on 10/30/15.
  */
-public class VcodeActivity extends BaseActivity {
+public class VcodeActivity extends AppCompatActivity {
+    public static final String TAG = "VcodeActivity";
     public static final int TYPE_REFRESH_TOKEN = 1;
     public static final int TYPE_REGISTER = 2;
     public static final int COUNTDOWN_LENGTH = 60;
+    public static final String EXTRA_ACCOUNT = "account";
+    public static final String EXTRA_TYPE = "type";
+    public static final String EXTRA_INTENT = "intent";
 
-    private String mPhone;
+    private Account mAccount;
     private TextView mCountdown;
     private EditText mVcode;
     private Timer mTimer;
     private ObservableInt mCounter = new ObservableInt(COUNTDOWN_LENGTH);
+    private ApiService mApiService;
+    private Intent mIntent;
+    private int mType;
 
     private void initToolbar(Toolbar toolbar) {
         // 初始化 Toolbar
@@ -49,40 +60,45 @@ public class VcodeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityVcodeBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_vcode);
-
-        Intent intent = getIntent();
-        int type = intent.getIntExtra("type", TYPE_REGISTER);
-        mPhone = getIntent().getStringExtra("phone");
-
         mCountdown = binding.countdown;
         mVcode = binding.vcode;
 
-        binding.setPhone(mPhone);
-        binding.setRegister(type == TYPE_REGISTER);
-        binding.setCounter(mCounter);
+        Intent intent = getIntent();
+        mType = intent.getIntExtra(EXTRA_TYPE, TYPE_REGISTER);
+        mAccount = intent.getParcelableExtra(EXTRA_ACCOUNT);
+        mIntent = intent.getParcelableExtra(EXTRA_INTENT);
 
+        binding.setPhone(mAccount.getProfile().getPhone());
+        binding.setRegister(mType == TYPE_REGISTER);
+        binding.setCounter(mCounter);
         initToolbar(binding.toolbar);
 
-
+        mApiService = (ApiService)((App)getApplication()).getComponent(ApiService.class);
     }
 
     public void comfirm(View view) {
         mTimer.cancel();
-        App.api().getToken(mPhone, mVcode.getText().toString())
+
+        final String phone = mAccount.getProfile().getPhone();
+        String vcode = mVcode.getText().toString();
+
+        mApiService.getToken(phone, vcode)
                 .enqueue(new ApiCallback<TokenResult>() {
                     @Override
                     protected void handleSuccess(TokenResult result) {
-                        String phone = mPhone;
                         String token = result.getToken();
 
-                        App.getProfile().setPhone(phone);
-                        App.getProfile().setToken(token);
-                        App.getPersistenceService().saveToken(phone, token);
+                        PhoneTokenAuthentication auth = new PhoneTokenAuthentication(phone, token);
+                        mAccount.setAuthentication(auth);
 
-                        Intent intent = new Intent(VcodeActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        finish();
+
+                        // TODO if this code will be executed
+                        startActivity(mIntent);
                     }
                 });
+
+
     }
 
     @Override

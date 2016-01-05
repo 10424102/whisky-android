@@ -14,6 +14,9 @@ public class PostExtensionDeserializer extends JsonDeserializer<PostExtensionDat
     @Override
     public PostExtensionData deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
-        return App.getPostExtensionManager().parseJson(jp);
+        final PostExtensionManager postExtensionManager =
+                (PostExtensionManager) App.getInstance().getComponent(PostExtensionManager.class);
+
+        return postExtensionManager.parseJson(jp);
     }
 }

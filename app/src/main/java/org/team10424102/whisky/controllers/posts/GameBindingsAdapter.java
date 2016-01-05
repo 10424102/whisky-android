@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.databinding.ItemGameBindingBinding;
@@ -23,8 +25,9 @@ public class GameBindingsAdapter extends RecyclerView.Adapter<GameBindingsAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        App.getPicasso().load(R.drawable.dummy_avatar).into(holder.binding.avatar);
-        Bitmap image = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.dummy_avatar);
+        Picasso picasso = (Picasso)App.getInstance().getComponent(Picasso.class);
+        picasso.load(R.drawable.dummy_avatar).into(holder.binding.avatar);
+        Bitmap image = BitmapFactory.decodeResource(App.getInstance().getResources(), R.drawable.dummy_avatar);
         Palette.from(image).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {

@@ -11,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.models.enums.EActivityType;
+import org.team10424102.whisky.components.GameManager;
+import org.team10424102.whisky.models.enums.ActivityType;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Activity extends BaseObservable implements Parcelable {
     private Date creationTime;
     private LazyImage cover;
     private List<LazyImage> photos;
-    private EActivityType type;
+    private ActivityType type;
     private User promoter;
     private Game game;
     private long groupId;
@@ -131,11 +132,11 @@ public class Activity extends BaseObservable implements Parcelable {
         this.photos = photos;
     }
 
-    public EActivityType getType() {
+    public ActivityType getType() {
         return type;
     }
 
-    public void setType(EActivityType type) {
+    public void setType(ActivityType type) {
         this.type = type;
     }
 
@@ -205,7 +206,8 @@ public class Activity extends BaseObservable implements Parcelable {
 
     @JsonSetter("game")
     public void setGameByIdentifier(String identifier) {
-        this.game = App.getInstance().getGameManager().getGame(identifier);
+        GameManager gameManager = (GameManager)App.getInstance().getComponent(GameManager.class);
+        this.game = gameManager.getGame(identifier);
     }
 
 
@@ -292,7 +294,7 @@ public class Activity extends BaseObservable implements Parcelable {
         this.cover = in.readParcelable(LazyImage.class.getClassLoader());
         this.photos = in.createTypedArrayList(LazyImage.CREATOR);
         int tmpType = in.readInt();
-        this.type = tmpType == -1 ? null : EActivityType.values()[tmpType];
+        this.type = tmpType == -1 ? null : ActivityType.values()[tmpType];
         this.promoter = in.readParcelable(User.class.getClassLoader());
         this.game = in.readParcelable(Game.class.getClassLoader());
         this.groupId = in.readLong();

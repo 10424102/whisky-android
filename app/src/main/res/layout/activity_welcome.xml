@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#4a90e2"
               android:orientation="vertical">
 
+    <!-- LOGO -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,7 +21,6 @@
             />
     </RelativeLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,6 +29,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
+        <!-- Phone -->
         <EditText
             android:id="@+id/phone"
             android:layout_width="300dp"
@@ -47,6 +49,7 @@
             android:textColorHint="#ccc"
             />
 
+        <!-- Login/Register -->
         <Button
             android:id="@+id/login_or_register"
             android:layout_width="300dp"
@@ -61,3 +64,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</layout>

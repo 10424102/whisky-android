@@ -2,7 +2,7 @@ package org.team10424102.whisky.models.enums;
 
 import org.team10424102.whisky.R;
 
-public enum EActivitiesCategory implements AndroidStringResourceProvided {
+public enum ActivitiesCategory implements AndroidStringResourceProvided {
 
     SCHOOL(R.string.enum_activities_category_school),
     FRIENDS(R.string.enum_activities_category_friends),
@@ -11,7 +11,7 @@ public enum EActivitiesCategory implements AndroidStringResourceProvided {
 
     private int id;
 
-    EActivitiesCategory(int resId) {
+    ActivitiesCategory(int resId) {
         id = resId;
     }
 

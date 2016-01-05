@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,7 +17,8 @@ import android.widget.Toast;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.controllers.BaseActivity;
+import org.team10424102.whisky.components.api.ApiService;
+import org.team10424102.whisky.components.PersistenceService;
 import org.team10424102.whisky.controllers.WelcomeActivity;
 import org.team10424102.whisky.databinding.ActivityDebugBinding;
 import org.team10424102.whisky.models.ServerHealth;
@@ -37,7 +39,7 @@ import static org.team10424102.whisky.App.PREF_SERVER_ADDRESS;
 /**
  * Created by yy on 11/7/15.
  */
-public class DebugActivity extends BaseActivity {
+public class DebugActivity extends AppCompatActivity {
 
 
     private EditText mServerAddr;
@@ -77,7 +79,11 @@ public class DebugActivity extends BaseActivity {
         RecyclerView userList = binding.userList;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userList.setLayoutManager(linearLayoutManager);
-        userList.setAdapter(new UserListAdapter(App.getPersistenceService().getAllUsers()));
+
+        PersistenceService persistenceService = (PersistenceService) App.getInstance().getComponent(PersistenceService.class);
+
+
+        userList.setAdapter(new UserListAdapter(persistenceService.getAllUsers()));
 
         mServerAddr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,10 +110,9 @@ public class DebugActivity extends BaseActivity {
         editor.putString(PREF_SERVER_ADDRESS, serverAddr);
         editor.apply();
 
+        ApiService apiService = (ApiService)App.getInstance().getComponent(ApiService.class);
 
-        ((App)getApplication()).changeServerAddress(serverAddr);
-
-        App.api().getServerHealth().enqueue(new ApiCallback<ServerHealth>() {
+        apiService.getServerHealth().enqueue(new ApiCallback<ServerHealth>() {
             @Override
             protected void handleSuccess(ServerHealth result) {
                 if (result.getStatus().equals("OK")) {

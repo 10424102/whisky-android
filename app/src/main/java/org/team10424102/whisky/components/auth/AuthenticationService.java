@@ -1,4 +1,4 @@
-package org.team10424102.whisky.components;
+package org.team10424102.whisky.components.auth;
 
 public interface AuthenticationService {
 

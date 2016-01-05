@@ -24,9 +24,10 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.databinding.FragmentActivitiesBinding;
 import org.team10424102.whisky.models.Activity;
-import org.team10424102.whisky.models.enums.EActivitiesCategory;
+import org.team10424102.whisky.models.enums.ActivitiesCategory;
 import org.team10424102.whisky.ui.ActivitySliderView;
 import org.team10424102.whisky.ui.MarginDownDecoration;
 import org.team10424102.whisky.utils.EnumUtils;
@@ -36,14 +37,14 @@ import java.util.List;
 
 public class ActivitiesFragment extends Fragment {
     public static final int PAGE_SIZE = 5;
-    private final ObservableField<EActivitiesCategory> mType = new ObservableField<>(EActivitiesCategory.SCHOOL);
+    private final ObservableField<ActivitiesCategory> mType = new ObservableField<>(ActivitiesCategory.SCHOOL);
     private RecyclerView mList;
     private List<Activity> mActivities = new ArrayList<>();
     private SliderLayout mSlider;
+    private ApiService mApiService;
 
     private void loadActivitiesFromServer(int page) {
-        App.api()
-                .getActivities(EActivitiesCategory.SCHOOL.toString(), page, PAGE_SIZE).enqueue(
+        mApiService.getActivities(ActivitiesCategory.SCHOOL.toString(), page, PAGE_SIZE).enqueue(
                 new ApiCallback<List<Activity>>() {
                     @Override
                     protected void handleSuccess(List<Activity> result) {
@@ -64,7 +65,7 @@ public class ActivitiesFragment extends Fragment {
 
         spinner.setAdapter(new ArrayAdapter<>(ab.getThemedContext(),
                 android.R.layout.simple_spinner_item,
-                EnumUtils.getStringList(getContext(), EActivitiesCategory.class)));
+                EnumUtils.getStringList(getContext(), ActivitiesCategory.class)));
     }
 
     private void initImageSlider(SliderLayout slider, PagerIndicator indicator) {
@@ -88,7 +89,7 @@ public class ActivitiesFragment extends Fragment {
             }
         });
 
-        App.api().getActivities(EActivitiesCategory.RECOMMENDATIONS.toString(), 0, 5).enqueue(
+        mApiService.getActivities(ActivitiesCategory.RECOMMENDATIONS.toString(), 0, 5).enqueue(
                 new ApiCallback<List<Activity>>() {
                     @Override
                     protected void handleSuccess(List<Activity> result) {
@@ -104,7 +105,7 @@ public class ActivitiesFragment extends Fragment {
 
                                     Bundle bundle = slider.getBundle();
                                     long id = bundle.getLong("id");
-                                    App.api().getActivity(id).enqueue(new ApiCallback<Activity>() {
+                                    mApiService.getActivity(id).enqueue(new ApiCallback<Activity>() {
                                         @Override
                                         protected void handleSuccess(Activity result) {
                                             Intent intent = new Intent(getContext(), ActivitiesDetailsActivity.class);
@@ -161,6 +162,8 @@ public class ActivitiesFragment extends Fragment {
         initRecyclerView(binding.list);
 
         loadActivitiesFromServer(0);
+
+        mApiService = (ApiService)App.getInstance().getComponent(ApiService.class);
 
         return binding.getRoot();
     }

@@ -2,7 +2,7 @@ package org.team10424102.whisky.models.enums;
 
 import org.team10424102.whisky.R;
 
-public enum EGender implements AndroidStringResourceProvided {
+public enum Gender implements AndroidStringResourceProvided {
     MALE(R.string.enum_gender_male),
     FEMALE(R.string.enum_gender_female),
     OTHER(R.string.enum_gender_other),
@@ -10,7 +10,7 @@ public enum EGender implements AndroidStringResourceProvided {
 
     private int id;
 
-    EGender(int resId) {
+    Gender(int resId) {
         id = resId;
     }
 

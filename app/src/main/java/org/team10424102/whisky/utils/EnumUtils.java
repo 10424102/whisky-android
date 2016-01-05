@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.team10424102.whisky.models.enums.AndroidStringResourceProvided;
+import org.team10424102.whisky.models.enums.Gender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,5 +21,13 @@ public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
             result.add(context.getString(sp.getStringResId()));
         }
         return result;
+    }
+
+//    public static <E extends AndroidStringResourceProvided> String toString(E e) {
+//        return StringUtils.getString(e.getStringResId());
+//    }
+
+    public static String toString(Gender e) {
+        return StringUtils.getString(e.getStringResId());
     }
 }

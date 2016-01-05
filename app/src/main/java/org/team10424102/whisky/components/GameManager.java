@@ -2,12 +2,12 @@ package org.team10424102.whisky.components;
 
 import android.util.Log;
 
+import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.models.Game;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import retrofit.Response;
 

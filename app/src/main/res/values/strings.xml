@@ -4,6 +4,7 @@
     <string name="login_or_register">登录/注册</string>
     <string name="phone_hint">输入手机号</string>
     <string name="phone_empty">手机号不能为空</string>
+    <string name="phone_validation_failed">该手机号码验证失败</string>
 
     <string name="vcode_title">输入短信验证码</string>
     <string name="vcode_hint">短信验证码已发送至 %1$s，请注意查收。</string>

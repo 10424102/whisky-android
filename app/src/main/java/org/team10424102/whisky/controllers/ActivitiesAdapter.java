@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.databinding.ItemActivityBinding;
 import org.team10424102.whisky.models.Activity;
 
@@ -15,9 +16,11 @@ import java.util.List;
 
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.ViewHolder> {
     private List<Activity> mDataset;
+    private final ApiService mApiService;
 
     public ActivitiesAdapter(List<Activity> dataset) {
         mDataset = dataset;
+        mApiService = (ApiService)App.getInstance().getComponent(ApiService.class);
     }
 
     @Override
@@ -29,7 +32,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
             @Override
             public void onClick(final View v) {
                 long id = (long) v.getTag();
-                App.api().getActivity(id).enqueue(new ApiCallback<Activity>() {
+                mApiService.getActivity(id).enqueue(new ApiCallback<Activity>() {
                     @Override
                     protected void handleSuccess(Activity result) {
                         Intent intent = new Intent(v.getContext(), ActivitiesDetailsActivity.class);

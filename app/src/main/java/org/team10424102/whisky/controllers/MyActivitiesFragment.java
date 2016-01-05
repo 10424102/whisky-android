@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.databinding.FragmentMyActivitiesBinding;
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.ui.MarginDownDecoration;
@@ -24,10 +25,10 @@ public class MyActivitiesFragment extends Fragment {
 
     private List<Activity> mActivities = new ArrayList<>();
     private RecyclerView mList;
+    private ApiService mApiService;
 
     private void loadActivitiesFromServer(int page) {
-        App.api()
-                .getActivities("myself", page, PAGE_SIZE).enqueue(
+        mApiService.getActivities("myself", page, PAGE_SIZE).enqueue(
                 new ApiCallback<List<Activity>>() {
                     @Override
                     protected void handleSuccess(List<Activity> result) {
@@ -52,6 +53,8 @@ public class MyActivitiesFragment extends Fragment {
                 loadActivitiesFromServer(current_page);
             }
         });
+
+        mApiService = (ApiService) App.getInstance().getComponent(ApiService.class);
 
         loadActivitiesFromServer(0);
 

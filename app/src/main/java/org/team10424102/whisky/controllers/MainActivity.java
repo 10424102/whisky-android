@@ -1,12 +1,17 @@
 package org.team10424102.whisky.controllers;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,12 +21,17 @@ import android.widget.TextView;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.auth.Account;
+import org.team10424102.whisky.components.auth.AccountService;
 import org.team10424102.whisky.components.ApiCallback;
+import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.controllers.posts.MatchesFragment;
-import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.Profile;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
+
+    private AccountService mAccountService;
+    private boolean mBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +52,6 @@ public class MainActivity extends BaseActivity {
         addTab(tabhost, "matches", R.string.tab_matches, R.drawable.tab_matches, MatchesFragment.class);
         addTab(tabhost, "messages", R.string.tab_messages, R.drawable.tab_messages, MessagesFragment.class);
         addTab(tabhost, "profile", R.string.tab_profile, R.drawable.tab_profile, ProfileFragment.class);
-
-        loadDataFromInternet();
     }
 
     private void addTab(FragmentTabHost tabhost, String tag, @StringRes int tiltle,
@@ -57,34 +65,39 @@ public class MainActivity extends BaseActivity {
         tabhost.addTab(spec, cls, null);
     }
 
-    private void loadDataFromInternet() {
-        App.api().getProfile().enqueue(new ApiCallback<Profile>(200) {
-            @Override
-            public void handleSuccess(Profile profile) {
-                Log.d(TAG, "获得用户资料：" + profile.toString());
-
-                Profile p = App.getProfile();
-
-                p.setPhone(profile.getPhone());
-                p.setUsername(profile.getUsername());
-                p.setEmail(profile.getEmail());
-                p.setBirthday(profile.getBirthday());
-                p.setCollege(profile.getCollege());
-                p.setAcademy(profile.getAcademy());
-                p.setGrade(profile.getGrade());
-                p.setSignature(profile.getSignature());
-                p.setHometown(profile.getHometown());
-                p.setHighschool(profile.getHighschool());
-                p.setAvatar(profile.getAvatar());
-                p.setBackground(profile.getBackground());
-                p.setGender(profile.getGender());
-                p.setNickname(profile.getNickname());
-
-                p.setFriendsCount(profile.getFriendsCount());
-                p.setFansCount(profile.getFansCount());
-                p.setFocusesCount(profile.getFocusesCount());
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, AccountService.class);
+        bindService(intent, mConnention, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnention);
+    }
+
+    private ServiceConnection mConnention = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
+            mAccountService = binder.getService();
+            final Account account = mAccountService.getCurrentAccount();
+            if (account.getProfile() == null) {
+                ApiService apiService = (ApiService)App.getInstance().getComponent(ApiService.class);
+                apiService.getProfile().enqueue(new ApiCallback<Profile>(){
+                    @Override
+                    protected void handleSuccess(Profile result) {
+                        account.setProfile(result);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 }
