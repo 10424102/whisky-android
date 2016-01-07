@@ -23,9 +23,10 @@ import android.view.ViewGroup;
 
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.auth.AccountService;
+import org.team10424102.whisky.controllers.activities.MyActivitiesFragment;
 import org.team10424102.whisky.controllers.posts.MyMatchesFragment;
 import org.team10424102.whisky.controllers.posts.MyPostsFragment;
-import org.team10424102.whisky.databinding.FragmentProfileBinding;
+import org.team10424102.whisky.databinding.ProfileFragmentBinding;
 import org.team10424102.whisky.utils.DimensionUtils;
 
 /**
@@ -34,7 +35,7 @@ import org.team10424102.whisky.utils.DimensionUtils;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
-    private FragmentProfileBinding mBinding;
+    private ProfileFragmentBinding mBinding;
 
     private void init() {
         // 初始化标签页
@@ -66,7 +67,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.profile_fragment, container, false);
 
         Intent intent = new Intent(getContext(), AccountService.class);
         getContext().bindService(intent, new ServiceConnection() {

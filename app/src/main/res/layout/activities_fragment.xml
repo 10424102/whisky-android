@@ -6,15 +6,11 @@
 
     <data>
 
-        <import type="org.team10424102.whisky.models.Activity"/>
-
-        <import type="org.team10424102.whisky.models.enums.ActivitiesCategory"/>
-
         <import type="android.databinding.ObservableField"/>
 
         <variable
-            name="type"
-            type="ObservableField&lt;ActivitiesCategory>"/>
+            name="category"
+            type="ObservableField&lt;String>"/>
     </data>
 
     <LinearLayout
@@ -120,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textSize="14sp"
-                        app:enum="@{type.get()}"/>
+                        android:text="@{category.get()}"/>
 
                     <com.github.johnkil.print.PrintView
                         android:layout_width="wrap_content"

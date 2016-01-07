@@ -14,19 +14,27 @@ import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.databinding.ItemGameBindingBinding;
 
+import javax.inject.Inject;
+
 public class GameBindingsAdapter extends RecyclerView.Adapter<GameBindingsAdapter.ViewHolder> {
+
+    @Inject Picasso mPicasso;
+
+    public GameBindingsAdapter() {
+        App.getInstance().getObjectGraph().inject(this);
+    }
 
     @Override
     public GameBindingsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-        ItemGameBindingBinding binding = ItemGameBindingBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemGameBindingBinding binding =
+                ItemGameBindingBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
         return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Picasso picasso = (Picasso)App.getInstance().getComponent(Picasso.class);
-        picasso.load(R.drawable.dummy_avatar).into(holder.binding.avatar);
+        mPicasso.load(R.drawable.dummy_avatar).into(holder.binding.avatar);
         Bitmap image = BitmapFactory.decodeResource(App.getInstance().getResources(), R.drawable.dummy_avatar);
         Palette.from(image).generate(new Palette.PaletteAsyncListener() {
             @Override

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class AccountRepoImpl implements AccountRepo {
 
     private final String TABLE_NAME = "t_user";
@@ -44,14 +46,8 @@ public class AccountRepoImpl implements AccountRepo {
     };
 
     private final SQLiteDatabase db;
-    private final Context mContext;
 
-
-    public AccountRepoImpl(Context context) {
-        mContext = context;
-        App app = (App)context.getApplicationContext();
-        PersistenceService persistenceService =
-                (PersistenceService)app.getComponent(PersistenceService.class);
+    public AccountRepoImpl(PersistenceService persistenceService) {
         db = persistenceService.getSQLiteDatabase();
     }
 
@@ -120,5 +116,6 @@ public class AccountRepoImpl implements AccountRepo {
 
     @Override
     public void save(Account account) {
+        Timber.i("未实现保存账户功能");
     }
 }

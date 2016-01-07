@@ -58,7 +58,6 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_login"
             android:elevation="1dp"
-            android:onClick="commit"
             android:text="@string/login_or_register"
             android:textSize="18sp"/>
     </LinearLayout>

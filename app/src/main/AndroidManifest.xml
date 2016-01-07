@@ -50,10 +50,10 @@
             android:name=".controllers.ChooseCollegeActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".controllers.ActivitiesCreatingActivity"
+            android:name=".controllers.activities.ActivitiesCreatingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".controllers.ActivitiesDetailsActivity"
+            android:name=".controllers.activities.ActivitiesDetailsActivity"
             android:screenOrientation="portrait"/>
         <service android:name=".components.auth.AccountService"
             android:exported="false"/>

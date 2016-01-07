@@ -21,17 +21,25 @@ import android.widget.TextView;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
-import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.components.api.ApiService;
+import org.team10424102.whisky.controllers.activities.ActivitiesFragment;
+import org.team10424102.whisky.controllers.messages.MessagesFragment;
 import org.team10424102.whisky.controllers.posts.MatchesFragment;
 import org.team10424102.whisky.models.Profile;
 
-public class MainActivity extends AppCompatActivity {
+import javax.inject.Inject;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+public class MainActivity extends BaseActivity {
 
     private AccountService mAccountService;
     private boolean mBound;
+    @Inject BlackServerApi mApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         FragmentTabHost tabhost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 
@@ -85,13 +93,25 @@ public class MainActivity extends AppCompatActivity {
             mAccountService = binder.getService();
             final Account account = mAccountService.getCurrentAccount();
             if (account.getProfile() == null) {
-                ApiService apiService = (ApiService)App.getInstance().getComponent(ApiService.class);
-                apiService.getProfile().enqueue(new ApiCallback<Profile>(){
-                    @Override
-                    protected void handleSuccess(Profile result) {
-                        account.setProfile(result);
-                    }
-                });
+                mApi.getProfile()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Profile>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Profile profile) {
+                                account.setProfile(profile);
+                            }
+                        });
             }
         }
 

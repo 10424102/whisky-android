@@ -206,7 +206,7 @@ public class Activity extends BaseObservable implements Parcelable {
 
     @JsonSetter("game")
     public void setGameByIdentifier(String identifier) {
-        GameManager gameManager = (GameManager)App.getInstance().getComponent(GameManager.class);
+        GameManager gameManager = App.getInstance().getObjectGraph().get(GameManager.class);
         this.game = gameManager.getGame(identifier);
     }
 

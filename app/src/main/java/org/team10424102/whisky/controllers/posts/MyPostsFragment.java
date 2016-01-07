@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.databinding.FragmentMyPostsBinding;
+import org.team10424102.whisky.databinding.MyPostsFragmentBinding;
 
 /**
  * Created by yy on 11/5/15.
@@ -17,8 +17,8 @@ import org.team10424102.whisky.databinding.FragmentMyPostsBinding;
 public class MyPostsFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final FragmentMyPostsBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_my_posts, container, false);
+        final MyPostsFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.my_posts_fragment, container, false);
         binding.setHandlers(new Handlers());
         return binding.getRoot();
     }

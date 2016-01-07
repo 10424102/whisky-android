@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers;
+package org.team10424102.whisky.controllers.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

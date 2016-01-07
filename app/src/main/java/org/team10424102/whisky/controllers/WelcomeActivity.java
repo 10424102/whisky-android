@@ -4,13 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,14 +19,13 @@ import android.widget.TextView;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
-import org.team10424102.whisky.components.api.ApiService;
 import org.team10424102.whisky.components.auth.BlackServerAccount;
-import org.team10424102.whisky.components.Initializer;
-import org.team10424102.whisky.databinding.ActivityWelcomeBinding;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yy on 10/30/15.
@@ -36,50 +33,37 @@ import javax.inject.Inject;
 public class WelcomeActivity extends BaseActivity {
     private static final String TAG = "WelcomeActivity";
 
-    @Inject ApiService mApiService;
+    @Bind(R.id.phone) EditText mPhone;
 
-    private EditText mPhone;
     private AccountService mAccountService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.welcome_activity);
+        ButterKnife.bind(this);
+
         // 低于 Jellybean 版本的 Android 使用下面的方法隐藏顶部状态栏
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
-        ActivityWelcomeBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mPhone.setOnClickListener(v -> mPhone.setCursorVisible(true));
 
-        mPhone = binding.phone;
-
-        // hide cursor
-        mPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPhone.setCursorVisible(true);
+        mPhone.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> {
+            mPhone.setCursorVisible(false);
+            if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                InputMethodManager in =
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(mPhone.getApplicationWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
+            return false;
         });
-
-        mPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                mPhone.setCursorVisible(false);
-                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager in =
-                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    in.hideSoftInputFromWindow(mPhone.getApplicationWindowToken(),
-                            InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-                return false;
-            }
-        });
-
-        new ApplicationInitializationTask().execute();
     }
 
-
+    @OnClick(R.id.login_or_register)
     public void commit(View view) {
         final String phone = mPhone.getText().toString();
         if (TextUtils.isEmpty(phone)) {
@@ -87,17 +71,6 @@ public class WelcomeActivity extends BaseActivity {
             return;
         }
         new PhoneValidationTask(mAccountService).execute(phone);
-    }
-
-    private class ApplicationInitializationTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            Log.d(TAG, "开始初始化应用");
-            Initializer initializer = new Initializer(WelcomeActivity.this);
-            initializer.init();
-            Log.d(TAG, "初始化完毕");
-            return null;
-        }
     }
 
     private class PhoneValidationTask extends AsyncTask<String, Void, Void> {

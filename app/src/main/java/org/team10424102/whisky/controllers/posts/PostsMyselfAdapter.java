@@ -13,8 +13,15 @@ import org.team10424102.whisky.models.extensions.PostExtensionManager;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PostsMyselfAdapter extends RecyclerView.Adapter<PostsMyselfAdapter.ViewHolder> {
     private List<Post> mDataset;
+    @Inject PostExtensionManager mPostExtensionManager;
+
+    public PostsMyselfAdapter() {
+        App.getInstance().getObjectGraph().inject(this);
+    }
 
     public PostsMyselfAdapter(List<Post> dataset) {
         mDataset = dataset;
@@ -27,15 +34,12 @@ public class PostsMyselfAdapter extends RecyclerView.Adapter<PostsMyselfAdapter.
 
         final Post post = mDataset.get(position);
 
-        final PostExtensionManager postExtensionManager =
-                (PostExtensionManager) App.getInstance().getComponent(PostExtensionManager.class);
-
-        binding.stub.getViewStub().setLayoutResource(postExtensionManager.getLayout(post.getExtension()));
+        binding.stub.getViewStub().setLayoutResource(mPostExtensionManager.getLayout(post.getExtension()));
 
         binding.stub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, View inflated) {
-                postExtensionManager.render(post.getExtension(), inflated);
+                mPostExtensionManager.render(post.getExtension(), inflated);
             }
         });
 

@@ -14,32 +14,32 @@ import org.team10424102.whisky.models.extensions.PostExtensionManager;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
     private List<Post> mDataset;
+    @Inject PostExtensionManager mPostExtensionManager;
 
     public PostsAdapter(List<Post> dataset) {
         mDataset = dataset;
+        App.getInstance().getObjectGraph().inject(this);
     }
 
     @Override
     public PostsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-        ItemPostBinding binding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemPostBinding binding =
+                ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
         final Post post = mDataset.get(position);
 
-        final PostExtensionManager postExtensionManager =
-                (PostExtensionManager) App.getInstance().getComponent(PostExtensionManager.class);
+        binding.stub.getViewStub().setLayoutResource(mPostExtensionManager.getLayout(post.getExtension()));
 
-        binding.stub.getViewStub().setLayoutResource(postExtensionManager.getLayout(post.getExtension()));
-
-        //binding.stub.setLayoutResource(Global.postExtensionManager.getLayout(post.getExtension()));
         binding.stub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, View inflated) {
-                postExtensionManager.render(post.getExtension(), inflated);
+                mPostExtensionManager.render(post.getExtension(), inflated);
             }
         });
-
 
         return new ViewHolder(binding);
     }

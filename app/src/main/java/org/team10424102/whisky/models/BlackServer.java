@@ -1,6 +1,6 @@
 package org.team10424102.whisky.models;
 
-public class ServerHealth {
+public class BlackServer {
     private String status;
 
     public String getStatus() {

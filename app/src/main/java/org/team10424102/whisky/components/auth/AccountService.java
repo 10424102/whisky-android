@@ -10,15 +10,17 @@ import org.team10424102.whisky.App;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class AccountService extends Service {
 
     private final IBinder mBinder = new InnerBinder();
     private Account mCurrentAccount;
-    private AccountRepo mAccountRepo;
+    @Inject AccountRepo mAccountRepo;
 
     @Override
     public void onCreate() {
-        
+        App.getInstance().getObjectGraph().inject(this);
     }
 
     @Nullable
@@ -46,10 +48,7 @@ public class AccountService extends Service {
      * @return
      */
     public List<Account> getAllAccounts() {
-        if (mAccountRepo == null) {
-            mAccountRepo = (AccountRepo)((App) getApplication()).getComponent(AccountRepo.class);
-            assert mAccountRepo != null: "缺少 AccountRepo 组件";
-        }
+        assert mAccountRepo != null: "缺少 AccountRepo 组件";
         return mAccountRepo.all();
     }
 }

@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers;
+package org.team10424102.whisky.controllers.activities;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -11,36 +11,56 @@ import android.view.ViewGroup;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.components.api.ApiService;
-import org.team10424102.whisky.databinding.FragmentMyActivitiesBinding;
+import org.team10424102.whisky.components.BlackServerApi;
+import org.team10424102.whisky.controllers.BaseFragment;
+import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
+import org.team10424102.whisky.databinding.MyActivitiesFragmentBinding;
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.ui.MarginDownDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyActivitiesFragment extends Fragment {
+import javax.inject.Inject;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+public class MyActivitiesFragment extends BaseFragment {
     public static final int PAGE_SIZE = 5;
 
     private List<Activity> mActivities = new ArrayList<>();
     private RecyclerView mList;
-    private ApiService mApiService;
 
-    private void loadActivitiesFromServer(int page) {
-        mApiService.getActivities("myself", page, PAGE_SIZE).enqueue(
-                new ApiCallback<List<Activity>>() {
+    @Inject BlackServerApi mApi;
+
+    private void loadPage(int page) {
+        mApi.getActivities("myself", page, PAGE_SIZE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Activity>>() {
                     @Override
-                    protected void handleSuccess(List<Activity> result) {
-                        mActivities.addAll(result);
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Activity> activities) {
+                        mActivities.addAll(activities);
                         mList.getAdapter().notifyDataSetChanged();
                     }
                 });
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final FragmentMyActivitiesBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_my_activities, container, false);
+        final MyActivitiesFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.my_activities_fragment, container, false);
 
         mList = binding.list;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -50,13 +70,9 @@ public class MyActivitiesFragment extends Fragment {
         mList.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
-                loadActivitiesFromServer(current_page);
+                loadPage(current_page);
             }
         });
-
-        mApiService = (ApiService) App.getInstance().getComponent(ApiService.class);
-
-        loadActivitiesFromServer(0);
 
         return binding.getRoot();
     }

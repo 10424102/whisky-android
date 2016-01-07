@@ -6,7 +6,6 @@ import android.databinding.ObservableInt;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -14,22 +13,26 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.components.auth.Account;
-import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.components.api.ApiService;
-import org.team10424102.whisky.components.auth.PhoneTokenAuthentication;
+import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.components.TokenResult;
-import org.team10424102.whisky.databinding.ActivityVcodeBinding;
+import org.team10424102.whisky.components.auth.Account;
+import org.team10424102.whisky.components.auth.PhoneTokenAuthentication;
+import org.team10424102.whisky.databinding.VcodeActivityBinding;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by yy on 10/30/15.
  */
-public class VcodeActivity extends AppCompatActivity {
+public class VcodeActivity extends BaseActivity {
     public static final String TAG = "VcodeActivity";
     public static final int TYPE_REFRESH_TOKEN = 1;
     public static final int TYPE_REGISTER = 2;
@@ -43,7 +46,7 @@ public class VcodeActivity extends AppCompatActivity {
     private EditText mVcode;
     private Timer mTimer;
     private ObservableInt mCounter = new ObservableInt(COUNTDOWN_LENGTH);
-    private ApiService mApiService;
+    @Inject BlackServerApi mApi;
     private Intent mIntent;
     private int mType;
 
@@ -59,7 +62,7 @@ public class VcodeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityVcodeBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_vcode);
+        VcodeActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.vcode_activity);
         mCountdown = binding.countdown;
         mVcode = binding.vcode;
 
@@ -72,8 +75,6 @@ public class VcodeActivity extends AppCompatActivity {
         binding.setRegister(mType == TYPE_REGISTER);
         binding.setCounter(mCounter);
         initToolbar(binding.toolbar);
-
-        mApiService = (ApiService)((App)getApplication()).getComponent(ApiService.class);
     }
 
     public void comfirm(View view) {
@@ -82,11 +83,23 @@ public class VcodeActivity extends AppCompatActivity {
         final String phone = mAccount.getProfile().getPhone();
         String vcode = mVcode.getText().toString();
 
-        mApiService.getToken(phone, vcode)
-                .enqueue(new ApiCallback<TokenResult>() {
+        mApi.getToken(phone, vcode)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<TokenResult>() {
                     @Override
-                    protected void handleSuccess(TokenResult result) {
-                        String token = result.getToken();
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TokenResult tokenResult) {
+                        String token = tokenResult.getToken();
 
                         PhoneTokenAuthentication auth = new PhoneTokenAuthentication(phone, token);
                         mAccount.setAuthentication(auth);
@@ -97,8 +110,6 @@ public class VcodeActivity extends AppCompatActivity {
                         startActivity(mIntent);
                     }
                 });
-
-
     }
 
     @Override

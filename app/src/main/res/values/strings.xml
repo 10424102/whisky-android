@@ -85,10 +85,14 @@
     <string name="enum_match_result_win">胜利</string>
     <string name="enum_match_result_lose">失败</string>
     <string name="enum_match_result_draw">平局</string>
-    <string name="enum_activities_category_school">校内活动</string>
-    <string name="enum_activities_category_friends">朋友的活动</string>
-    <string name="enum_activities_category_focuses">关注的人的活动</string>
-    <string name="enum_activities_category_recommendations">推荐活动</string>
+
+    <string name="matches_category_school">校园战况</string>
+    <string name="matches_category_friends">好友战况</string>
+    <string name="matches_category_focuses">关注的人战况</string>
+    <string name="activities_category_school">校园活动</string>
+    <string name="activities_category_friends">好友活动</string>
+    <string name="activities_category_focuses">关注的人活动</string>
+
     <string name="enum_activity_type_civil_war">内战</string>
     <string name="enum_activity_type_match">比赛</string>
     <string name="enum_gender_male">男</string>

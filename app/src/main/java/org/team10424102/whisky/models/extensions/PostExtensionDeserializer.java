@@ -9,14 +9,19 @@ import org.team10424102.whisky.App;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 public class PostExtensionDeserializer extends JsonDeserializer<PostExtensionData> {
+
+    @Inject PostExtensionManager mPostExtensionManager;
+
+    public PostExtensionDeserializer() {
+        App.getInstance().getObjectGraph().inject(this);
+    }
 
     @Override
     public PostExtensionData deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
-        final PostExtensionManager postExtensionManager =
-                (PostExtensionManager) App.getInstance().getComponent(PostExtensionManager.class);
-
-        return postExtensionManager.parseJson(jp);
+        return mPostExtensionManager.parseJson(jp);
     }
 }

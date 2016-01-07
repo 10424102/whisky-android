@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.team10424102.whisky.App;
-import org.team10424102.whisky.components.api.ApiService;
+import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.controllers.VcodeActivity;
 import org.team10424102.whisky.models.Profile;
+
+import javax.inject.Inject;
 
 public class BlackServerAccount implements Account {
     public static final String TAG = "BlackServerAccount";
@@ -19,9 +21,16 @@ public class BlackServerAccount implements Account {
     private Profile mProfile;
     private int usedCount;
     private String mPhone;
+    @Inject BlackServerApi mApi;
+    @Inject AccountRepo mAccountRepo;
 
-    public BlackServerAccount(){}
+    public BlackServerAccount(){
+        App.getInstance().getObjectGraph().inject(this);
+    }
+
+
     public BlackServerAccount(String phone) {
+        App.getInstance().getObjectGraph().inject(this);
         mPhone = phone;
     }
 
@@ -48,11 +57,9 @@ public class BlackServerAccount implements Account {
     @Override
     public void activate(Context context) {
         String phone = mPhone;
-        ApiService apiService =
-                (ApiService)((App)context.getApplicationContext()).getComponent(ApiService.class);
         try {
             if (mAuth == null) {
-                if (apiService.isPhoneAvailable(phone).execute().code() == 404) {
+                if (mApi.isPhoneAvailable(phone).execute().code() == 404) {
                     Intent intent = new Intent(context, VcodeActivity.class);
                     intent.putExtra(VcodeActivity.EXTRA_TYPE, VcodeActivity.TYPE_REGISTER);
                     intent.putExtra(VcodeActivity.EXTRA_ACCOUNT, this);
@@ -102,9 +109,7 @@ public class BlackServerAccount implements Account {
 
     @Override
     public void save(Context context) {
-        AccountRepo accountRepo =
-                (AccountRepo)((App)context.getApplicationContext()).getComponent(AccountRepo.class);
-        accountRepo.save(this);
+        mAccountRepo.save(this);
     }
 
     @NonNull

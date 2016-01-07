@@ -5,10 +5,12 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.squareup.okhttp.Request;
+import okhttp3.Request;
 
 import org.team10424102.whisky.App;
-import org.team10424102.whisky.components.api.ApiService;
+import org.team10424102.whisky.components.BlackServerApi;
+
+import javax.inject.Inject;
 
 public class PhoneTokenAuthentication implements Authentication {
     public static final String TAG = "PhoneTokenAuth...";
@@ -17,7 +19,10 @@ public class PhoneTokenAuthentication implements Authentication {
     private String mPhone;
     private String mToken;
 
+    @Inject BlackServerApi mApi;
+
     public PhoneTokenAuthentication(@NonNull String phone, @NonNull String token) {
+        App.getInstance().getObjectGraph().inject(this);
         mPhone = phone;
         mToken = token;
     }
@@ -40,10 +45,8 @@ public class PhoneTokenAuthentication implements Authentication {
 
     @Override
     public boolean isAuthenticated(Context context) {
-        ApiService apiService =
-                (ApiService)((App)context.getApplicationContext()).getComponent(ApiService.class);
         try {
-            if (apiService.isTokenAvailable(mToken).execute().code() == 200) return true;
+            if (mApi.isTokenAvailable(mToken).execute().code() == 200) return true;
         }catch (Exception e) {
             Log.d(TAG, "无法验证账户令牌是否有效", e);
         }
@@ -52,10 +55,6 @@ public class PhoneTokenAuthentication implements Authentication {
 
     @Override
     public Request authenticateHttpRequest(Request request) {
-        String url = request.urlString();
-        if (url.contains(App.API_USER + "/token")) return request;
-        if (url.contains(App.API_STATUS)) return request;
-
         return request.newBuilder().addHeader(AUTH_HEADER, mToken).build();
     }
 

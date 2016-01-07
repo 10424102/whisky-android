@@ -2,7 +2,7 @@ package org.team10424102.whisky.models.enums;
 
 import org.team10424102.whisky.R;
 
-public enum Constellation implements AndroidStringResourceProvided {
+public enum Constellation implements StringResourceProvided {
 
     ARIES(R.string.enum_constellation_aries),
     TAURUS(R.string.enum_constellation_taurus),

@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
  */
 public class SimpleDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "main.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     private static final String TAG = "SimpleDatabaseHelper";
     private Context mContext;
 

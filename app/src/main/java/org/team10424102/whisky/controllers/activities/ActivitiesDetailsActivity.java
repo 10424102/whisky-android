@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers;
+package org.team10424102.whisky.controllers.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -7,11 +7,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.databinding.ActivityActivitiesDetailsBinding;
+import org.team10424102.whisky.databinding.ActivitiesDetailsActivityBinding;
 import org.team10424102.whisky.models.Activity;
 
 public class ActivitiesDetailsActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +18,8 @@ public class ActivitiesDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Activity activity = intent.getParcelableExtra("activity");
 
-        ActivityActivitiesDetailsBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.activity_activities_details);
+        ActivitiesDetailsActivityBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activities_details_activity);
 
 
         setSupportActionBar(binding.toolbar);

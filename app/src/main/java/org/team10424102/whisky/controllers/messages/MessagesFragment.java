@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers;
+package org.team10424102.whisky.controllers.messages;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class MessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_messages, container, false);
+        View root = inflater.inflate(R.layout.messages_fragment, container, false);
 
         // 初始化 Toolbar
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);

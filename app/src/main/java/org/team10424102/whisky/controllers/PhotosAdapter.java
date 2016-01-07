@@ -14,24 +14,20 @@ import java.util.List;
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
     private List<LazyImage> mDataset;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public PhotosAdapter(List<LazyImage> dataset) {
         mDataset = dataset;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public PhotosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo, parent, false);
         return new ViewHolder(view);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-    // 绑定数据
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final LazyImage image = mDataset.get(position);
-        holder.image.setImageResource(R.drawable.dummy_avatar);
+        LazyImage image = mDataset.get(position);
+        image.loadInto(holder.image);
     }
 
     @Override
