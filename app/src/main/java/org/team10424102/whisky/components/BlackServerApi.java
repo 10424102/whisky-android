@@ -1,6 +1,6 @@
 package org.team10424102.whisky.components;
 
-import okhttp3.ResponseBody;
+
 
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.Game;
@@ -12,16 +12,18 @@ import org.team10424102.whisky.models.User;
 
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.HEAD;
-import retrofit.http.PATCH;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import okhttp3.ResponseBody;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.HEAD;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 public interface BlackServerApi {
@@ -35,11 +37,12 @@ public interface BlackServerApi {
     @GET("/api/users/token")
     Observable<TokenResult> getToken(@Query("phone") String phone, @Query("vcode") String vcode);
 
-    @HEAD("/api/users/phone")
-    Call<ResponseBody> isPhoneAvailable(@Query("q") String phone);
+
+    @HEAD("/api/users/phone") // java.lang.IllegalArgumentException: HEAD method must use Void as response type.
+    Call<Void> isPhoneAvailable(@Query("q") String phone);
 
     @HEAD("/api/users/token")
-    Call<ResponseBody> isTokenAvailable(@Query("q") String token);
+    Call<Void> isTokenAvailable(@Query("q") String token);
 
     @GET("/api/users/focuses")
     Observable<List<User>> getFocuses();
