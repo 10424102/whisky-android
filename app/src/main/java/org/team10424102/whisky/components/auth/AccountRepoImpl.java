@@ -1,7 +1,6 @@
 package org.team10424102.whisky.components.auth;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 

@@ -1,16 +1,11 @@
 package org.team10424102.whisky.components;
 
-import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import org.team10424102.whisky.App;
-import org.team10424102.whisky.R;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.enums.StringResourceProvided;
 import org.team10424102.whisky.utils.EnumUtils;
@@ -18,11 +13,6 @@ import org.team10424102.whisky.utils.EnumUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
-
-import dagger.ObjectGraph;
-import retrofit.Retrofit;
 
 public class DataBindingAdapters {
 
