@@ -108,32 +108,19 @@ public class CoreModule {
     @Provides @Singleton ObjectMapper provideObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
-    }
 
-    @Provides @Singleton SimpleModule provideSimpleModule(ObjectMapper objectMapper) {
         SimpleModule module = new SimpleModule();
-        objectMapper.registerModule(module);
-        return module;
-    }
 
-    @Provides @Singleton LazyImageSerializer provideLazyImageSerializer(SimpleModule module) {
         LazyImageSerializer serializer = new LazyImageSerializer();
         module.addSerializer(LazyImage.class, serializer);
-        return serializer;
-    }
 
-    @Provides @Singleton LazyImageDeserializer provideLazyImageDeserializer(SimpleModule module) {
-        LazyImageDeserializer deserializer = new LazyImageDeserializer();
-        module.addDeserializer(LazyImage.class, deserializer);
-        return deserializer;
-    }
+        LazyImageDeserializer deserializer1 = new LazyImageDeserializer();
+        module.addDeserializer(LazyImage.class, deserializer1);
 
-    @Provides @Singleton PostExtensionDeserializer providePostExtensionDeserializer
-            (PostExtensionManager manager, SimpleModule module) {
-        PostExtensionDeserializer deserializer = new PostExtensionDeserializer(manager);
-        module.addDeserializer(PostExtension.class, deserializer);
-        return deserializer;
+        PostExtensionDeserializer deserializer2 = new PostExtensionDeserializer();
+        module.addDeserializer(PostExtension.class, deserializer2);
+
+        return objectMapper;
     }
 
     @Provides @Singleton
@@ -154,28 +141,18 @@ public class CoreModule {
     }
 
     @Provides @Singleton PostExtensionManager providePostExtensionManager() {
-        return new PostExtensionManager();
-    }
+        PostExtensionManager manager = new PostExtensionManager();
 
-    @Provides @Singleton Dota2PostExtensionHandler provideDota2PostExtensionHandler
-            (PostExtensionManager manager) {
-        Dota2PostExtensionHandler handler = new Dota2PostExtensionHandler();
-        manager.registerPostExtensionHandler(handler);
-        return handler;
-    }
+        Dota2PostExtensionHandler handler1 = new Dota2PostExtensionHandler();
+        manager.registerPostExtensionHandler(handler1);
 
-    @Provides @Singleton ImagePostExtensionHandler provideImagePostExtensionHandler
-            (PostExtensionManager manager) {
-        ImagePostExtensionHandler handler = new ImagePostExtensionHandler();
-        manager.registerPostExtensionHandler(handler);
-        return handler;
-    }
+        ImagePostExtensionHandler handler2 = new ImagePostExtensionHandler();
+        manager.registerPostExtensionHandler(handler2);
 
-    @Provides @Singleton PollPostExtensionHandler providePollPostExtensionHandler
-            (PostExtensionManager manager) {
-        PollPostExtensionHandler handler = new PollPostExtensionHandler();
-        manager.registerPostExtensionHandler(handler);
-        return handler;
+        PollPostExtensionHandler handler3 = new PollPostExtensionHandler();
+        manager.registerPostExtensionHandler(handler3);
+
+        return manager;
     }
 
     @Provides @Singleton AccountRepo provideAccountRepo(PersistenceService persistenceService) {
