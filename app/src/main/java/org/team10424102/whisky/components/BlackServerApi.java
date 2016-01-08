@@ -1,6 +1,6 @@
 package org.team10424102.whisky.components;
 
-import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.Game;
@@ -36,10 +36,10 @@ public interface BlackServerApi {
     Observable<TokenResult> getToken(@Query("phone") String phone, @Query("vcode") String vcode);
 
     @HEAD("/api/users/phone")
-    Call<Response> isPhoneAvailable(@Query("q") String phone);
+    Call<ResponseBody> isPhoneAvailable(@Query("q") String phone);
 
     @HEAD("/api/users/token")
-    Call<Response> isTokenAvailable(@Query("q") String token);
+    Call<ResponseBody> isTokenAvailable(@Query("q") String token);
 
     @GET("/api/users/focuses")
     Observable<List<User>> getFocuses();
@@ -51,22 +51,22 @@ public interface BlackServerApi {
     Observable<List<User>> getFriends();
 
     @POST("/api/users/focuses/{id}")
-    Observable<Response> focusSomeone(@Path("id") long id);
+    Observable<ResponseBody> focusSomeone(@Path("id") long id);
 
     @DELETE("/api/users/focuses/{id}")
-    Observable<Response> unfocusSomeone(@Path("id") long id);
+    Observable<ResponseBody> unfocusSomeone(@Path("id") long id);
 
     @POST("/api/users/friends/{id}")
-    Observable<Response> friendSomeone(@Path("id") long id, @Query("alias") String alias);
+    Observable<ResponseBody> friendSomeone(@Path("id") long id, @Query("alias") String alias);
 
     @PUT("/api/users/friends/{id}")
-    Observable<Response> updateFriendAlias(@Path("id") long id, @Query("alias") String alias);
+    Observable<ResponseBody> updateFriendAlias(@Path("id") long id, @Query("alias") String alias);
 
     @DELETE("/api/users/friends/{id}")
-    Observable<Response> unfriendSomeone(@Path("id") long id);
+    Observable<ResponseBody> unfriendSomeone(@Path("id") long id);
 
     @PATCH("/api/users/signature")
-    Observable<Response> updateSignature(@Query("val") String value);
+    Observable<ResponseBody> updateSignature(@Query("val") String value);
 
     @GET("/api/users/photos")
     Observable<List<LazyImage>> getPhotos(@Query("page") int page, @Query("size") int size);
@@ -88,5 +88,5 @@ public interface BlackServerApi {
     Observable<Activity> getActivity(@Path("id") long id);
 
     @POST("/api/activities")
-    Call<Response> createActivity(@Body Activity activity);
+    Call<ResponseBody> createActivity(@Body Activity activity);
 }

@@ -65,15 +65,17 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
+        Timber.i("App onCreate()");
         super.onCreate();
         if (BuildConfig.DEBUG) {
+            Timber.d("Timber plant DebugTree");
             Timber.plant(new Timber.DebugTree());
         }
-
-        Timber.d("hello world");
     }
 
     public void init() {
+        Timber.i("App init()");
+
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         // Icon font
         PrintConfig.initDefault(getAssets(), "ionicons.ttf");

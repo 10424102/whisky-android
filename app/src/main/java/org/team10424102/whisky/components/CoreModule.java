@@ -43,6 +43,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.JacksonConverterFactory;
 import retrofit2.Retrofit;
+import timber.log.Timber;
 
 @Module(
         injects = {
@@ -59,7 +60,8 @@ import retrofit2.Retrofit;
                 PostsMyselfAdapter.class,
                 PostExtensionDeserializer.class,
                 ActivitySliderView.class,
-                PostExtensionManager.class
+                PostExtensionManager.class,
+                GameManager.class
         },
         library = true
 )
@@ -72,15 +74,18 @@ public class CoreModule {
     }
 
     @Provides @Singleton ErrorManager provideErrorManager() {
+        Timber.i("initialize ErrorManager");
         return new ErrorManager();
     }
 
     @Provides @Singleton PersistenceService providePersistenceService() {
+        Timber.i("initialize PersistenceService");
         return new PersistenceService(mContext);
     }
 
     @Provides @Singleton
     OkHttpClient provideOkHttpClient() {
+        Timber.i("initialize OkHttpClient");
         OkHttpClient client = new OkHttpClient();
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -98,6 +103,7 @@ public class CoreModule {
     }
 
     @Provides @Singleton Picasso providePicasso(OkHttpClient client) {
+        Timber.i("initialize Picasso");
         Picasso picasso = new Picasso
                 .Builder(mContext)
                 .downloader(new OkHttp3Downloader(client))
@@ -106,6 +112,7 @@ public class CoreModule {
     }
 
     @Provides @Singleton ObjectMapper provideObjectMapper() {
+        Timber.i("initialize ObjectMapper");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -125,6 +132,7 @@ public class CoreModule {
 
     @Provides @Singleton
     Retrofit provideRetrofit(ObjectMapper objectMapper, OkHttpClient client) {
+        Timber.i("initialze Retrofit");
         return new Retrofit.Builder()
                 .baseUrl(App.getInstance().getHost())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
@@ -133,14 +141,17 @@ public class CoreModule {
     }
 
     @Provides @Singleton BlackServerApi provideBlackServerApi(Retrofit retrofit) {
+        Timber.i("initialize BlackServerApi");
         return retrofit.create(BlackServerApi.class);
     }
 
-    @Provides @Singleton GameManager provideGameManager(BlackServerApi api) {
-        return new GameManager(api);
+    @Provides @Singleton GameManager provideGameManager() {
+        Timber.i("initialize GameManager");
+        return new GameManager();
     }
 
     @Provides @Singleton PostExtensionManager providePostExtensionManager() {
+        Timber.i("initialize PostExtensionManager");
         PostExtensionManager manager = new PostExtensionManager();
 
         Dota2PostExtensionHandler handler1 = new Dota2PostExtensionHandler();
@@ -156,11 +167,13 @@ public class CoreModule {
     }
 
     @Provides @Singleton AccountRepo provideAccountRepo(PersistenceService persistenceService) {
+        Timber.i("initialize AccountRepo");
         AccountRepo repo = new AccountRepoImpl(persistenceService);
         return repo;
     }
 
     @Provides @Singleton ImageRepo provideImageRepo(PersistenceService persistenceService) {
+        Timber.i("initialize ImageRepo");
         ImageRepo repo = new ImageRepoImpl(persistenceService);
         return repo;
     }

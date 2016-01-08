@@ -85,4 +85,10 @@ public class PhoneTokenAuthentication implements Authentication {
             return new PhoneTokenAuthentication[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return String.format("PhoneTokenAuthentication[phone=%s, token=%s, authenticated=%s]",
+                mPhone, mToken, mAuthenticated);
+    }
 }

@@ -13,13 +13,15 @@ import org.team10424102.whisky.models.Profile;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 public class BlackServerAccount implements Account {
     public static final String TAG = "BlackServerAccount";
     private Authentication mAuth;
     private boolean mValid;
     private boolean mVisiable;
     private Profile mProfile;
-    private int usedCount;
+    private int mUsedCount;
     private String mPhone;
     @Inject BlackServerApi mApi;
     @Inject AccountRepo mAccountRepo;
@@ -47,11 +49,11 @@ public class BlackServerAccount implements Account {
     }
 
     public int getUsedCount() {
-        return usedCount;
+        return mUsedCount;
     }
 
     public void setUsedCount(int usedCount) {
-        this.usedCount = usedCount;
+        mUsedCount = usedCount;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class BlackServerAccount implements Account {
                 }
             }
         } catch (Exception e) {
-            Log.d(TAG, "账户激活失败", e);
+            Timber.e(e, "account activation failed: %s", this);
         }
     }
 
@@ -136,7 +138,7 @@ public class BlackServerAccount implements Account {
         dest.writeByte(mValid ? (byte) 1 : (byte) 0);
         dest.writeByte(mVisiable ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.mProfile, 0);
-        dest.writeInt(this.usedCount);
+        dest.writeInt(this.mUsedCount);
         dest.writeString(this.mPhone);
     }
 
@@ -145,7 +147,7 @@ public class BlackServerAccount implements Account {
         this.mValid = in.readByte() != 0;
         this.mVisiable = in.readByte() != 0;
         this.mProfile = in.readParcelable(Profile.class.getClassLoader());
-        this.usedCount = in.readInt();
+        this.mUsedCount = in.readInt();
         this.mPhone = in.readString();
     }
 
@@ -158,4 +160,10 @@ public class BlackServerAccount implements Account {
             return new BlackServerAccount[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return String.format("BlackServerAccount[phone=%s, auth=%s, profile=%s, valid=%s, visiable=%s, usedCount=%d]",
+                mPhone, mAuth, mProfile, mValid, mVisiable, mUsedCount);
+    }
 }
