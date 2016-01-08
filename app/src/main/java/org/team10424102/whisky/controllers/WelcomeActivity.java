@@ -96,7 +96,8 @@ public class WelcomeActivity extends BaseActivity {
             if (account == null) {
                 account = new BlackServerAccount(phone);
             }
-            while (!account.isValid(context)) {
+
+            if (!account.isValid(context)) {
                 account.activate(context);
             }
             account.save(context);
