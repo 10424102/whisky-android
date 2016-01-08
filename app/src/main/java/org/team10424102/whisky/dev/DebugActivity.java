@@ -117,7 +117,7 @@ public class DebugActivity extends AppCompatActivity {
         editor.putString(PREF_SERVER_ADDRESS, serverAddr);
         editor.commit();
 
-        App.getInstance().init();
+        //App.getInstance().init();
 
         final String host = "http://" + serverAddr;
 

@@ -1,5 +1,6 @@
 package org.team10424102.whisky.controllers.posts;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,12 +46,21 @@ public class MatchesFragment extends Fragment {
     @Inject BlackServerApi mApi;
     @Inject PostExtensionManager mPostExtensionManager;
     private String mCategory = "school";
-    private final String[] mCategories = {"school", "friends", "focuses"};
-    private final String[] mLocalizedCategory = {
-            getString(R.string.matches_category_school),
-            getString(R.string.matches_category_friends),
-            getString(R.string.matches_category_focuses)
-    };
+    private String[] mCategories = {"school", "friends", "focuses"};
+    private String[] mLocalizedCategory;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mLocalizedCategory = new String[]{
+
+                getString(R.string.matches_category_school),
+                getString(R.string.matches_category_friends),
+                getString(R.string.matches_category_focuses)
+
+        };
+    }
 
     private void loadPage(int page) {
         mApi.getPosts(mCategory, page, PAGE_SIZE)

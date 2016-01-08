@@ -1,5 +1,6 @@
 package org.team10424102.whisky.controllers.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
@@ -25,6 +26,8 @@ import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.components.ErrorManager;
+import org.team10424102.whisky.controllers.BaseActivity;
+import org.team10424102.whisky.controllers.BaseFragment;
 import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
 import org.team10424102.whisky.databinding.ActivitiesFragmentBinding;
 import org.team10424102.whisky.models.Activity;
@@ -37,25 +40,32 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observer;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ActivitiesFragment extends Fragment {
+public class ActivitiesFragment extends BaseFragment {
     public static final String TAG = "ActivitiesFragment";
     public static final int PAGE_SIZE = 5;
     private RecyclerView mList;
     private List<Activity> mActivities = new ArrayList<>();
     private SliderLayout mSlider;
     private ObservableField<String> mCategory = new ObservableField<>("school");
-    private final String[] mCategories = {"school", "friends", "focuses"};
-    private final String[] mLocalizedCategory = {
-            getString(R.string.activities_category_school),
-            getString(R.string.activities_category_friends),
-            getString(R.string.activities_category_focuses)
-    };
+    private String[] mCategories = {"school", "friends", "focuses"};
+    private String[] mLocalizedCategory;
 
     @Inject BlackServerApi mApi;
     @Inject ErrorManager mErrorManager;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mLocalizedCategory = new String[] {
+                getString(R.string.activities_category_school),
+                getString(R.string.activities_category_friends),
+                getString(R.string.activities_category_focuses)
+        };
+    }
 
     private void loadPage(int page) {
         mApi
@@ -81,10 +91,6 @@ public class ActivitiesFragment extends Fragment {
                 });
     }
 
-    private void initToolbar(Toolbar toolbar, Spinner spinner) {
-
-    }
-
     private void initImageSlider(SliderLayout slider, PagerIndicator indicator) {
         mSlider = slider;
         mSlider.setCustomIndicator(indicator);
@@ -94,15 +100,16 @@ public class ActivitiesFragment extends Fragment {
         mApi.getActivities("recommendations", 0, 5)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Activity>>() {
+                .subscribe(new Subscriber<List<Activity>>() {
+
                     @Override
                     public void onCompleted() {
-                        Log.d(TAG, "成功获取推荐活动");
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "获取推荐活动失败");
+
                     }
 
                     @Override
@@ -152,12 +159,12 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSlider.startAutoCycle();
+        //mSlider.startAutoCycle();
     }
 
     @Override
     public void onPause() {
-        mSlider.stopAutoCycle();
+        //mSlider.stopAutoCycle();
         super.onPause();
     }
 
@@ -177,8 +184,6 @@ public class ActivitiesFragment extends Fragment {
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((App) getActivity().getApplication()).getObjectGraph().inject(this);
-
         ActivitiesFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.activities_fragment, container, false);
         binding.setCategory(mCategory);
@@ -213,7 +218,7 @@ public class ActivitiesFragment extends Fragment {
             }
         });
 
-        initImageSlider(binding.slider, binding.customIndicator);
+       // initImageSlider(binding.slider, binding.customIndicator);
 
         initRecyclerView(binding.list);
 

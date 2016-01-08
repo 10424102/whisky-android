@@ -17,6 +17,7 @@ import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.components.TokenResult;
 import org.team10424102.whisky.components.auth.Account;
+import org.team10424102.whisky.components.auth.BlackServerAccount;
 import org.team10424102.whisky.components.auth.PhoneTokenAuthentication;
 import org.team10424102.whisky.databinding.VcodeActivityBinding;
 
@@ -41,7 +42,7 @@ public class VcodeActivity extends BaseActivity {
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_INTENT = "intent";
 
-    private Account mAccount;
+    private BlackServerAccount mAccount;
     private TextView mCountdown;
     private EditText mVcode;
     private Timer mTimer;
@@ -71,7 +72,8 @@ public class VcodeActivity extends BaseActivity {
         mAccount = intent.getParcelableExtra(EXTRA_ACCOUNT);
         mIntent = intent.getParcelableExtra(EXTRA_INTENT);
 
-        binding.setPhone(mAccount.getProfile().getPhone());
+
+        binding.setPhone(mAccount.getPhone());
         binding.setRegister(mType == TYPE_REGISTER);
         binding.setCounter(mCounter);
         initToolbar(binding.toolbar);

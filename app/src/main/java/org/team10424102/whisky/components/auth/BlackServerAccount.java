@@ -12,7 +12,9 @@ import org.team10424102.whisky.models.Profile;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 public class BlackServerAccount implements Account {
     public static final String TAG = "BlackServerAccount";
@@ -25,7 +27,7 @@ public class BlackServerAccount implements Account {
     @Inject BlackServerApi mApi;
     @Inject AccountRepo mAccountRepo;
 
-    public BlackServerAccount(){
+    public BlackServerAccount() {
         App.getInstance().getObjectGraph().inject(this);
     }
 
@@ -82,7 +84,7 @@ public class BlackServerAccount implements Account {
                 }
             }
         } catch (Exception e) {
-            Timber.e(e, "account activation failed: %s", this);
+            throw new RuntimeException(String.format("account activation failed: %s", this), e);
         }
     }
 
@@ -105,7 +107,12 @@ public class BlackServerAccount implements Account {
     @NonNull
     @Override
     public Profile getProfile() {
+        //if (mProfile == null) throw new RuntimeException("mProfile is null");
         return mProfile;
+    }
+
+    public String getPhone() {
+        return mPhone;
     }
 
     @Override

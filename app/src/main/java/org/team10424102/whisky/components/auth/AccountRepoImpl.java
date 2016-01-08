@@ -115,6 +115,6 @@ public class AccountRepoImpl implements AccountRepo {
 
     @Override
     public void save(Account account) {
-        Timber.i("未实现保存账户功能");
+        Timber.e("saving account not implemented");
     }
 }

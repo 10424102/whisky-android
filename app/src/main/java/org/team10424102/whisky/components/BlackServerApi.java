@@ -1,13 +1,10 @@
 package org.team10424102.whisky.components;
 
-
-
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.Game;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.Post;
 import org.team10424102.whisky.models.Profile;
-import org.team10424102.whisky.models.BlackServer;
 import org.team10424102.whisky.models.User;
 
 import java.util.List;
@@ -28,15 +25,11 @@ import rx.Observable;
 
 public interface BlackServerApi {
 
-    @GET("/status")
-    Call<BlackServer> getServerStatus();
-
     @GET("/api/users")
     Observable<Profile> getProfile();
 
     @GET("/api/users/token")
     Observable<TokenResult> getToken(@Query("phone") String phone, @Query("vcode") String vcode);
-
 
     @HEAD("/api/users/phone") // java.lang.IllegalArgumentException: HEAD method must use Void as response type.
     Call<Void> isPhoneAvailable(@Query("q") String phone);

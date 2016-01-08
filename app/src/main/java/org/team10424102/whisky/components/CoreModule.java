@@ -18,6 +18,8 @@ import org.team10424102.whisky.components.auth.PhoneTokenAuthentication;
 import org.team10424102.whisky.controllers.MainActivity;
 import org.team10424102.whisky.controllers.VcodeActivity;
 import org.team10424102.whisky.controllers.WelcomeActivity;
+import org.team10424102.whisky.controllers.activities.ActivitiesAdapter;
+import org.team10424102.whisky.controllers.activities.ActivitiesFragment;
 import org.team10424102.whisky.controllers.posts.GameBindingsAdapter;
 import org.team10424102.whisky.controllers.posts.PostsAdapter;
 import org.team10424102.whisky.controllers.posts.PostsMyselfAdapter;
@@ -61,7 +63,9 @@ import timber.log.Timber;
                 PostExtensionDeserializer.class,
                 ActivitySliderView.class,
                 PostExtensionManager.class,
-                GameManager.class
+                GameManager.class,
+                ActivitiesFragment.class,
+                ActivitiesAdapter.class
         },
         library = true
 )
