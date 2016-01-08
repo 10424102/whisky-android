@@ -19,7 +19,7 @@ import static org.team10424102.whisky.App.ERR_SERVER_MAINTENANCE;
  */
 public class ErrorManager {
 
-    public void handleError(Context context, int err) {
+    public void handleError(Context context, int err, Throwable t) {
         switch (err) {
             case ERR_RENEW_TOKEN:
             case ERR_NETWORK:
@@ -34,6 +34,10 @@ public class ErrorManager {
             case ERR_INVOKING_API:
                 alertErrorDialog(context, R.string.err_invoking_api);
         }
+    }
+
+    public void handleError(Context context, int err) {
+        handleError(context, err, null);
     }
 
     private void alertErrorDialog(final Context context, @StringRes int resId) {

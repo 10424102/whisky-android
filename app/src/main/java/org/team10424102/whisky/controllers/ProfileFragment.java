@@ -1,9 +1,13 @@
 package org.team10424102.whisky.controllers;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,11 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.auth.AccountService;
+import org.team10424102.whisky.controllers.activities.MyActivitiesFragment;
 import org.team10424102.whisky.controllers.posts.MyMatchesFragment;
 import org.team10424102.whisky.controllers.posts.MyPostsFragment;
-import org.team10424102.whisky.databinding.FragmentProfileBinding;
+import org.team10424102.whisky.databinding.ProfileFragmentBinding;
 import org.team10424102.whisky.utils.DimensionUtils;
 
 /**
@@ -30,7 +35,7 @@ import org.team10424102.whisky.utils.DimensionUtils;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
-    private FragmentProfileBinding mBinding;
+    private ProfileFragmentBinding mBinding;
 
     private void init() {
         // 初始化标签页
@@ -62,8 +67,21 @@ public class ProfileFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
-        mBinding.setProfile(App.getProfile());
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.profile_fragment, container, false);
+
+        Intent intent = new Intent(getContext(), AccountService.class);
+        getContext().bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
+                mBinding.setAccount(binder.getService().getCurrentAccount());
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, Context.BIND_AUTO_CREATE);
 
         init();
 
@@ -83,7 +101,7 @@ public class ProfileFragment extends Fragment {
         private final Fragment[] mFragments = new Fragment[]{
                 new MyActivitiesFragment(),
                 new MyMatchesFragment(),
-                MyInfoFragment.newInstance(App.getProfile()),
+                new MyInfoFragment(),
                 new MyPostsFragment(),
                 new MyPhotosFragment()
         };

@@ -4,6 +4,7 @@
     <string name="login_or_register">登录/注册</string>
     <string name="phone_hint">输入手机号</string>
     <string name="phone_empty">手机号不能为空</string>
+    <string name="phone_validation_failed">该手机号码验证失败</string>
 
     <string name="vcode_title">输入短信验证码</string>
     <string name="vcode_hint">短信验证码已发送至 %1$s，请注意查收。</string>
@@ -84,10 +85,14 @@
     <string name="enum_match_result_win">胜利</string>
     <string name="enum_match_result_lose">失败</string>
     <string name="enum_match_result_draw">平局</string>
-    <string name="enum_activities_category_school">校内活动</string>
-    <string name="enum_activities_category_friends">朋友的活动</string>
-    <string name="enum_activities_category_focuses">关注的人的活动</string>
-    <string name="enum_activities_category_recommendations">推荐活动</string>
+
+    <string name="matches_category_school">校园战况</string>
+    <string name="matches_category_friends">好友战况</string>
+    <string name="matches_category_focuses">关注的人战况</string>
+    <string name="activities_category_school">校园活动</string>
+    <string name="activities_category_friends">好友活动</string>
+    <string name="activities_category_focuses">关注的人活动</string>
+
     <string name="enum_activity_type_civil_war">内战</string>
     <string name="enum_activity_type_match">比赛</string>
     <string name="enum_gender_male">男</string>

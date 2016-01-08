@@ -1,51 +1,42 @@
 package org.team10424102.whisky.controllers;
 
+import android.content.ComponentName;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.squareup.okhttp.Response;
-
-import org.team10424102.whisky.App;
-import org.team10424102.whisky.R;
-import org.team10424102.whisky.components.ApiCallback;
-import org.team10424102.whisky.databinding.FragmentMyInfoBinding;
-import org.team10424102.whisky.models.Profile;
+import org.team10424102.whisky.components.auth.AccountService;
+import org.team10424102.whisky.databinding.MyInfoFragmentBinding;
 import org.team10424102.whisky.ui.MyInfoItem;
-
-import java.util.zip.Inflater;
 
 /**
  * Created by yy on 11/5/15.
  */
 public class MyInfoFragment extends Fragment {
-    public static final String ARG_PROFILE = "profile";
     private final Handlers handlers = new Handlers(this);
 
-    public static MyInfoFragment newInstance(Profile profile) {
-
-        Bundle args = new Bundle();
-
-        args.putParcelable(ARG_PROFILE, profile);
-
-        MyInfoFragment fragment = new MyInfoFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final FragmentMyInfoBinding binding = FragmentMyInfoBinding.inflate(inflater, container, false);
+        final MyInfoFragmentBinding binding = MyInfoFragmentBinding.inflate(inflater, container, false);
 
-        final Profile profile = getArguments().getParcelable(ARG_PROFILE);
-        binding.setProfile(profile);
-        binding.setHandlers(handlers);
+        Intent intent = new Intent(getContext(), AccountService.class);
+        getContext().bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
+                binding.setAccount(binder.getService().getCurrentAccount());
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, Context.BIND_AUTO_CREATE);
 
         return binding.getRoot();
     }

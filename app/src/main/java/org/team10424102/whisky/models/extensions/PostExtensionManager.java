@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.GameManager;
 import org.team10424102.whisky.models.Post;
 
@@ -14,16 +15,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class PostExtensionManager {
-    private Map<String, PostExtension> extensions = new HashMap<>();
+    private Map<String, PostExtensionHandler> extensions = new HashMap<>();
 
     private Map<String, String> games = new HashMap<>();
 
-    private GameManager mGameManager;
+    @Inject GameManager mGameManager;
 
-
-    public PostExtensionManager(GameManager gameManager) {
-        mGameManager = gameManager;
+    public PostExtensionManager() {
+        App.getInstance().getObjectGraph().inject(this);
     }
 
     public void setGameFor(Post post) {
@@ -34,7 +36,7 @@ public class PostExtensionManager {
         }
     }
 
-    public void registerPostExtension(PostExtension pe) {
+    public void registerPostExtensionHandler(PostExtensionHandler pe) {
         Class cls = pe.getClass();
         PostExtensionIdentifier a = (PostExtensionIdentifier) cls.getAnnotation(PostExtensionIdentifier.class);
         String identifier = a.value();
@@ -52,21 +54,21 @@ public class PostExtensionManager {
         }
     }
 
-    public int getLayout(PostExtensionData data) {
+    public int getLayout(PostExtension data) {
         return extensions.get(data.getId()).getLayout();
     }
 
     @SuppressWarnings("unchecked")
-    public void render(PostExtensionData data, View view) {
+    public void render(PostExtension data, View view) {
         if (data == null) return;
         extensions.get(data.getId()).render(data.getData(), view);
     }
 
-    public PostExtensionData parseJson(JsonParser jp) throws IOException, JsonParseException {
+    public PostExtension parseJson(JsonParser jp) throws IOException, JsonParseException {
         JsonNode root = jp.getCodec().readTree(jp);
         String id = root.get("id").asText();
         JsonNode dataNode = root.get("data");
         Parcelable data = extensions.get(id).parseJson(dataNode, jp);
-        return new PostExtensionData(id, data);
+        return new PostExtension(id, data);
     }
 }

@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.android.databinding'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+
+repositories {
+    mavenCentral()
+}
 
 android {
     compileSdkVersion 23
@@ -14,8 +19,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -42,32 +47,60 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'com.mikhaellopez:circularimageview:2.0.2'
-    compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
-    //compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:palette-v7:23.1.1'
+
+    // square 全家桶
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    apt 'com.squareup.dagger:dagger-compiler:1.2.2'
+    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.0.0-RC1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.apache.commons:commons-lang3:3.4'
-    // Image Slider
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.daimajia.slider:library:1.1.5@aar'
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:converter-jackson:2.0.0-beta3'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton.timber:timber:4.1.0'
+
+    // RxJava
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.0'
+
+    // JSR-310 Java 8 新日期 API
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
+
     // Icon Font
     compile 'com.github.johnkil.print:print:1.3.1'
+
+    // 第三方框控件
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    //compile 'com.mikhaellopez:circularimageview:2.0.2'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar' // image slider
+
+    // utilities
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.commons:commons-lang3:3.4'
     compile('commons-beanutils:commons-beanutils:1.9.2') {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
-    compile 'com.android.support:support-annotations:23.1.1'
-    compile 'com.android.support:palette-v7:23.1.1'
+
+    // test
+    testCompile 'junit:junit:4.12'
 }

@@ -87,7 +87,9 @@ public class PersistenceService implements IDebugData {
         return users;
     }
 
-    public void closeDatabase() {
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
         db.close();
     }
 }

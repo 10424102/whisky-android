@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#4a90e2"
+              android:orientation="vertical">
+
+    <!-- LOGO -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/wan"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <!-- Phone -->
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/et_phone"
+            android:cursorVisible="false"
+            android:drawableLeft="@drawable/ic_phone_android_black_24dp"
+            android:drawablePadding="6dp"
+            android:elevation="1dp"
+            android:hint="@string/phone_hint"
+            android:inputType="phone"
+            android:padding="8dp"
+            android:text="123456789"
+            android:textColor="#333"
+            android:textColorHint="#ccc"
+            />
+
+        <!-- Login/Register -->
+        <Button
+            android:id="@+id/login_or_register"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_login"
+            android:elevation="1dp"
+            android:text="@string/login_or_register"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+</LinearLayout>
+</layout>

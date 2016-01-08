@@ -1,8 +1,10 @@
 package org.team10424102.whisky.components;
 
+import android.graphics.Bitmap;
+
 public interface ImageRepo {
 
-    byte[] getImage(String hash);
+    Bitmap getImage(String hash);
 
-    void save(byte[] data);
+    void save(String hash, Bitmap bitmap);
 }

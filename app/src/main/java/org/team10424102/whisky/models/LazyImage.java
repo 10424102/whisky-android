@@ -1,51 +1,100 @@
 package org.team10424102.whisky.models;
 
 import android.databinding.BaseObservable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.squareup.picasso.Picasso;
 
 import org.team10424102.whisky.App;
+import org.team10424102.whisky.components.ImageRepo;
+import org.team10424102.whisky.components.ImageViewWrapper;
+
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by yy on 11/14/15.
  */
 public class LazyImage extends BaseObservable implements Parcelable {
 
-    private String accessToken;
-    private String hash;
+    private String mAccessToken;
+    private String mHash;
+    private int mDefaultDrawableId = App.DEFAULT_NO_IMAGE;
+    @Inject Picasso mPicasso;
+    @Inject ImageRepo mImageRepo;
 
+    @Deprecated
     public LazyImage(String accessToken) {
-        this.accessToken = accessToken;
+        this(accessToken, null, App.DEFAULT_NO_IMAGE);
     }
 
+    public LazyImage(String accessToken, String hash) {
+        this(accessToken, hash, App.DEFAULT_NO_IMAGE);
+    }
 
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        GET & SET                            //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
-
+    public LazyImage(String accessToken, String hash, int defaultDrawableId) {
+        App.getInstance().getObjectGraph().inject(this);
+        mAccessToken = accessToken;
+        mHash = hash;
+        mDefaultDrawableId = defaultDrawableId;
+    }
 
     public String getAccessToken() {
-        return accessToken;
+        return mAccessToken;
     }
 
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        mAccessToken = accessToken;
     }
 
-
     public String getHash() {
-        return hash;
+        return mHash;
     }
 
     public void setHash(String hash) {
-        this.hash = hash;
+        mHash = hash;
+    }
+
+    public void loadInto(ImageView imageView) {
+        Observable.just(mHash)
+                .map(mImageRepo::getImage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Bitmap>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Bitmap bitmap) {
+                        if (bitmap != null) {
+                            imageView.setImageBitmap(bitmap);
+                        } else {
+                            mPicasso.load(uri()).into(new ImageViewWrapper(imageView, mHash));
+                        }
+                    }
+                });
+    }
+
+    public Uri uri() {
+        return Uri.parse(App.getInstance().getHost() + "/api/images?q=" + mAccessToken);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -55,8 +104,6 @@ public class LazyImage extends BaseObservable implements Parcelable {
     //                    =================                        //
     //                                                             //
     /////////////////////////////////////////////////////////////////
-
-
 
     @Override
     public String toString() {
@@ -68,19 +115,16 @@ public class LazyImage extends BaseObservable implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        LazyImage lazyImage = (LazyImage) o;
+        LazyImage image = (LazyImage) o;
 
-        return !(hash != null ? !hash.equals(lazyImage.hash) : lazyImage.hash != null);
+        return mHash.equals(image.mHash);
 
     }
 
     @Override
     public int hashCode() {
-        return hash != null ? hash.hashCode() : 0;
+        return mHash.hashCode();
     }
-
-
-
 
     /////////////////////////////////////////////////////////////////
     //                                                             //
@@ -90,17 +134,6 @@ public class LazyImage extends BaseObservable implements Parcelable {
     //                                                             //
     /////////////////////////////////////////////////////////////////
 
-
-
-
-    protected LazyImage(Parcel in) {
-        this.accessToken = in.readString();
-        this.hash = in.readString();
-    }
-
-    public LazyImage() {
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -108,10 +141,15 @@ public class LazyImage extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.accessToken);
-        dest.writeString(this.hash);
+        dest.writeString(this.mAccessToken);
+        dest.writeString(this.mHash);
     }
 
+    protected LazyImage(Parcel in) {
+        this.mAccessToken = in.readString();
+        this.mHash = in.readString();
+        App.getInstance().getObjectGraph().inject(this);
+    }
 
     public static final Creator<LazyImage> CREATOR = new Creator<LazyImage>() {
         public LazyImage createFromParcel(Parcel source) {

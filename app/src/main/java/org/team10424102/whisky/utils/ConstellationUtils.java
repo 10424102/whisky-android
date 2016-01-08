@@ -1,6 +1,6 @@
 package org.team10424102.whisky.utils;
 
-import org.team10424102.whisky.models.enums.EConstellation;
+import org.team10424102.whisky.models.enums.Constellation;
 import org.threeten.bp.MonthDay;
 
 import java.util.Calendar;
@@ -24,22 +24,22 @@ public class ConstellationUtils {
             MonthDay.of(11, 21),
             MonthDay.of(12, 21)
     };
-    public static EConstellation[] constellation = new EConstellation[]{
-            EConstellation.AQUARIUS,
-            EConstellation.PISCES,
-            EConstellation.ARIES,
-            EConstellation.TAURUS,
-            EConstellation.GEMINI,
-            EConstellation.CANCER,
-            EConstellation.LEO,
-            EConstellation.VIRGO,
-            EConstellation.LIBRA,
-            EConstellation.SCORPIO,
-            EConstellation.SAGITTARIUS,
-            EConstellation.CAPRICORN
+    public static Constellation[] constellation = new Constellation[]{
+            Constellation.AQUARIUS,
+            Constellation.PISCES,
+            Constellation.ARIES,
+            Constellation.TAURUS,
+            Constellation.GEMINI,
+            Constellation.CANCER,
+            Constellation.LEO,
+            Constellation.VIRGO,
+            Constellation.LIBRA,
+            Constellation.SCORPIO,
+            Constellation.SAGITTARIUS,
+            Constellation.CAPRICORN
     };
 
-    public static EConstellation getConstellation(Date date) {
+    public static Constellation getConstellation(Date date) {
         if (date == null) return null;
         int begin = 0, end = 11, mid = 5;
         Calendar cal = Calendar.getInstance();
