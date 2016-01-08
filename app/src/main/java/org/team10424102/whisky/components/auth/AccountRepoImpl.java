@@ -1,7 +1,6 @@
 package org.team10424102.whisky.components.auth;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -116,6 +115,6 @@ public class AccountRepoImpl implements AccountRepo {
 
     @Override
     public void save(Account account) {
-        Timber.i("未实现保存账户功能");
+        Timber.e("saving account not implemented");
     }
 }

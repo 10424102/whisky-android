@@ -6,14 +6,24 @@ import android.support.annotation.NonNull;
 
 import org.team10424102.whisky.models.Profile;
 
+import rx.Observable;
+
 public interface Account extends Parcelable{
+
     boolean isValid(Context context);
+
     Profile getProfile();
+
     void setProfile(Profile profile);
+
     boolean isVisiable();
+
     void activate(Context context);
+
     @NonNull
     Authentication getAuthentication();
+
     void setAuthentication(Authentication authentication);
+
     void save(Context context);
 }

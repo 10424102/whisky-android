@@ -31,7 +31,6 @@ import butterknife.OnClick;
  * Created by yy on 10/30/15.
  */
 public class WelcomeActivity extends BaseActivity {
-    private static final String TAG = "WelcomeActivity";
 
     @Bind(R.id.phone) EditText mPhone;
 

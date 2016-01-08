@@ -38,7 +38,7 @@ public class App extends Application {
     public static final String PREF_LOG_FILE_NAME_PREFIX = "log_file_name_prefix";
     public static final String PREF_LOG_FILE_LOCATION = "log_file_location";
     public static final String PREF_LOG_SWITCH = "log_switch";
-    public static final String DEFAULT_SERVER_ADDRESS = "oplogobit.eicp.net:29008";
+    public static final String DEFAULT_SERVER_ADDRESS = "192.168.1.100:8080";
     public static final String DEFAULT_LOG_FILE_NAME_PREFIX = "WALog_";
     public static final String DEFAULT_LOG_FILE_LOCATION = "/Whisky";
     public static final String DEFAULT_LOG_SWITCH = "off";
@@ -71,6 +71,7 @@ public class App extends Application {
             Timber.d("Timber plant DebugTree");
             Timber.plant(new Timber.DebugTree());
         }
+        init();
     }
 
     public void init() {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,7 +22,6 @@ import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.controllers.WelcomeActivity;
 import org.team10424102.whisky.databinding.DebugActivityBinding;
-import org.team10424102.whisky.databinding.ExtDota2MatchResultBinding;
 import org.team10424102.whisky.models.BlackServer;
 
 import java.io.File;
@@ -33,9 +31,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -120,9 +115,9 @@ public class DebugActivity extends AppCompatActivity {
         SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(PREF_SERVER_ADDRESS, serverAddr);
-        editor.apply();
+        editor.commit();
 
-        App.getInstance().init();
+        //App.getInstance().init();
 
         final String host = "http://" + serverAddr;
 

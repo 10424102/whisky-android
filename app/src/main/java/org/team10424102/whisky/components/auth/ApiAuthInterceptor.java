@@ -47,18 +47,17 @@ public class ApiAuthInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        Log.d(TAG, String.format("%s %s", request.method(), request.url().toString()));
-
         try {
             mBound.await();
 
             Account account = mAccountService.getCurrentAccount();
-            request = account.getAuthentication().authenticateHttpRequest(request);
-            Response response = chain.proceed(request);
-            if (response.code() == HTTP_UNAUTHORIZED) {
-                account.activate(mContext);
+
+            if(account != null) {
+                Authentication auth = account.getAuthentication();
+                request = auth.authenticateHttpRequest(request);
             }
-            return response;
+
+            return chain.proceed(request);
 
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
