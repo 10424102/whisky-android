@@ -45,6 +45,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.JacksonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
 import timber.log.Timber;
 
 @Module(
@@ -140,6 +141,7 @@ public class CoreModule {
         return new Retrofit.Builder()
                 .baseUrl(App.getInstance().getHost())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build();
     }
