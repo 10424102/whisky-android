@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.BlackServerApi;

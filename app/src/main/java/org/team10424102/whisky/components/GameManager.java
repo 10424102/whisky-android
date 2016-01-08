@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import dagger.Lazy;
-import retrofit.Response;
+import retrofit2.Response;
 
 public class GameManager {
     private static final String TAG = "GameManager";
