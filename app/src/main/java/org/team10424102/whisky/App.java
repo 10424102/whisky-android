@@ -4,17 +4,25 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.johnkil.print.PrintConfig;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import org.team10424102.whisky.components.CoreModule;
-import org.team10424102.whisky.components.DataBindingAdapters;
-import org.team10424102.whisky.components.PersistenceService;
+import org.team10424102.whisky.models.LazyImage;
+import org.team10424102.whisky.models.extensions.PostExtension;
+import org.team10424102.whisky.models.extensions.PostExtensionDeserializer;
+import org.team10424102.whisky.models.extensions.PostExtensionHandler;
+import org.team10424102.whisky.models.extensions.PostExtensionManager;
+import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtensionHandler;
+import org.team10424102.whisky.models.extensions.image.ImagePostExtensionHandler;
+import org.team10424102.whisky.models.extensions.poll.PollPostExtensionHandler;
+import org.team10424102.whisky.models.mapping.LazyImageDeserializer;
+import org.team10424102.whisky.models.mapping.LazyImageSerializer;
 import org.team10424102.whisky.utils.DimensionUtils;
 
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 
 import dagger.ObjectGraph;
 import timber.log.Timber;
@@ -75,6 +83,7 @@ public class App extends Application {
         DimensionUtils.init(getApplicationContext());
 
         mObjectGraph = ObjectGraph.create(new CoreModule(getApplicationContext()));
+
     }
 
     public static App getInstance() {

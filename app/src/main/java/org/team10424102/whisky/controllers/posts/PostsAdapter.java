@@ -9,7 +9,6 @@ import android.view.ViewStub;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.databinding.ItemPostBinding;
 import org.team10424102.whisky.models.Post;
-import org.team10424102.whisky.models.extensions.PostExtension;
 import org.team10424102.whisky.models.extensions.PostExtensionManager;
 
 import java.util.List;

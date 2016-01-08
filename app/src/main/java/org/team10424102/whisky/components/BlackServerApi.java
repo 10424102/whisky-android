@@ -1,6 +1,6 @@
 package org.team10424102.whisky.components;
 
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.Game;
@@ -36,10 +36,10 @@ public interface BlackServerApi {
     Observable<TokenResult> getToken(@Query("phone") String phone, @Query("vcode") String vcode);
 
     @HEAD("/api/users/phone")
-    Call<Void> isPhoneAvailable(@Query("q") String phone);
+    Call<Response> isPhoneAvailable(@Query("q") String phone);
 
     @HEAD("/api/users/token")
-    Call<Void> isTokenAvailable(@Query("q") String token);
+    Call<Response> isTokenAvailable(@Query("q") String token);
 
     @GET("/api/users/focuses")
     Observable<List<User>> getFocuses();

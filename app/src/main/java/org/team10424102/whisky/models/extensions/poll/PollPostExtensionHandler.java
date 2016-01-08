@@ -14,14 +14,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.databinding.ExtPollBinding;
-import org.team10424102.whisky.models.extensions.PostExtension;
+import org.team10424102.whisky.models.extensions.PostExtensionHandler;
 import org.team10424102.whisky.models.extensions.PostExtensionIdentifier;
-import org.team10424102.whisky.models.extensions.RelatedGame;
 
 import java.util.Arrays;
 
 @PostExtensionIdentifier("poll")
-public class PollPostExtension implements PostExtension<Poll> {
+public class PollPostExtensionHandler implements PostExtensionHandler<Poll> {
 
     @Override
     public void render(Poll poll, View view) {

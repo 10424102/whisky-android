@@ -5,22 +5,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import org.team10424102.whisky.App;
-
 import java.io.IOException;
 
 import javax.inject.Inject;
 
-public class PostExtensionDeserializer extends JsonDeserializer<PostExtensionData> {
+public class PostExtensionDeserializer extends JsonDeserializer<PostExtension> {
 
     @Inject PostExtensionManager mPostExtensionManager;
 
-    public PostExtensionDeserializer() {
-        App.getInstance().getObjectGraph().inject(this);
+    public PostExtensionDeserializer(PostExtensionManager postExtensionManager) {
+        mPostExtensionManager = postExtensionManager;
     }
 
     @Override
-    public PostExtensionData deserialize(JsonParser jp, DeserializationContext ctxt)
+    public PostExtension deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         return mPostExtensionManager.parseJson(jp);
     }

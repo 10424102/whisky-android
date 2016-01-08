@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import org.team10424102.whisky.models.extensions.PostExtensionData;
+import org.team10424102.whisky.models.extensions.PostExtension;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ public class Post extends BaseObservable implements Parcelable {
     private String device;
     private Date creationTime;
     private User sender;
-    private PostExtensionData extension;
+    private PostExtension extension;
     private Game game;
     private int likes;
     private int comments;
@@ -100,11 +100,11 @@ public class Post extends BaseObservable implements Parcelable {
         this.comments = comments;
     }
 
-    public PostExtensionData getExtension() {
+    public PostExtension getExtension() {
         return extension;
     }
 
-    public void setExtension(PostExtensionData extension) {
+    public void setExtension(PostExtension extension) {
         this.extension = extension;
     }
 
@@ -180,7 +180,7 @@ public class Post extends BaseObservable implements Parcelable {
         long tmpCreationTime = in.readLong();
         this.creationTime = tmpCreationTime == -1 ? null : new Date(tmpCreationTime);
         this.sender = in.readParcelable(User.class.getClassLoader());
-        this.extension = in.readParcelable(PostExtensionData.class.getClassLoader());
+        this.extension = in.readParcelable(PostExtension.class.getClassLoader());
         this.game = in.readParcelable(Game.class.getClassLoader());
         this.likes = in.readInt();
         this.comments = in.readInt();

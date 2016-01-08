@@ -23,12 +23,12 @@ import org.team10424102.whisky.controllers.posts.PostsAdapter;
 import org.team10424102.whisky.controllers.posts.PostsMyselfAdapter;
 import org.team10424102.whisky.dev.DebugActivity;
 import org.team10424102.whisky.models.LazyImage;
-import org.team10424102.whisky.models.extensions.PostExtensionData;
+import org.team10424102.whisky.models.extensions.PostExtension;
 import org.team10424102.whisky.models.extensions.PostExtensionDeserializer;
 import org.team10424102.whisky.models.extensions.PostExtensionManager;
-import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtension;
-import org.team10424102.whisky.models.extensions.image.ImagePostExtension;
-import org.team10424102.whisky.models.extensions.poll.PollPostExtension;
+import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtensionHandler;
+import org.team10424102.whisky.models.extensions.image.ImagePostExtensionHandler;
+import org.team10424102.whisky.models.extensions.poll.PollPostExtensionHandler;
 import org.team10424102.whisky.models.mapping.LazyImageDeserializer;
 import org.team10424102.whisky.models.mapping.LazyImageSerializer;
 import org.team10424102.whisky.ui.ActivitySliderView;
@@ -58,7 +58,8 @@ import retrofit2.Retrofit;
                 GameBindingsAdapter.class,
                 PostsMyselfAdapter.class,
                 PostExtensionDeserializer.class,
-                ActivitySliderView.class
+                ActivitySliderView.class,
+                PostExtensionManager.class
         },
         library = true
 )
@@ -81,16 +82,18 @@ public class CoreModule {
     @Provides @Singleton
     OkHttpClient provideOkHttpClient() {
         OkHttpClient client = new OkHttpClient();
-        client = client.newBuilder()
-                .readTimeout(1, TimeUnit.SECONDS)
-                .connectTimeout(1,TimeUnit.SECONDS)
-                .build();
-        client.interceptors().add(new ApiAuthInterceptor(mContext));
-        client.interceptors().add(new LocalizationInterceptor(mContext));
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        client.interceptors().add(loggingInterceptor);
+
+        client = client.newBuilder()
+                .readTimeout(1, TimeUnit.SECONDS)
+                .connectTimeout(1,TimeUnit.SECONDS)
+                .addInterceptor(new ApiAuthInterceptor(mContext))
+                .addInterceptor(new LocalizationInterceptor(mContext))
+                .addInterceptor(loggingInterceptor)
+                .build();
+
         return client;
     }
 
@@ -105,14 +108,32 @@ public class CoreModule {
     @Provides @Singleton ObjectMapper provideObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(LazyImage.class, new LazyImageSerializer());
-        module.addDeserializer(LazyImage.class, new LazyImageDeserializer());
-        module.addDeserializer(PostExtensionData.class, new PostExtensionDeserializer());
-        objectMapper.registerModule(module);
-
         return objectMapper;
+    }
+
+    @Provides @Singleton SimpleModule provideSimpleModule(ObjectMapper objectMapper) {
+        SimpleModule module = new SimpleModule();
+        objectMapper.registerModule(module);
+        return module;
+    }
+
+    @Provides @Singleton LazyImageSerializer provideLazyImageSerializer(SimpleModule module) {
+        LazyImageSerializer serializer = new LazyImageSerializer();
+        module.addSerializer(LazyImage.class, serializer);
+        return serializer;
+    }
+
+    @Provides @Singleton LazyImageDeserializer provideLazyImageDeserializer(SimpleModule module) {
+        LazyImageDeserializer deserializer = new LazyImageDeserializer();
+        module.addDeserializer(LazyImage.class, deserializer);
+        return deserializer;
+    }
+
+    @Provides @Singleton PostExtensionDeserializer providePostExtensionDeserializer
+            (PostExtensionManager manager, SimpleModule module) {
+        PostExtensionDeserializer deserializer = new PostExtensionDeserializer(manager);
+        module.addDeserializer(PostExtension.class, deserializer);
+        return deserializer;
     }
 
     @Provides @Singleton
@@ -132,12 +153,29 @@ public class CoreModule {
         return new GameManager(api);
     }
 
-    @Provides @Singleton PostExtensionManager providePostExtensionManager(GameManager gameManager) {
-        PostExtensionManager postExtensionManager = new PostExtensionManager(gameManager);
-        postExtensionManager.registerPostExtension(new Dota2PostExtension());
-        postExtensionManager.registerPostExtension(new ImagePostExtension());
-        postExtensionManager.registerPostExtension(new PollPostExtension());
-        return postExtensionManager;
+    @Provides @Singleton PostExtensionManager providePostExtensionManager() {
+        return new PostExtensionManager();
+    }
+
+    @Provides @Singleton Dota2PostExtensionHandler provideDota2PostExtensionHandler
+            (PostExtensionManager manager) {
+        Dota2PostExtensionHandler handler = new Dota2PostExtensionHandler();
+        manager.registerPostExtensionHandler(handler);
+        return handler;
+    }
+
+    @Provides @Singleton ImagePostExtensionHandler provideImagePostExtensionHandler
+            (PostExtensionManager manager) {
+        ImagePostExtensionHandler handler = new ImagePostExtensionHandler();
+        manager.registerPostExtensionHandler(handler);
+        return handler;
+    }
+
+    @Provides @Singleton PollPostExtensionHandler providePollPostExtensionHandler
+            (PostExtensionManager manager) {
+        PollPostExtensionHandler handler = new PollPostExtensionHandler();
+        manager.registerPostExtensionHandler(handler);
+        return handler;
     }
 
     @Provides @Singleton AccountRepo provideAccountRepo(PersistenceService persistenceService) {

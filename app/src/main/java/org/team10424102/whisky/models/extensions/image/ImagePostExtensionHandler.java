@@ -14,13 +14,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.databinding.ItemImageBinding;
 import org.team10424102.whisky.models.LazyImage;
-import org.team10424102.whisky.models.extensions.PostExtension;
+import org.team10424102.whisky.models.extensions.PostExtensionHandler;
 import org.team10424102.whisky.models.extensions.PostExtensionIdentifier;
 
 import java.util.List;
 
 @PostExtensionIdentifier("image")
-public class ImagePostExtension implements PostExtension<Gallery> {
+public class ImagePostExtensionHandler implements PostExtensionHandler<Gallery> {
     @Override
     @SuppressWarnings("unchecked")
     public void render(Gallery gallery, View view) {
