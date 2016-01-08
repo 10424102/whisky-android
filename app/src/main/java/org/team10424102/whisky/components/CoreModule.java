@@ -132,7 +132,7 @@ public class CoreModule {
 
     @Provides @Singleton
     Retrofit provideRetrofit(ObjectMapper objectMapper, OkHttpClient client) {
-        Timber.i("initialze Retrofit");
+        Timber.i("initialize Retrofit");
         return new Retrofit.Builder()
                 .baseUrl(App.getInstance().getHost())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))

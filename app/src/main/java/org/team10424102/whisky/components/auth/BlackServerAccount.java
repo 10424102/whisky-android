@@ -116,7 +116,7 @@ public class BlackServerAccount implements Account {
     @NonNull
     @Override
     public Authentication getAuthentication() {
-        if (mAuth == null) throw new IllegalStateException("Account 中 mAuth 为空");
+        if (mAuth == null) throw new RuntimeException("mAuth is null, crash app");
         return mAuth;
     }
 
