@@ -20,20 +20,15 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 public class BlackServerAccount extends BaseObservable implements Account {
-    public static final String TAG = "BlackServerAccount";
     private Authentication mAuth;
     private boolean mValid;
     private boolean mVisiable;
     private BlackServerUserProfile mProfile;
     private int mUsedCount;
     private BlackServerAccountIdentity mPhoneIdentity;
+
     @Inject BlackServerApi mApi;
     @Inject AccountRepo mAccountRepo;
-    private CountDownLatch mAuthLock = new CountDownLatch(1);
-
-    public BlackServerAccount() {
-        App.getInstance().getObjectGraph().inject(this);
-    }
 
     public BlackServerAccount(String phone) {
         App.getInstance().getObjectGraph().inject(this);
@@ -42,7 +37,6 @@ public class BlackServerAccount extends BaseObservable implements Account {
 
     public void setToken(String token) {
         mAuth = new PhoneTokenAuthentication(mPhoneIdentity.get(), token);
-        mAuthLock.countDown();
     }
 
     public void setVisiable(boolean visiable) {
@@ -63,7 +57,6 @@ public class BlackServerAccount extends BaseObservable implements Account {
             Timber.e("DO NOT activate account on the main thread!");
             throw new RuntimeException("activate account on main thread");
         }
-        mAuthLock = new CountDownLatch(1);
         String phone = mPhoneIdentity.get();
         try {
             if (mAuth == null) {
@@ -116,13 +109,8 @@ public class BlackServerAccount extends BaseObservable implements Account {
     @NonNull
     @Override
     public Authentication getAuthentication() {
-        try {
-            mAuthLock.await();
-            if (mAuth == null) throw new RuntimeException("mAuth is null");
-            return mAuth;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        if (mAuth == null) throw new RuntimeException("mAuth is null");
+        return mAuth;
     }
 
     @Override
@@ -152,7 +140,7 @@ public class BlackServerAccount extends BaseObservable implements Account {
         dest.writeParcelable(this.mAuth, 0);
         dest.writeByte(mValid ? (byte) 1 : (byte) 0);
         dest.writeByte(mVisiable ? (byte) 1 : (byte) 0);
-        dest.writeParcelable(this.mProfile, flags);
+        dest.writeParcelable(this.mProfile, 0);
         dest.writeInt(this.mUsedCount);
         dest.writeParcelable(this.mPhoneIdentity, 0);
     }
@@ -161,11 +149,9 @@ public class BlackServerAccount extends BaseObservable implements Account {
         this.mAuth = in.readParcelable(Authentication.class.getClassLoader());
         this.mValid = in.readByte() != 0;
         this.mVisiable = in.readByte() != 0;
-        this.mProfile = in.readParcelable(Profile.class.getClassLoader());
+        this.mProfile = in.readParcelable(BlackServerUserProfile.class.getClassLoader());
         this.mUsedCount = in.readInt();
         this.mPhoneIdentity = in.readParcelable(BlackServerAccountIdentity.class.getClassLoader());
-
-        App.getInstance().getObjectGraph().inject(this);
     }
 
     public static final Creator<BlackServerAccount> CREATOR = new Creator<BlackServerAccount>() {
