@@ -13,6 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 
@@ -53,8 +54,10 @@ public class ApiAuthInterceptor implements Interceptor {
             Account account = mAccountService.getCurrentAccount();
 
             if(account != null) {
+                Timber.d("before auth");
                 Authentication auth = account.getAuthentication();
                 request = auth.authenticateHttpRequest(request);
+                Timber.d("after auth");
             }
 
             return chain.proceed(request);

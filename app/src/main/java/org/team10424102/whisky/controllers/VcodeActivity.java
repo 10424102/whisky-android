@@ -39,7 +39,6 @@ import rx.schedulers.Schedulers;
  * Created by yy on 10/30/15.
  */
 public class VcodeActivity extends BaseActivity {
-    public static final String TAG = "VcodeActivity";
     public static final int TYPE_REFRESH_TOKEN = 1;
     public static final int TYPE_REGISTER = 2;
     public static final int COUNTDOWN_LENGTH = 60;
@@ -109,6 +108,7 @@ public class VcodeActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(token -> {
+                    // FIXME mAccount is not the same account in AccountService
                     mAccount.setToken(token);
                     finish();
                     VcodeActivity.finishedLock.countDown();
