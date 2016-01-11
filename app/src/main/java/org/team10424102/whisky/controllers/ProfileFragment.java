@@ -22,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.team10424102.whisky.R;
+import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
+import org.team10424102.whisky.components.auth.BlackServerAccount;
 import org.team10424102.whisky.controllers.activities.MyActivitiesFragment;
 import org.team10424102.whisky.controllers.posts.MyMatchesFragment;
 import org.team10424102.whisky.controllers.posts.MyPostsFragment;
@@ -74,7 +76,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
-                mBinding.setAccount(binder.getService().getCurrentAccount());
+                Account account = binder.getService().getCurrentAccount();
+                if (account instanceof BlackServerAccount) {
+                    mBinding.setAccount((BlackServerAccount) account);
+                }
             }
 
             @Override

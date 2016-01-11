@@ -6,6 +6,6 @@ import android.os.Parcelable;
 import okhttp3.Request;
 
 public interface Authentication extends Parcelable {
-    boolean isAuthenticated(Context context);
+    boolean isAuthenticated();
     Request authenticateHttpRequest(Request request);
 }

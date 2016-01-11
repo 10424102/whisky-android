@@ -101,15 +101,12 @@ public class ActivitiesFragment extends BaseFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Activity>>() {
-
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
 
                     @Override
@@ -159,12 +156,12 @@ public class ActivitiesFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //mSlider.startAutoCycle();
+        mSlider.startAutoCycle();
     }
 
     @Override
     public void onPause() {
-        //mSlider.stopAutoCycle();
+        mSlider.stopAutoCycle();
         super.onPause();
     }
 
@@ -176,8 +173,8 @@ public class ActivitiesFragment extends BaseFragment {
         mList.setAdapter(new ActivitiesAdapter(mActivities));
         mList.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
-            public void onLoadMore(int current_page) {
-                loadPage(current_page);
+            public void onLoadMore(int currentPage) {
+                loadPage(currentPage);
             }
         });
     }
@@ -218,9 +215,11 @@ public class ActivitiesFragment extends BaseFragment {
             }
         });
 
-       // initImageSlider(binding.slider, binding.customIndicator);
+        initImageSlider(binding.slider, binding.customIndicator);
 
         initRecyclerView(binding.list);
+
+        loadPage(0);
 
         return binding.getRoot();
     }

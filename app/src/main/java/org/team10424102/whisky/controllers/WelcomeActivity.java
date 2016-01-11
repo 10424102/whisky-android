@@ -20,12 +20,19 @@ import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
 import org.team10424102.whisky.components.auth.BlackServerAccount;
+import org.team10424102.whisky.components.auth.BlackServerAccountIdentity;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by yy on 10/30/15.
@@ -42,7 +49,7 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.welcome_activity);
         ButterKnife.bind(this);
 
-        // 低于 Jellybean 版本的 Android 使用下面的方法隐藏顶部状态栏
+        // hide system top status bar
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -69,47 +76,29 @@ public class WelcomeActivity extends BaseActivity {
             mPhone.setError(getString(R.string.phone_empty));
             return;
         }
-        new PhoneValidationTask(mAccountService).execute(phone);
-    }
+        //new PhoneValidationTask(mAccountService).execute(phone);
 
-    private class PhoneValidationTask extends AsyncTask<String, Void, Void> {
-
-        private final AccountService mAccountService;
-
-        public PhoneValidationTask(AccountService accountService) {
-            mAccountService = accountService;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            String phone = params[0];
-            List<Account> accounts = mAccountService.getAllAccounts();
-            Account account = null;
-            for (Account a : accounts) {
-                if (a.getProfile().getPhone().equals(phone)) {
-                    account = a;
-                    break;
-                }
-            }
-            Context context = WelcomeActivity.this;
-            if (account == null) {
-                account = new BlackServerAccount(phone);
-            }
-
-            if (!account.isValid(context)) {
-                account.activate(context);
-            }
-            account.save(context);
-            jumpMainActivity(account);
-            return null;
-        }
-
-    }
-
-    private void jumpMainActivity(Account validAccount) {
-        mAccountService.setCurrentAccount(validAccount);
-        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-        startActivity(intent);
+        // activate the account
+        Subscription activation = Observable.just(phone)
+                .map(BlackServerAccountIdentity::new)
+                .map(mAccountService::findByIdentity)
+                .map(account -> {
+                    if (account == null) return new BlackServerAccount(phone);
+                    return account;
+                })
+                .doOnNext(account -> {
+                    if (!account.isValid()) account.activate(this);
+                })
+                .doOnNext(account -> account.save(this))
+                .doOnNext(mAccountService::setCurrentAccount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(account -> {
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }, throwable -> {
+                    Timber.e(throwable, "failed to activate the account: phone = " + phone);
+                });
     }
 
     @Override

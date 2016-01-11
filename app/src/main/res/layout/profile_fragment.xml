@@ -7,7 +7,7 @@
     <data>
         <variable
             name="account"
-            type="org.team10424102.whisky.components.auth.Account"/>
+            type="org.team10424102.whisky.components.auth.BlackServerAccount"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -178,7 +178,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
-                                android:text="@{Integer.toString(account.profile.friendsCount)}"
+                                android:text="@{Integer.toString(account.profile.friends.size())}"
                                 android:textColor="#fff" />
 
                             <TextView
@@ -186,7 +186,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
-                                android:text="@{Integer.toString(account.profile.focusesCount)}"
+                                android:text="@{Integer.toString(account.profile.focuses.size())}"
                                 android:textColor="#fff" />
 
                             <TextView
@@ -194,7 +194,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
-                                android:text="@{Integer.toString(account.profile.fansCount)}"
+                                android:text="@{Integer.toString(account.profile.fans.size())}"
                                 android:textColor="#fff" />
 
                             <TextView
@@ -202,7 +202,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
-                                android:text="32"
+                                android:text="@{Integer.toString(account.profile.likes.size())}"
                                 android:textColor="#fff" />
 
                         </LinearLayout>

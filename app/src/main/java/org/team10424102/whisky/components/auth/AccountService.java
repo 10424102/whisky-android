@@ -51,4 +51,8 @@ public class AccountService extends Service {
         assert mAccountRepo != null: "缺少 AccountRepo 组件";
         return mAccountRepo.all();
     }
+
+    public Account findByIdentity(AccountIdentity identity) {
+        return null;
+    }
 }

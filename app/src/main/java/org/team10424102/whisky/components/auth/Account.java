@@ -4,26 +4,33 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import org.team10424102.whisky.models.Profile;
-
-import rx.Observable;
-
 public interface Account extends Parcelable{
-
-    boolean isValid(Context context);
-
-    Profile getProfile();
-
-    void setProfile(Profile profile);
 
     boolean isVisiable();
 
-    void activate(Context context);
+    @NonNull
+    Profile getProfile();
 
     @NonNull
     Authentication getAuthentication();
 
-    void setAuthentication(Authentication authentication);
+    AccountIdentity getIdentity();
+
+    /**
+     * Normally this method will call mAuth.isAuthenticated() to check if this account is valid.
+     * NOTICE: Do not invoke this method on main thread
+     *
+     * @return
+     */
+    boolean isValid();
+
+    /**
+     * If the account is valid, invoking this method will activate it again.
+     * NOTICE: Do not invoke this method on main thread
+     *
+     * @param context
+     */
+    void activate(Context context);
 
     void save(Context context);
 }
