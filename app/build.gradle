@@ -81,6 +81,8 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.0'
+    compile 'io.reactivex:rxjava-computation-expressions:0.21.0'
+    //compile 'com.netflix.rxjava:rxjava-computation-expressions:0.20.7'
 
     // JSR-310 Java 8 新日期 API
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'

@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
+import org.team10424102.whisky.components.auth.BlackServerAccount;
 import org.team10424102.whisky.databinding.MyInfoFragmentBinding;
 import org.team10424102.whisky.ui.MyInfoItem;
 
@@ -29,7 +31,10 @@ public class MyInfoFragment extends Fragment {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
-                binding.setAccount(binder.getService().getCurrentAccount());
+                Account account = binder.getService().getCurrentAccount();
+                if (account instanceof BlackServerAccount) {
+                    binding.setAccount((BlackServerAccount) account);
+                }
             }
 
             @Override

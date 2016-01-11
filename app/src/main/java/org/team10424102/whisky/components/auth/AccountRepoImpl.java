@@ -7,11 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.PersistenceService;
 import org.team10424102.whisky.models.LazyImage;
-import org.team10424102.whisky.models.Profile;
-import org.team10424102.whisky.models.enums.Gender;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class AccountRepoImpl implements AccountRepo {
     private final String COLUMN_VISIABLE = "visiable";
     private final String COLUMN_AVATAR_HASH = "avatar_hash";         // 32 chars
     private final String COLUMN_BACKGROUND_HASH = "background_HASH"; // 32 chars
-    private final String[] ALL_COLUMNS = new String[] {
+    private final String[] ALL_COLUMNS = new String[]{
             COLUMN_PHONE, COLUMN_TOKEN, COLUMN_USED_COUNT, COLUMN_USERNAME, COLUMN_NICKNAME,
             COLUMN_SIGNATURE, COLUMN_EMAIL, COLUMN_HIGHSCHOOL, COLUMN_HOMETOWN, COLUMN_GENDER,
             COLUMN_BIRTHDAY, COLUMN_COLLEGE, COLUMN_ACADEMY, COLUMN_GRADE, COLUMN_VISIABLE,
@@ -57,55 +56,50 @@ public class AccountRepoImpl implements AccountRepo {
         List<Account> result = new ArrayList<>(cursor.getCount());
 
         while (cursor.moveToNext()) {
-            BlackServerAccount account = new BlackServerAccount();
-            account.setUsedCount(cursor.getInt(cursor.getColumnIndex(COLUMN_USED_COUNT)));
-            account.setVisiable(cursor.getInt(cursor.getColumnIndex(COLUMN_VISIABLE)) != 0);
-
             String phone = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE));
             String token = cursor.getString(cursor.getColumnIndex(COLUMN_TOKEN));
 
-            PhoneTokenAuthentication auth = new PhoneTokenAuthentication(phone, token);
-            account.setAuth(auth);
+            BlackServerAccount account = new BlackServerAccount(phone);
 
-            Profile profile =  account.getProfile();
+            account.setToken(token);
 
-            profile.setPhone(phone);
-            profile.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)));
-            profile.setNickname(cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
-            profile.setSignature(cursor.getString(cursor.getColumnIndex(COLUMN_SIGNATURE)));
-            profile.setHighschool(cursor.getString(cursor.getColumnIndex(COLUMN_HIGHSCHOOL)));
-            profile.setHometown(cursor.getString(cursor.getColumnIndex(COLUMN_HOMETOWN)));
+            account.setUsedCount(cursor.getInt(cursor.getColumnIndex(COLUMN_USED_COUNT)));
+            account.setVisiable(cursor.getInt(cursor.getColumnIndex(COLUMN_VISIABLE)) != 0);
 
-            String genderStr = cursor.getString(cursor.getColumnIndex(COLUMN_GENDER));
-            Gender gender = Gender.UNKNOWN;
-            try {
-                gender = Gender.valueOf(genderStr);
-            }catch (Exception e){
-                // no-op
-            }
-            profile.setGender(gender);
 
+            int year = 0, month = 0, day = 0;
             String birthdayStr = cursor.getString(cursor.getColumnIndex(COLUMN_BIRTHDAY));
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date birthday = null;
             try {
                 birthday = format.parse(birthdayStr);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(birthday);
+                year = cal.get(Calendar.YEAR);
+                month = cal.get(Calendar.MONTH);
+                day = cal.get(Calendar.DAY_OF_MONTH);
             } catch (Exception e) {
                 // no-op
             }
-            profile.setBirthday(birthday);
 
-            profile.setCollege(cursor.getString(cursor.getColumnIndex(COLUMN_COLLEGE)));
-            profile.setAcademy(cursor.getString(cursor.getColumnIndex(COLUMN_ACADEMY)));
-            profile.setGrade(cursor.getString(cursor.getColumnIndex(COLUMN_ACADEMY)));
+            BlackServerUserProfile profile = new BlackServerUserProfile.Builder()
+                    .phone(phone)
+                    .username(cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)))
+                    .nickname(cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)))
+                    .signature(cursor.getString(cursor.getColumnIndex(COLUMN_SIGNATURE)))
+                    .highschool(cursor.getString(cursor.getColumnIndex(COLUMN_HIGHSCHOOL)))
+                    .hometown(cursor.getString(cursor.getColumnIndex(COLUMN_HOMETOWN)))
+                    .gender(cursor.getInt(cursor.getColumnIndex(COLUMN_GENDER)))
+                    .birthday(year, month, day)
+                    .college(cursor.getString(cursor.getColumnIndex(COLUMN_COLLEGE)))
+                    .academy(cursor.getString(cursor.getColumnIndex(COLUMN_ACADEMY)))
+                    .grade(cursor.getString(cursor.getColumnIndex(COLUMN_ACADEMY)))
+                    .avatar(null, cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR_HASH)))
+                    .background(null, cursor.getString(cursor.getColumnIndex(COLUMN_BACKGROUND_HASH)))
+                    .build();
 
-            String avatarHash = cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR_HASH));
-            LazyImage avatar = new LazyImage(null, avatarHash, App.DEFAULT_AVATAR);
-            profile.setAvatar(avatar);
-            String backgroundHash = cursor.getString(cursor.getColumnIndex(COLUMN_BACKGROUND_HASH));
-            LazyImage background = new LazyImage(null, backgroundHash, App.DEFAULT_BACKGROUND);
-            profile.setBackground(background);
+            account.setProfile(profile);
 
             result.add(account);
         }
@@ -116,5 +110,10 @@ public class AccountRepoImpl implements AccountRepo {
     @Override
     public void save(Account account) {
         Timber.e("saving account not implemented");
+    }
+
+    @Override
+    public Account findByIdentity(AccountIdentity identity) {
+        return null;
     }
 }

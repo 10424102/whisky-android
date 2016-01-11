@@ -2,47 +2,47 @@ package org.team10424102.whisky.components.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.os.Looper;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
 import org.team10424102.whisky.App;
+import org.team10424102.whisky.BR;
 import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.controllers.VcodeActivity;
-import org.team10424102.whisky.models.Profile;
+
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
+import timber.log.Timber;
 
-public class BlackServerAccount implements Account {
+public class BlackServerAccount extends BaseObservable implements Account {
     public static final String TAG = "BlackServerAccount";
     private Authentication mAuth;
     private boolean mValid;
     private boolean mVisiable;
-    private Profile mProfile;
+    private BlackServerUserProfile mProfile;
     private int mUsedCount;
-    private String mPhone;
+    private BlackServerAccountIdentity mPhoneIdentity;
     @Inject BlackServerApi mApi;
     @Inject AccountRepo mAccountRepo;
+    private CountDownLatch mAuthLock = new CountDownLatch(1);
 
     public BlackServerAccount() {
         App.getInstance().getObjectGraph().inject(this);
     }
 
-
     public BlackServerAccount(String phone) {
         App.getInstance().getObjectGraph().inject(this);
-        mPhone = phone;
+        mPhoneIdentity = new BlackServerAccountIdentity(phone);
     }
 
-    public Authentication getAuth() {
-        return mAuth;
-    }
-
-    public void setAuth(Authentication auth) {
-        mAuth = auth;
+    public void setToken(String token) {
+        mAuth = new PhoneTokenAuthentication(mPhoneIdentity.get(), token);
+        mAuthLock.countDown();
     }
 
     public void setVisiable(boolean visiable) {
@@ -59,39 +59,40 @@ public class BlackServerAccount implements Account {
 
     @Override
     public void activate(Context context) {
-        String phone = mPhone;
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            Timber.e("DO NOT activate account on the main thread!");
+            throw new RuntimeException("activate account on main thread");
+        }
+        mAuthLock = new CountDownLatch(1);
+        String phone = mPhoneIdentity.get();
         try {
             if (mAuth == null) {
                 if (mApi.isPhoneAvailable(phone).execute().code() == 404) {
-                    Intent intent = new Intent(context, VcodeActivity.class);
-                    intent.putExtra(VcodeActivity.EXTRA_TYPE, VcodeActivity.TYPE_REGISTER);
-                    intent.putExtra(VcodeActivity.EXTRA_ACCOUNT, this);
-                    context.startActivity(intent);
+                    jumpVcodeActivity(context, VcodeActivity.TYPE_REGISTER);
                 } else {
-                    Intent intent = new Intent(context, VcodeActivity.class);
-                    intent.putExtra(VcodeActivity.EXTRA_TYPE, VcodeActivity.TYPE_REFRESH_TOKEN);
-                    intent.putExtra(VcodeActivity.EXTRA_ACCOUNT, this);
-                    context.startActivity(intent);
+                    jumpVcodeActivity(context, VcodeActivity.TYPE_REFRESH_TOKEN);
                 }
             } else {
-                if (mAuth.isAuthenticated(context)) {
-                    // no-op
-                } else {
-                    Intent intent = new Intent(context, VcodeActivity.class);
-                    intent.putExtra(VcodeActivity.EXTRA_TYPE, VcodeActivity.TYPE_REFRESH_TOKEN);
-                    intent.putExtra(VcodeActivity.EXTRA_ACCOUNT, this);
-                    context.startActivity(intent);
-                }
+                jumpVcodeActivity(context, VcodeActivity.TYPE_REFRESH_TOKEN);
             }
         } catch (Exception e) {
             throw new RuntimeException(String.format("account activation failed: %s", this), e);
         }
     }
 
+    private void jumpVcodeActivity(Context context, int type) throws InterruptedException {
+        Intent intent = new Intent(context, VcodeActivity.class);
+        intent.putExtra(VcodeActivity.EXTRA_TYPE, type);
+        intent.putExtra(VcodeActivity.EXTRA_ACCOUNT, this);
+        VcodeActivity.finishedLock = new CountDownLatch(1);
+        context.startActivity(intent);
+        VcodeActivity.finishedLock.await();
+    }
+
     @Override
-    public boolean isValid(Context context) {
+    public boolean isValid() {
         if (mAuth == null) return false;
-        return mAuth.isAuthenticated(context);
+        return mAuth.isAuthenticated();
     }
 
     @Override
@@ -99,20 +100,34 @@ public class BlackServerAccount implements Account {
         return mVisiable;
     }
 
-    @Override
-    public void setProfile(Profile profile) {
+    public void setProfile(BlackServerUserProfile profile) {
         mProfile = profile;
+        notifyPropertyChanged(BR.profile);
     }
 
     @NonNull
     @Override
-    public Profile getProfile() {
-        //if (mProfile == null) throw new RuntimeException("mProfile is null");
+    @Bindable
+    public BlackServerUserProfile getProfile() {
+        if (mProfile == null) throw new RuntimeException("mProfile is null");
         return mProfile;
     }
 
-    public String getPhone() {
-        return mPhone;
+    @NonNull
+    @Override
+    public Authentication getAuthentication() {
+        try {
+            mAuthLock.await();
+            if (mAuth == null) throw new RuntimeException("mAuth is null");
+            return mAuth;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public BlackServerAccountIdentity getIdentity() {
+        return mPhoneIdentity;
     }
 
     @Override
@@ -120,16 +135,10 @@ public class BlackServerAccount implements Account {
         mAccountRepo.save(this);
     }
 
-    @NonNull
     @Override
-    public Authentication getAuthentication() {
-        if (mAuth == null) throw new RuntimeException("mAuth is null, crash app");
-        return mAuth;
-    }
-
-    @Override
-    public void setAuthentication(Authentication authentication) {
-        mAuth = authentication;
+    public String toString() {
+        return String.format("BlackServerAccount[phone=%s, auth=%s, profile=%s, valid=%s, visiable=%s, usedCount=%d]",
+                mPhoneIdentity.get(), mAuth, mProfile, mValid, mVisiable, mUsedCount);
     }
 
 
@@ -143,9 +152,9 @@ public class BlackServerAccount implements Account {
         dest.writeParcelable(this.mAuth, 0);
         dest.writeByte(mValid ? (byte) 1 : (byte) 0);
         dest.writeByte(mVisiable ? (byte) 1 : (byte) 0);
-        dest.writeParcelable(this.mProfile, 0);
+        dest.writeParcelable(this.mProfile, flags);
         dest.writeInt(this.mUsedCount);
-        dest.writeString(this.mPhone);
+        dest.writeParcelable(this.mPhoneIdentity, 0);
     }
 
     protected BlackServerAccount(Parcel in) {
@@ -154,7 +163,9 @@ public class BlackServerAccount implements Account {
         this.mVisiable = in.readByte() != 0;
         this.mProfile = in.readParcelable(Profile.class.getClassLoader());
         this.mUsedCount = in.readInt();
-        this.mPhone = in.readString();
+        this.mPhoneIdentity = in.readParcelable(BlackServerAccountIdentity.class.getClassLoader());
+
+        App.getInstance().getObjectGraph().inject(this);
     }
 
     public static final Creator<BlackServerAccount> CREATOR = new Creator<BlackServerAccount>() {
@@ -166,10 +177,4 @@ public class BlackServerAccount implements Account {
             return new BlackServerAccount[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return String.format("BlackServerAccount[phone=%s, auth=%s, profile=%s, valid=%s, visiable=%s, usedCount=%d]",
-                mPhone, mAuth, mProfile, mValid, mVisiable, mUsedCount);
-    }
 }

@@ -8,6 +8,8 @@ import android.support.annotation.StringRes;
 
 import org.team10424102.whisky.R;
 
+import timber.log.Timber;
+
 import static org.team10424102.whisky.App.ERR_INIT_RETROFIT;
 import static org.team10424102.whisky.App.ERR_INVOKING_API;
 import static org.team10424102.whisky.App.ERR_NETWORK;
@@ -20,6 +22,7 @@ import static org.team10424102.whisky.App.ERR_SERVER_MAINTENANCE;
 public class ErrorManager {
 
     public void handleError(Context context, int err, Throwable t) {
+        Timber.e(t, "oops");
         switch (err) {
             case ERR_RENEW_TOKEN:
             case ERR_NETWORK:

@@ -2,7 +2,10 @@
 <layout>
 
     <data>
-        <variable name="account" type="org.team10424102.whisky.components.auth.Account"/>
+
+        <variable
+            name="account"
+            type="org.team10424102.whisky.components.auth.BlackServerAccount"/>
         <import type="org.team10424102.whisky.utils.EnumUtils"/>
     </data>
 
@@ -42,7 +45,10 @@
             <include layout="@layout/horizontal_divider"/>
             <include layout="@layout/my_info_item" app:content="@{account.profile.username}"/>
             <include layout="@layout/horizontal_divider"/>
-            <include layout="@layout/my_info_item" app:content="@{EnumUtils.toString(account.profile.gender)}"/>
+
+            <include
+                layout="@layout/my_info_item"
+                app:content="@{account.profile.gender}"/>
             <include layout="@layout/horizontal_divider"/>
             <include layout="@layout/my_info_item" app:content="@{account.profile.age}"/>
             <include layout="@layout/horizontal_divider"/>

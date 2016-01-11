@@ -44,7 +44,7 @@ public class PhoneTokenAuthentication implements Authentication {
     }
 
     @Override
-    public boolean isAuthenticated(Context context) {
+    public boolean isAuthenticated() {
         try {
             if (mApi.isTokenAvailable(mToken).execute().code() == 200) return true;
         }catch (Exception e) {

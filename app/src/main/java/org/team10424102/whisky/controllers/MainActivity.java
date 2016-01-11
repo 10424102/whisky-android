@@ -91,28 +91,6 @@ public class MainActivity extends BaseActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             AccountService.InnerBinder binder = (AccountService.InnerBinder) service;
             mAccountService = binder.getService();
-            final Account account = mAccountService.getCurrentAccount();
-            if (account.getProfile() == null) {
-                mApi.getProfile()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Profile>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(Profile profile) {
-                                account.setProfile(profile);
-                            }
-                        });
-            }
         }
 
         @Override

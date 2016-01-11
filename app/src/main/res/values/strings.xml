@@ -95,10 +95,10 @@
 
     <string name="enum_activity_type_civil_war">内战</string>
     <string name="enum_activity_type_match">比赛</string>
-    <string name="enum_gender_male">男</string>
-    <string name="enum_gender_female">女</string>
-    <string name="enum_gender_other">其他</string>
-    <string name="enum_gender_unknown">未知</string>
+    <string name="gender_male">男</string>
+    <string name="gender_female">女</string>
+    <string name="gender_other">其他</string>
+    <string name="gender_unknown">未知</string>
     <string-array name="gender">
         <item>男</item>
         <item>女</item>
@@ -142,5 +142,8 @@
     <string name="activity_status_signup">活动报名中</string>
     <string name="activity_status_running">活动进行中</string>
     <string name="activity_status_ended">活动已结束</string>
+
+    <string name="default_username">用户</string>
+    <string name="default_nickname">无名氏</string>
 
 </resources>
