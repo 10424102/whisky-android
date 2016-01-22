@@ -1,19 +1,15 @@
-package org.team10424102.whisky.controllers.activities;
+package org.team10424102.whisky.controllers;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
-import org.team10424102.whisky.controllers.BaseFragment;
-import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
 import org.team10424102.whisky.databinding.MyActivitiesFragmentBinding;
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.ui.MarginDownDecoration;

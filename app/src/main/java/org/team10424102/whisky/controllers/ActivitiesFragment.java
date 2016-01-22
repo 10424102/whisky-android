@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers.activities;
+package org.team10424102.whisky.controllers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +23,6 @@ import com.daimajia.slider.library.SliderLayout;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.components.ErrorManager;
-import org.team10424102.whisky.controllers.BaseFragment;
-import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
 import org.team10424102.whisky.databinding.ActivitiesFragmentBinding;
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.ui.ActivitySliderView;

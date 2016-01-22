@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers.activities;
+package org.team10424102.whisky.controllers;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;

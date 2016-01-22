@@ -11,7 +11,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,21 +18,11 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
-import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
-import org.team10424102.whisky.controllers.activities.ActivitiesFragment;
-import org.team10424102.whisky.controllers.messages.MessagesFragment;
-import org.team10424102.whisky.controllers.posts.MatchesFragment;
-import org.team10424102.whisky.models.Profile;
 
 import javax.inject.Inject;
-
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
 

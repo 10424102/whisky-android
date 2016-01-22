@@ -25,9 +25,6 @@ import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
 import org.team10424102.whisky.components.auth.BlackServerAccount;
-import org.team10424102.whisky.controllers.activities.MyActivitiesFragment;
-import org.team10424102.whisky.controllers.posts.MyMatchesFragment;
-import org.team10424102.whisky.controllers.posts.MyPostsFragment;
 import org.team10424102.whisky.databinding.ProfileFragmentBinding;
 import org.team10424102.whisky.utils.DimensionUtils;
 
