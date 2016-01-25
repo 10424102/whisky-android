@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.ImageRepo;
-import org.team10424102.whisky.components.ImageViewWrapper;
 
 import javax.inject.Inject;
 

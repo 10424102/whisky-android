@@ -1,4 +1,4 @@
-package org.team10424102.whisky.components;
+package org.team10424102.whisky.models;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -8,6 +8,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.team10424102.whisky.App;
+import org.team10424102.whisky.components.ImageRepo;
 
 public class ImageViewWrapper implements Target {
 
@@ -21,9 +22,14 @@ public class ImageViewWrapper implements Target {
     }
 
     @Override
-    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-        mImageRepo.save(mHash, bitmap);
+    public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
         mImageView.setImageBitmap(bitmap);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mImageRepo.save(mHash, bitmap);
+            }
+        }).start();
     }
 
     @Override
