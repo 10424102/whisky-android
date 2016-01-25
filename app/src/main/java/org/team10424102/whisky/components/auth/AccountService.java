@@ -9,13 +9,16 @@ import android.support.annotation.Nullable;
 import org.team10424102.whisky.App;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 public class AccountService extends Service {
 
     private final IBinder mBinder = new InnerBinder();
-    private Account mCurrentAccount;
+    private volatile Account mCurrentAccount;
     @Inject AccountRepo mAccountRepo;
 
     @Override
@@ -35,6 +38,7 @@ public class AccountService extends Service {
         }
     }
 
+    @Nullable
     public Account getCurrentAccount() {
         return mCurrentAccount;
     }

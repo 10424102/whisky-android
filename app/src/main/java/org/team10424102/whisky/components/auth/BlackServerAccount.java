@@ -7,6 +7,7 @@ import android.databinding.Bindable;
 import android.os.Looper;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.BR;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 public class BlackServerAccount extends BaseObservable implements Account {
-    private Authentication mAuth;
+    private volatile Authentication mAuth;
     private boolean mValid;
     private boolean mVisiable;
     private BlackServerUserProfile mProfile;
@@ -106,10 +107,9 @@ public class BlackServerAccount extends BaseObservable implements Account {
         return mProfile;
     }
 
-    @NonNull
+    @Nullable
     @Override
     public Authentication getAuthentication() {
-        if (mAuth == null) throw new RuntimeException("mAuth is null");
         return mAuth;
     }
 

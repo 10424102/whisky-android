@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers.messages;
+package org.team10424102.whisky.controllers;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

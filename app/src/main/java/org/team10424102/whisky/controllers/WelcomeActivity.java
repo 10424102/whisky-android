@@ -30,6 +30,7 @@ import butterknife.OnClick;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -55,17 +56,25 @@ public class WelcomeActivity extends BaseActivity {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
-        mPhone.setOnClickListener(v -> mPhone.setCursorVisible(true));
-
-        mPhone.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> {
-            mPhone.setCursorVisible(false);
-            if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                InputMethodManager in =
-                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(mPhone.getApplicationWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
+        mPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPhone.setCursorVisible(true);
             }
-            return false;
+        });
+
+        mPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                mPhone.setCursorVisible(false);
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager in =
+                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(mPhone.getApplicationWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return false;
+            }
         });
     }
 
@@ -79,25 +88,45 @@ public class WelcomeActivity extends BaseActivity {
         //new PhoneValidationTask(mAccountService).execute(phone);
 
         // activate the account
-        Subscription activation = Observable.just(phone)
-                .map(BlackServerAccountIdentity::new)
-                .map(mAccountService::findByIdentity)
-                .map(account -> {
-                    if (account == null) return new BlackServerAccount(phone);
-                    return account;
+        Observable.just(phone)
+                .map(new Func1<String, BlackServerAccountIdentity>() {
+                    @Override
+                    public BlackServerAccountIdentity call(String phone) {
+                        return new BlackServerAccountIdentity(phone);
+                    }
                 })
-                .doOnNext(account -> {
-                    if (!account.isValid()) account.activate(this);
+                .map(new Func1<BlackServerAccountIdentity, Account>() {
+                    @Override
+                    public Account call(BlackServerAccountIdentity identity) {
+                        return mAccountService.findByIdentity(identity);
+                    }
                 })
-                .doOnNext(account -> account.save(this))
-                .doOnNext(mAccountService::setCurrentAccount)
+                .map(new Func1<Account, Account>() {
+                    @Override
+                    public Account call(Account account) {
+                        if (account == null) {
+                            account = new BlackServerAccount(phone);
+                        }
+                        mAccountService.setCurrentAccount(account);
+                        Context context = WelcomeActivity.this;
+                        if (!account.isValid()) account.activate(context);
+                        account.save(context);
+                        return account;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(account -> {
-                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }, throwable -> {
-                    Timber.e(throwable, "failed to activate the account: phone = " + phone);
+                .subscribe(new Action1<Account>() {
+                    @Override
+                    public void call(Account account) {
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Timber.e(throwable, "failed to activate the account: phone = " + phone);
+                    }
                 });
     }
 

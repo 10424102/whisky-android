@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers.posts;
+package org.team10424102.whisky.controllers;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
-import org.team10424102.whisky.controllers.EndlessRecyclerOnScrollListener;
 import org.team10424102.whisky.databinding.MatchesFragmentBinding;
 import org.team10424102.whisky.models.Post;
 import org.team10424102.whisky.models.extensions.PostExtensionManager;

@@ -20,13 +20,12 @@ import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 /**
  * Created by yy on 11/7/15.
  */
-public class ApiAuthInterceptor implements Interceptor {
-    private static final String TAG = "ApiAuthInterceptor";
+public class ApiAuthenticationInterceptor implements Interceptor {
     private final CountDownLatch mBound = new CountDownLatch(1);
     private AccountService mAccountService;
     private final Context mContext;
 
-    public ApiAuthInterceptor(Context context) {
+    public ApiAuthenticationInterceptor(Context context) {
         mContext = context;
         Intent intent = new Intent(context, AccountService.class);
         context.bindService(intent, new ServiceConnection() {
@@ -53,11 +52,11 @@ public class ApiAuthInterceptor implements Interceptor {
 
             Account account = mAccountService.getCurrentAccount();
 
-            if(account != null) {
-                Timber.d("before auth");
+            if (account != null && account.getAuthentication() != null) {
+                //Timber.d("before auth: " + Thread.currentThread().getName());
                 Authentication auth = account.getAuthentication();
                 request = auth.authenticateHttpRequest(request);
-                Timber.d("after auth");
+                //Timber.d("after auth: " + Thread.currentThread().getName());
             }
 
             return chain.proceed(request);

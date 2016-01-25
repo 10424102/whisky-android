@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
-                    app:lazyImage="@{activity.cover}"/>
+                    app:image="@{activity.cover}"/>
 
                 <!-- 游戏图标 -->
                 <ImageView
@@ -136,7 +136,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:enum="@{activity.type}"/>
+                                android:text="@{activity.type}"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -241,7 +241,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{@string/activity_details_reg_end_time(DateUtils.toHumanReadableString(activity.registrationDeadline))}"
+                            android:text="@{@string/activity_details_reg_end_time(DateUtils.toHumanReadableString(activity.deadline))}"
                             android:textColor="#9B9B9B"
                             android:textSize="13sp"/>
                     </LinearLayout>
@@ -352,7 +352,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="@{@string/activity_details_comments_left(activity.commentsCount)}"/>
+                                android:text="@{@string/activity_details_comments_left(activity.comments.size)}"/>
 
 
                             <TextView

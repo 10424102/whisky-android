@@ -1,153 +1,119 @@
 package org.team10424102.whisky.models;
 
-import android.databinding.BaseObservable;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.squareup.picasso.Picasso;
 
 import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.ImageRepo;
-import org.team10424102.whisky.components.ImageViewWrapper;
 
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by yy on 11/14/15.
- */
-public class LazyImage extends BaseObservable implements Parcelable {
+@JsonDeserialize(using = LazyImageDeserializer.class)
+@JsonSerialize(using = LazyImageSerializer.class)
+public class LazyImage extends BaseModel implements Image {
 
-    private String mAccessToken;
-    private String mHash;
-    private int mDefaultDrawableId = App.DEFAULT_NO_IMAGE;
-    @Inject Picasso mPicasso;
-    @Inject ImageRepo mImageRepo;
+    /**
+     * 访问令牌字符串
+     */
+    private String token;
 
-    @Deprecated
-    public LazyImage(String accessToken) {
-        this(accessToken, null, App.DEFAULT_NO_IMAGE);
+    public String getAccessToken() {
+        return token;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.token = accessToken;
+    }
+
+    /**
+     * 哈希校验字符串
+     */
+    private String hash;
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    @DrawableRes private int def = App.DEFAULT_NO_IMAGE;
+    @Inject Picasso picasso;
+    @Inject ImageRepo imageRepo;
+
+    @Override
+    protected Observable<LazyImage> init() {
+        return null;
+    }
+
+    public LazyImage() {
+        super();
     }
 
     public LazyImage(String accessToken, String hash) {
         this(accessToken, hash, App.DEFAULT_NO_IMAGE);
     }
 
-    public LazyImage(String accessToken, String hash, int defaultDrawableId) {
-        App.getInstance().getObjectGraph().inject(this);
-        mAccessToken = accessToken;
-        mHash = hash;
-        mDefaultDrawableId = defaultDrawableId;
+    public LazyImage(String accessToken, String hash, @DrawableRes int defaultDrawableId) {
+        super();
+        this.token = accessToken;
+        this.hash = hash;
+        this.def = defaultDrawableId;
     }
 
-    public String getAccessToken() {
-        return mAccessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        mAccessToken = accessToken;
-    }
-
-    public String getHash() {
-        return mHash;
-    }
-
-    public void setHash(String hash) {
-        mHash = hash;
-    }
-
-    public void loadInto(ImageView imageView) {
-        Observable.just(mHash)
-                .map(mImageRepo::getImage)
+    @Override
+    public void loadInto(final ImageView imageView) {
+        Observable.just(hash)
+                .map(new Func1<String, Bitmap>() {
+                    @Override
+                    public Bitmap call(String hash) {
+                        return imageRepo.getImage(hash);
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Bitmap>() {
+                .subscribe(new Action1<Bitmap>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Bitmap bitmap) {
+                    public void call(Bitmap bitmap) {
                         if (bitmap != null) {
                             imageView.setImageBitmap(bitmap);
                         } else {
-                            mPicasso.load(uri()).into(new ImageViewWrapper(imageView, mHash));
+                            picasso.load(uri()).into(new ImageViewWrapper(imageView, hash));
                         }
                     }
                 });
     }
 
+    @Override
     public Uri uri() {
-        return Uri.parse(App.getInstance().getHost() + "/api/images?q=" + mAccessToken);
-    }
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                     Object Override                         //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
-    @Override
-    public String toString() {
-        return String.format("图片 (哈希值 = %s, 访问令牌 = %s)", getHash(), getAccessToken());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LazyImage image = (LazyImage) o;
-
-        return mHash.equals(image.mHash);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return mHash.hashCode();
-    }
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        Parcelable                           //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
-    @Override
-    public int describeContents() {
-        return 0;
+        return Uri.parse(App.getInstance().getHost() + "/api/images?q=" + token);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.mAccessToken);
-        dest.writeString(this.mHash);
+        dest.writeString(this.token);
+        dest.writeString(this.hash);
     }
 
     protected LazyImage(Parcel in) {
-        this.mAccessToken = in.readString();
-        this.mHash = in.readString();
+        this.token = in.readString();
+        this.hash = in.readString();
         App.getInstance().getObjectGraph().inject(this);
     }
 

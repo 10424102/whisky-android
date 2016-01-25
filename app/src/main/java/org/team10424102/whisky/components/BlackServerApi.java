@@ -2,10 +2,12 @@ package org.team10424102.whisky.components;
 
 import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.Game;
+import org.team10424102.whisky.models.Image;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.Post;
 import org.team10424102.whisky.models.Profile;
 import org.team10424102.whisky.models.User;
+import org.team10424102.whisky.models.UserGroup;
 
 import java.util.List;
 
@@ -67,6 +69,9 @@ public interface BlackServerApi {
     @GET("/api/users/photos")
     Observable<List<LazyImage>> getPhotos(@Query("page") int page, @Query("size") int size);
 
+    @GET("/api/group/{id}")
+    Observable<UserGroup> getGroup(@Path("id") long id);
+
     @GET("/api/posts")
     Observable<List<Post>> getPosts(@Query("category") String category,
                                     @Query("page") int page,
@@ -85,4 +90,10 @@ public interface BlackServerApi {
 
     @POST("/api/activities")
     Call<ResponseBody> createActivity(@Body Activity activity);
+
+    @GET("/api/activity/{id}/comments")
+    Observable<List<Post>> getActivityComments(@Path("id") long id, @Query("page") int page, @Query("size") int size);
+
+    @GET("/api/activity/{id}/photos")
+    Observable<List<Image>> getActivityPhotos(@Path("id") long id, @Query("page") int page, @Query("size") int size);
 }

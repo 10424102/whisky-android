@@ -10,7 +10,6 @@ public class Game implements Parcelable {
     private String identifier;
     private LazyImage logo;
 
-
     @JsonProperty("localizedName")
     public String getName() {
         return name;

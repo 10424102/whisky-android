@@ -3,6 +3,7 @@ package org.team10424102.whisky.components.auth;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public interface Account extends Parcelable{
 
@@ -11,7 +12,7 @@ public interface Account extends Parcelable{
     @NonNull
     Profile getProfile();
 
-    @NonNull
+    @Nullable
     Authentication getAuthentication();
 
     AccountIdentity getIdentity();

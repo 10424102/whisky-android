@@ -1,4 +1,4 @@
-package org.team10424102.whisky.controllers.messages;
+package org.team10424102.whisky.controllers;
 
 import android.os.Build;
 import android.os.Bundle;

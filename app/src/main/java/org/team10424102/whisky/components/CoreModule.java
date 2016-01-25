@@ -12,18 +12,19 @@ import org.team10424102.whisky.App;
 import org.team10424102.whisky.components.auth.AccountRepo;
 import org.team10424102.whisky.components.auth.AccountRepoImpl;
 import org.team10424102.whisky.components.auth.AccountService;
-import org.team10424102.whisky.components.auth.ApiAuthInterceptor;
+import org.team10424102.whisky.components.auth.ApiAuthenticationInterceptor;
 import org.team10424102.whisky.components.auth.BlackServerAccount;
 import org.team10424102.whisky.components.auth.PhoneTokenAuthentication;
 import org.team10424102.whisky.controllers.MainActivity;
 import org.team10424102.whisky.controllers.VcodeActivity;
 import org.team10424102.whisky.controllers.WelcomeActivity;
-import org.team10424102.whisky.controllers.activities.ActivitiesAdapter;
-import org.team10424102.whisky.controllers.activities.ActivitiesFragment;
-import org.team10424102.whisky.controllers.posts.GameBindingsAdapter;
-import org.team10424102.whisky.controllers.posts.PostsAdapter;
-import org.team10424102.whisky.controllers.posts.PostsMyselfAdapter;
+import org.team10424102.whisky.controllers.ActivitiesAdapter;
+import org.team10424102.whisky.controllers.ActivitiesFragment;
+import org.team10424102.whisky.controllers.GameBindingsAdapter;
+import org.team10424102.whisky.controllers.PostsAdapter;
+import org.team10424102.whisky.controllers.PostsMyselfAdapter;
 import org.team10424102.whisky.dev.DebugActivity;
+import org.team10424102.whisky.models.Activity;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.extensions.PostExtension;
 import org.team10424102.whisky.models.extensions.PostExtensionDeserializer;
@@ -31,8 +32,8 @@ import org.team10424102.whisky.models.extensions.PostExtensionManager;
 import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtensionHandler;
 import org.team10424102.whisky.models.extensions.image.ImagePostExtensionHandler;
 import org.team10424102.whisky.models.extensions.poll.PollPostExtensionHandler;
-import org.team10424102.whisky.models.mapping.LazyImageDeserializer;
-import org.team10424102.whisky.models.mapping.LazyImageSerializer;
+import org.team10424102.whisky.models.LazyImageDeserializer;
+import org.team10424102.whisky.models.LazyImageSerializer;
 import org.team10424102.whisky.ui.ActivitySliderView;
 
 import java.util.concurrent.TimeUnit;
@@ -66,7 +67,11 @@ import timber.log.Timber;
                 PostExtensionManager.class,
                 GameManager.class,
                 ActivitiesFragment.class,
-                ActivitiesAdapter.class
+                ActivitiesAdapter.class,
+                LazyImage.class,
+                Activity.class,
+                ActivitySliderView.class,
+                ImageRepo.class
         },
         library = true
 )
@@ -99,7 +104,7 @@ public class CoreModule {
         client = client.newBuilder()
                 .readTimeout(1, TimeUnit.SECONDS)
                 .connectTimeout(1,TimeUnit.SECONDS)
-                .addInterceptor(new ApiAuthInterceptor(mContext))
+                .addInterceptor(new ApiAuthenticationInterceptor(mContext))
                 .addInterceptor(new LocalizationInterceptor(mContext))
                 .addInterceptor(loggingInterceptor)
                 .build();
@@ -123,11 +128,11 @@ public class CoreModule {
 
         SimpleModule module = new SimpleModule();
 
-        LazyImageSerializer serializer = new LazyImageSerializer();
-        module.addSerializer(LazyImage.class, serializer);
-
-        LazyImageDeserializer deserializer1 = new LazyImageDeserializer();
-        module.addDeserializer(LazyImage.class, deserializer1);
+//        LazyImageSerializer serializer = new LazyImageSerializer();
+//        module.addSerializer(LazyImage.class, serializer);
+//
+//        LazyImageDeserializer deserializer1 = new LazyImageDeserializer();
+//        module.addDeserializer(LazyImage.class, deserializer1);
 
         PostExtensionDeserializer deserializer2 = new PostExtensionDeserializer();
         module.addDeserializer(PostExtension.class, deserializer2);
