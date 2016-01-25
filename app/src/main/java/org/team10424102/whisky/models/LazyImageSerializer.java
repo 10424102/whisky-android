@@ -1,4 +1,4 @@
-package org.team10424102.whisky.models.mapping;
+package org.team10424102.whisky.models;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -8,7 +8,6 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import org.team10424102.whisky.App;
 import org.team10424102.whisky.BR;
 import org.team10424102.whisky.models.enums.Gender;
 import org.team10424102.whisky.utils.ConstellationUtils;

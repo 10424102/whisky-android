@@ -4,33 +4,20 @@ import android.databinding.BaseObservable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.security.acl.Group;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by yy on 11/14/15.
  */
-public class UserGroup extends BaseObservable implements Parcelable {
+public class UserGroup extends BaseModel {
 
-    private Long id;
+    /**
+     * 组名
+     */
     private String name;
-    private List<User> members;
-
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        GET & SET                            //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -40,6 +27,11 @@ public class UserGroup extends BaseObservable implements Parcelable {
         this.name = name;
     }
 
+    /**
+     * 组员
+     */
+    private List<User> members;
+
     public List<User> getMembers() {
         return members;
     }
@@ -48,68 +40,25 @@ public class UserGroup extends BaseObservable implements Parcelable {
         this.members = members;
     }
 
-
-
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                     Object Override                         //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
-    @Override
-    public String toString() {
-        return String.format("用户组 (编号 = %d, 组名 = %s)", getId(), getName());
+    public UserGroup(long id) {
+        super(id);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserGroup userGroup = (UserGroup) o;
-
-        return !(id != null ? !id.equals(userGroup.id) : userGroup.id != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-
-
-
-
-
-    /////////////////////////////////////////////////////////////////
-    //                                                             //
-    //                    ~~~~~~~~~~~~~~~~~                        //
-    //                        Parcelable                           //
-    //                    =================                        //
-    //                                                             //
-    /////////////////////////////////////////////////////////////////
-
-
-    public UserGroup() {
+    protected Observable<UserGroup> init() {
+        return api.getGroup(id);
     }
 
     protected UserGroup(Parcel in) {
+        super(in);
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.name = in.readString();
         this.members = in.createTypedArrayList(User.CREATOR);
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeValue(this.id);
         dest.writeString(this.name);
         dest.writeTypedList(members);

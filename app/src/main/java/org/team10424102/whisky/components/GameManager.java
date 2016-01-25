@@ -1,5 +1,6 @@
 package org.team10424102.whisky.components;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.team10424102.whisky.App;
@@ -8,36 +9,50 @@ import org.team10424102.whisky.models.Game;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.inject.Inject;
 
 import dagger.Lazy;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class GameManager {
-    private static final String TAG = "GameManager";
 
-    private Lazy<BlackServerApi> mApi;
+    @Inject Lazy<BlackServerApi> api;
 
-    private Map<String, Game> mGames = new ConcurrentHashMap<>();
+    private Map<String, Game> games = new ConcurrentHashMap<>();
+    private Map<String, ReentrantLock> gameLocks = new ConcurrentHashMap<>();
 
     public GameManager() {
         App.getInstance().getObjectGraph().inject(this);
     }
 
-    public Game getGame(String identifier) {
+    public Game getGame(@NonNull String identifier) {
 
-        Game game = mGames.get(identifier);
-
+        Game game = games.get(identifier);
         if (game != null) return game;
 
+        ReentrantLock lock = gameLocks.get(identifier);
+        if (lock == null) {
+            lock = new ReentrantLock();
+            gameLocks.put(identifier, lock);
+        }
+
+        lock.lock();
+        game = games.get(identifier);
+        if (game != null) return game;
         try {
-            Response<Game> resp = mApi.get().getGameInfo(identifier).execute();
+            Response<Game> resp = api.get().getGameInfo(identifier).execute();
             if (resp.code() == 200 && resp.body() != null) {
                 game = resp.body();
-                mGames.put(identifier, game);
+                games.put(identifier, game);
             }
         } catch (IOException e) {
-            Log.e(TAG, "failed to fetch game from server", e);
+            Timber.e("failed to fetch game from server", e);
+            e.printStackTrace();
         }
+        lock.unlock();
 
         return game;
     }

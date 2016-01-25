@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.team10424102.whisky.models.Image;
 import org.team10424102.whisky.models.LazyImage;
 import org.team10424102.whisky.models.enums.StringResourceProvided;
 import org.team10424102.whisky.utils.EnumUtils;
@@ -18,6 +19,12 @@ public class DataBindingAdapters {
 
     @BindingAdapter({"bind:lazyImage"})
     public static void loadLazyImage(ImageView view, LazyImage image) {
+        if (image == null) return;
+        image.loadInto(view);
+    }
+
+    @BindingAdapter({"bind:image"})
+    public static void loadImage(ImageView view, Image image) {
         if (image == null) return;
         image.loadInto(view);
     }

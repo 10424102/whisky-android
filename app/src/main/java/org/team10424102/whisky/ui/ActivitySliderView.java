@@ -1,6 +1,7 @@
 package org.team10424102.whisky.ui;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,26 +15,27 @@ import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.DataBindingAdapters;
 import org.team10424102.whisky.models.Activity;
 
+import javax.inject.Inject;
+
 public class ActivitySliderView extends BaseSliderView {
 
     private String gameLogoUrl;
 
+    @Inject Picasso picasso;
+
     public ActivitySliderView(Context context, final Activity activity) {
         super(context);
 
+        App.getInstance().getObjectGraph().inject(this);
+
         description(activity.getTitle());
-
         image(activity.getCover().uri().toString());
-
         setScaleType(BaseSliderView.ScaleType.CenterCrop);
-
-        Picasso picasso = App.getInstance().getObjectGraph().get(Picasso.class);
         setPicasso(picasso);
 
         if (activity.getGame() != null) {
             gameLogoUrl = activity.getGame().getLogo().uri().toString();
         }
-
     }
 
     @Override

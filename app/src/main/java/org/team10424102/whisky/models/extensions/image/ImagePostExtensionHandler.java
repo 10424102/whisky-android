@@ -40,7 +40,13 @@ public class ImagePostExtensionHandler implements PostExtensionHandler<Gallery> 
     public Parcelable parseJson(JsonNode dataNode, JsonParser jp) throws JsonProcessingException {
         Gallery gallery = new Gallery();
         for (JsonNode token : dataNode) {
-            LazyImage image = new LazyImage(token.asText());
+            String[] parts = token.asText().split("~");
+            LazyImage image;
+            if (parts.length > 1) {
+                image = new LazyImage(parts[0], parts[1]);
+            } else {
+                image = new LazyImage(parts[0], null);
+            }
             gallery.getImages().add(image);
         }
         return gallery;
