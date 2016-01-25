@@ -16,6 +16,7 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.team10424102.whisky.R;
 import org.team10424102.whisky.components.BlackServerApi;
@@ -41,6 +42,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by yy on 10/30/15.
@@ -57,7 +59,7 @@ public class VcodeActivity extends BaseActivity {
     private TextView mCountdown;
     private EditText mVcode;
     private ObservableInt mCounter = new ObservableInt(COUNTDOWN_LENGTH);
-    @Inject BlackServerApi mApi;
+    @Inject BlackServerApi api;
     private int mType;
     private Subscription mSubscription;
     private SpannableString mResendText;
@@ -112,8 +114,6 @@ public class VcodeActivity extends BaseActivity {
     }
 
     public void comfirm(View view) {
-        mSubscription.unsubscribe();
-
         // wait until account service binded
         try {
             mAccountLock.await();
@@ -124,7 +124,7 @@ public class VcodeActivity extends BaseActivity {
         String phone = mAccount.getIdentity().get();
         String vcode = mVcode.getText().toString();
 
-        mApi.getToken(phone, vcode)
+        api.getToken(phone, vcode)
                 .map(new Func1<TokenResult, String>() {
                     @Override
                     public String call(TokenResult tokenResult) {
@@ -142,8 +142,14 @@ public class VcodeActivity extends BaseActivity {
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String token) {
+                        mSubscription.unsubscribe();
                         finish();
                         VcodeActivity.finishedLock.countDown();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Toast.makeText(VcodeActivity.this, R.string.vcode_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
