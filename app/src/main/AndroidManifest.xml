@@ -4,8 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Include following permission if you load images from Internet -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Include following permission if you want to cache images on SD card -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -24,10 +26,11 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".dev.DebugActivity"
+            android:name="org.team10424102.whisky.controllers.WelcomeActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -36,11 +39,6 @@
         <activity
             android:name="org.team10424102.whisky.controllers.MainActivity"
             android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="org.team10424102.whisky.controllers.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
             android:name="org.team10424102.whisky.controllers.VcodeActivity"

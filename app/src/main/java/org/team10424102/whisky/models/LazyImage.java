@@ -20,6 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 @JsonDeserialize(using = LazyImageDeserializer.class)
 @JsonSerialize(using = LazyImageSerializer.class)
@@ -92,6 +93,7 @@ public class LazyImage extends BaseModel implements Image {
                     @Override
                     public void call(Bitmap bitmap) {
                         if (bitmap != null) {
+                            Timber.d("load image from local storage");
                             imageView.setImageBitmap(bitmap);
                         } else {
                             picasso.load(uri()).into(new ImageViewWrapper(imageView, hash));

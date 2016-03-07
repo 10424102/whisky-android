@@ -1,5 +1,9 @@
 package org.team10424102.whisky.controllers;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.team10424102.whisky.R;
-import org.team10424102.whisky.components.auth.Account;
 import org.team10424102.whisky.components.auth.AccountService;
 import org.team10424102.whisky.components.auth.BlackServerAccount;
 import org.team10424102.whisky.components.auth.BlackServerAccountIdentity;
@@ -48,9 +51,8 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_activity);
-        ButterKnife.bind(this);
 
-        // hide system top status bar
+        // 隐藏顶部状态来
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -85,49 +87,95 @@ public class WelcomeActivity extends BaseActivity {
             mPhone.setError(getString(R.string.phone_empty));
             return;
         }
-        //new PhoneValidationTask(mAccountService).execute(phone);
 
-        // activate the account
         Observable.just(phone)
-                .map(new Func1<String, BlackServerAccountIdentity>() {
+                .map(new Func1<String, String>() {
                     @Override
-                    public BlackServerAccountIdentity call(String phone) {
-                        return new BlackServerAccountIdentity(phone);
-                    }
-                })
-                .map(new Func1<BlackServerAccountIdentity, Account>() {
-                    @Override
-                    public Account call(BlackServerAccountIdentity identity) {
-                        return mAccountService.findByIdentity(identity);
-                    }
-                })
-                .map(new Func1<Account, Account>() {
-                    @Override
-                    public Account call(Account account) {
-                        if (account == null) {
-                            account = new BlackServerAccount(phone);
+                    public String call(String phone) {
+                        AccountManager accountManager = AccountManager.get(WelcomeActivity.this);
+                        Account[] accounts = accountManager.getAccountsByType("org.projw");
+                        Account myAccount = null;
+                        for (Account account : accounts) {
+                            if (account.name.equals(phone)) {
+                                myAccount = account;
+                            }
                         }
-                        mAccountService.setCurrentAccount(account);
-                        Context context = WelcomeActivity.this;
-                        if (!account.isValid()) account.activate(context);
-                        account.save(context);
-                        return account;
+                        if (myAccount == null) {
+                            Intent intent = new Intent(WelcomeActivity.this, VcodeActivity.class);
+                            startActivity(intent);
+                        } else {
+                            final AccountManagerFuture<Bundle> future = accountManager.getAuthToken(myAccount,
+                                    "unknown",null, WelcomeActivity.this, null, null);
+                            Bundle result;
+                            try {
+                                result = future.getResult();
+                            } catch (Exception e) {
+                                throw new AuthFailureException("无法获取用户 token");
+                            }
+                            String token = null;
+                            if (future.isDone() && !future.isCancelled()) {
+                                token = result.getString(AccountManager.KEY_AUTHTOKEN);
+                            }
+                            return token;
+                        }
+                        return null;
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Account>() {
+                .subscribe(new Action1<String>() {
                     @Override
-                    public void call(Account account) {
-                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Timber.e(throwable, "failed to activate the account: phone = " + phone);
+                    public void call(String token) {
+                        AccountManager accountManager = AccountManager.get(WelcomeActivity.this);
+                        
                     }
                 });
+
+
+
+
+
+        // activate the account
+//        Observable.just(phone)
+//                .map(new Func1<String, BlackServerAccountIdentity>() {
+//                    @Override
+//                    public BlackServerAccountIdentity call(String phone) {
+//                        return new BlackServerAccountIdentity(phone);
+//                    }
+//                })
+//                .map(new Func1<BlackServerAccountIdentity, Account>() {
+//                    @Override
+//                    public Account call(BlackServerAccountIdentity identity) {
+//                        return mAccountService.findByIdentity(identity);
+//                    }
+//                })
+//                .map(new Func1<Account, Account>() {
+//                    @Override
+//                    public Account call(Account account) {
+//                        if (account == null) {
+//                            account = new BlackServerAccount(phone);
+//                        }
+//                        mAccountService.setCurrentAccount(account);
+//                        Context context = WelcomeActivity.this;
+//                        if (!account.isValid()) account.activate(context);
+//                        account.save(context);
+//                        return account;
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Account>() {
+//                    @Override
+//                    public void call(Account account) {
+//                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+//                        startActivity(intent);
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        Timber.e(throwable, "failed to activate the account: phone = " + phone);
+//                    }
+//                });
     }
 
     @Override

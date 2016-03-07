@@ -14,7 +14,7 @@
     <string name="vcode_eula"><u>《玩在校园用户协议》</u></string>
     <string name="vcode_register">完成注册</string>
     <string name="vcode_login">验证登录</string>
-    <string name="vcode_failed">未能完成验证</string>
+    <string name="vcode_failed">验证失败</string>
 
     <string name="tab_activities">活动</string>
     <string name="tab_matches">战况</string>

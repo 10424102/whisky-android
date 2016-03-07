@@ -4,22 +4,42 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.johnkil.print.PrintConfig;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.squareup.picasso.Picasso;
 
+import org.team10424102.whisky.components.BlackServerApi;
 import org.team10424102.whisky.components.CoreModule;
+import org.team10424102.whisky.components.LocalizationInterceptor;
+import org.team10424102.whisky.components.auth.ApiAuthenticationInterceptor;
+import org.team10424102.whisky.models.BlackServer;
+import org.team10424102.whisky.models.extensions.PostExtension;
+import org.team10424102.whisky.models.extensions.PostExtensionDeserializer;
+import org.team10424102.whisky.models.extensions.PostExtensionManager;
+import org.team10424102.whisky.models.extensions.dota2.Dota2PostExtensionHandler;
+import org.team10424102.whisky.models.extensions.image.ImagePostExtensionHandler;
+import org.team10424102.whisky.models.extensions.poll.PollPostExtensionHandler;
 import org.team10424102.whisky.utils.DimensionUtils;
 
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import dagger.ObjectGraph;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.JacksonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
 import timber.log.Timber;
 
 /**
  * Created by yy on 11/4/15.
  */
 public class App extends Application {
-    public static final String TAG = "App";
     public static final String API_PREFIX = "/api";
 
     public static final String PREF_SERVER_ADDRESS = "server_address";
@@ -43,61 +63,64 @@ public class App extends Application {
 
     public static final String PREF_NAME = "org.team10424102.whisky";
 
-    private static App INSTANCE;
-
-    private ObjectGraph mObjectGraph;
-
-    public App() {
-        INSTANCE = this;
-    }
+    public static BlackServerApi api;
+    public static Picasso picasso;
+    public static Context context;
+    public static PostExtensionManager postExtensionManager;
 
     @Override
     public void onCreate() {
-        Timber.i("App onCreate()");
         super.onCreate();
         if (BuildConfig.DEBUG) {
             Timber.d("Timber plant DebugTree");
             Timber.plant(new Timber.DebugTree());
         }
+        context = getApplicationContext();
         init();
     }
 
     public void init() {
-        Timber.i("App init()");
+        Timber.d("开始初始化");
 
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        // Icon font
-        PrintConfig.initDefault(getAssets(), "ionicons.ttf");
-        // JSR-310
-        AndroidThreeTen.init(this);
+        PrintConfig.initDefault(getAssets(), "ionicons.ttf");// Icon font
+        AndroidThreeTen.init(this);// JSR-310
+        DimensionUtils.init(context);
 
-        DimensionUtils.init(getApplicationContext());
+        OkHttpClient client = new OkHttpClient();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        client = client.newBuilder()
+                .readTimeout(1, TimeUnit.SECONDS)
+                .connectTimeout(1,TimeUnit.SECONDS)
+                .addInterceptor(new ApiAuthenticationInterceptor(context))
+                .addInterceptor(new LocalizationInterceptor(context))
+                .addInterceptor(loggingInterceptor)
+                .build();
+        picasso = new Picasso
+                .Builder(context)
+                .downloader(new OkHttp3Downloader(client))
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        SimpleModule module = new SimpleModule();
+        PostExtensionDeserializer deserializer2 = new PostExtensionDeserializer();
+        module.addDeserializer(PostExtension.class, deserializer2);
+        Retrofit retrofit = new Retrofit.Builder()
+                // .baseUrl("https://bs.projw.org")
+                // .baseUrl("http://192.168.2.108:8080")
+                .baseUrl("http://127.0.0.1:8080")
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(client)
+                .build();
+        api = retrofit.create(BlackServerApi.class);
 
-        mObjectGraph = ObjectGraph.create(new CoreModule(getApplicationContext()));
+        postExtensionManager = new PostExtensionManager();
+        postExtensionManager.registerPostExtensionHandler(new Dota2PostExtensionHandler());
+        postExtensionManager.registerPostExtensionHandler(new ImagePostExtensionHandler());
+        postExtensionManager.registerPostExtensionHandler(new PollPostExtensionHandler());
 
-    }
-
-    public static App getInstance() {
-        return INSTANCE;
-    }
-
-    public String getHost() {
-        SharedPreferences prefs = getSharedPreferences(App.PREF_NAME, Context.MODE_PRIVATE);
-        String host = "http://" + prefs.getString(App.PREF_SERVER_ADDRESS, App.DEFAULT_SERVER_ADDRESS);
-        return host;
-    }
-
-    /**
-     * hide this method call, because it will generate exceptions when we using dagger
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    private <T> T getComponent(Class<T> clazz) {
-        return mObjectGraph.get(clazz);
-    }
-
-    public ObjectGraph getObjectGraph() {
-        return mObjectGraph;
+        Timber.d("初始化完成");
     }
 }

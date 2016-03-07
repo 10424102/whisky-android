@@ -19,7 +19,7 @@ public class LazyImageDeserializer extends JsonDeserializer<LazyImage> {
 
     @Override
     public LazyImage deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        Timber.d("lazy image");
+        //Timber.d("lazy image");
         JsonNode root = jp.getCodec().readTree(jp);
         String[] parts = root.asText().split("~");
         String token = parts[0];

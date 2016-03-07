@@ -10,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -164,7 +167,7 @@ public class ActivitiesFragment extends BaseFragment {
             }
         });
 
-        loadPage(0);
+        //loadPage(0);
 
         return binding.getRoot();
     }
@@ -187,4 +190,22 @@ public class ActivitiesFragment extends BaseFragment {
                     });
         }
     };
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activities_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.school:
+                break;
+            case R.id.friends:
+                break;
+            case R.id.focuses:
+                break;
+        }
+        return false;
+    }
 }
